@@ -2,7 +2,10 @@ package org.quixalert.br.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Set quixalert colors
+val primaryGreen = Color(0xFF269996)
+val primaryBlue = Color(0xFF0B5DA2)
+val primaryGray = Color(0xFFD0D3D9)
+val primaryRed = Color(0xFFFF4246)
 
 val sunlitOrange = Color(0xFFA912)
 val vibrantOrange = Color(0xE69810)
