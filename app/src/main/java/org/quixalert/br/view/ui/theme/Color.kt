@@ -1,4 +1,4 @@
-package org.quixalert.br.ui.theme
+package org.quixalert.br.view.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
