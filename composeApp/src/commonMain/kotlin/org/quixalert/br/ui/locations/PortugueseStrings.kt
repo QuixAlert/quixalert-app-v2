@@ -5,5 +5,6 @@ import cafe.adriel.lyricist.LyricistStrings
 
 @LyricistStrings(languageTag = Locales.PT_BR, default = true)
 internal val PortugueseStrings = Strings(
-    whereIsMyBus = "Cadê o \nmeu ônibus?"
+    whereIsMyBus = "Cadê o \nmeu ônibus?",
+    appName = "QuixAlert!"
 )

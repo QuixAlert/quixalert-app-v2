@@ -1,6 +1,6 @@
 package org.quixalert.br.ui.locations
 
 data class Strings(
-    val whereIsMyBus: String
-
+    val whereIsMyBus: String,
+    val appName: String
 )
