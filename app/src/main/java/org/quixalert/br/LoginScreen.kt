@@ -33,7 +33,7 @@ fun LoginScreen() {
     val screenHeight = configuration.screenHeightDp.dp
     val screenWidth = configuration.screenWidthDp.dp
 
-    var waveHeight by remember { mutableStateOf(0.35f) }
+    var waveHeight by remember { mutableStateOf(0.45f) }
     
     val infiniteTransition = rememberInfiniteTransition()
     val animatedWaveHeight by infiniteTransition.animateFloat(
@@ -83,8 +83,8 @@ fun LoginScreen() {
                 .padding(horizontal = 50.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Placeholder for logo
-            Spacer(modifier = Modifier.height(187.dp))
+            // Logo - adjusted spacing
+            Spacer(modifier = Modifier.height(120.dp))
             Image(
                 painter = painterResource(id = R.drawable.quix_alert),
                 contentDescription = "QuixAlert Logo",
@@ -95,7 +95,7 @@ fun LoginScreen() {
             
             Spacer(modifier = Modifier.weight(1f))
             
-            // Register Button
+            // Register Button (Blue)
             Button(
                 onClick = { /* TODO */ },
                 modifier = Modifier
@@ -114,26 +114,26 @@ fun LoginScreen() {
             
             Spacer(modifier = Modifier.height(16.dp))
             
-            // Login Button
-            OutlinedButton(
+            // Login Button (White with blue border)
+            Button(
                 onClick = { /* TODO */ },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(59.dp),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = primaryBlue
-                ),
-                border = BorderStroke(1.dp, primaryBlue),
-                shape = RoundedCornerShape(40.dp)
+                colors = ButtonDefaults.buttonColors(Color.White),
+                shape = RoundedCornerShape(40.dp),
+                border = BorderStroke(1.dp, primaryBlue)
             ) {
                 Text(
                     text = "Entrar",
                     fontSize = 24.sp,
+                    color = primaryBlue,
                     letterSpacing = (-0.333333).sp
                 )
             }
             
-            Spacer(modifier = Modifier.height(128.dp))
+            // Increased bottom spacing to move buttons up
+            Spacer(modifier = Modifier.height(120.dp))
         }
     }
 }
