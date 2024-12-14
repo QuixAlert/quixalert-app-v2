@@ -28,7 +28,10 @@ import org.quixalert.br.view.ui.theme.primaryGreen
 import org.quixalert.br.view.ui.theme.primaryBlue
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    onRegisterClick: () -> Unit,
+    onLoginClick: () -> Unit
+) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     val screenWidth = configuration.screenWidthDp.dp
@@ -97,7 +100,7 @@ fun LoginScreen() {
             
             // Register Button (Blue)
             Button(
-                onClick = { /* TODO */ },
+                onClick = onRegisterClick,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(59.dp),
@@ -116,7 +119,7 @@ fun LoginScreen() {
             
             // Login Button (White with blue border)
             Button(
-                onClick = { /* TODO */ },
+                onClick = onLoginClick,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(59.dp),
