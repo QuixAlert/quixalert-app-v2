@@ -21,6 +21,9 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
+import org.quixalert.br.R
 import org.quixalert.br.view.ui.theme.primaryGreen
 import org.quixalert.br.view.ui.theme.primaryBlue
 
@@ -82,10 +85,12 @@ fun LoginScreen() {
         ) {
             // Placeholder for logo
             Spacer(modifier = Modifier.height(187.dp))
-            Box(
+            Image(
+                painter = painterResource(id = R.drawable.quix_alert),
+                contentDescription = "QuixAlert Logo",
                 modifier = Modifier
                     .size(206.dp)
-                    .background(Color.White)
+                    .padding(16.dp)
             )
             
             Spacer(modifier = Modifier.weight(1f))
