@@ -9,17 +9,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import org.quixalert.br.view.pages.home.HomeScreen
+import org.quixalert.br.view.pages.login.LoginScreen
 
 @Composable
 @Preview
 fun App() {
-    AppTheme{
+    AppTheme {
         Surface(
             modifier = Modifier
                 .fillMaxSize()
                 .background(AppTheme.colorScheme.background)
         ) {
-            HomeScreen()
+            LoginScreen()
         }
     }
 }
