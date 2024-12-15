@@ -14,6 +14,7 @@ import org.quixalert.br.R
 import org.quixalert.br.model.UserRegistrationData
 import org.quixalert.br.view.ui.theme.primaryBlue
 import org.quixalert.br.view.ui.theme.primaryGreen
+import org.quixalert.br.view.components.StyledTextField
 
 @Composable
 fun RegisterScreen(
@@ -35,7 +36,7 @@ fun RegisterScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 50.dp),
+                .padding(horizontal = 54.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(80.dp))
@@ -55,76 +56,45 @@ fun RegisterScreen(
             Spacer(modifier = Modifier.height(40.dp))
 
             // Name field
-            TextField(
+            StyledTextField(
                 value = name,
                 onValueChange = { name = it },
-                label = { Text("Nome") },
-                placeholder = { Text("Nome Completo") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White, RoundedCornerShape(8.dp)),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    focusedIndicatorColor = primaryBlue,
-                    unfocusedIndicatorColor = Color.Gray
-                )
+                label = "Nome:",
+                placeholder = "Nome Completo",
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             // Email field
-            TextField(
+            StyledTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("E-mail") },
-                placeholder = { Text("usuario@exemplo.com") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White, RoundedCornerShape(8.dp)),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    focusedIndicatorColor = primaryBlue,
-                    unfocusedIndicatorColor = Color.Gray
-                )
+                label = "E-mail:",
+                placeholder = "usuario@exemplo.com",
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             // Phone field
-            TextField(
+            StyledTextField(
                 value = phone,
                 onValueChange = { phone = it },
-                label = { Text("Celular") },
-                placeholder = { Text("(99) 9 9999-9999") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White, RoundedCornerShape(8.dp)),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    focusedIndicatorColor = primaryBlue,
-                    unfocusedIndicatorColor = Color.Gray
-                )
+                label = "Celular:",
+                placeholder = "(99) 9 9999-9999",
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             // Birth date field
-            TextField(
+            StyledTextField(
                 value = birthDate,
                 onValueChange = { birthDate = it },
-                label = { Text("Data de nascimento") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White, RoundedCornerShape(8.dp)),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    focusedIndicatorColor = primaryBlue,
-                    unfocusedIndicatorColor = Color.Gray
-                )
+                label = "Data de nascimento:",
+                placeholder = "DD/MM/AAAA",
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(32.dp))
