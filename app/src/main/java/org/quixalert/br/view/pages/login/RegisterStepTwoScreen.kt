@@ -5,6 +5,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -14,11 +15,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -26,6 +27,7 @@ import org.quixalert.br.R
 import org.quixalert.br.model.UserRegistrationData
 import org.quixalert.br.view.ui.theme.primaryBlue
 import org.quixalert.br.view.ui.theme.primaryGreen
+import org.quixalert.br.view.components.StyledTextField
 
 @Composable
 fun RegisterStepTwoScreen(
@@ -36,8 +38,6 @@ fun RegisterStepTwoScreen(
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
-    
-    val context = LocalContext.current
     
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -55,17 +55,45 @@ fun RegisterStepTwoScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 50.dp),
+                .padding(horizontal = 53.dp),  // Exact padding from Figma
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(83.dp))  // Matches Figma spacing
+            
+            Text(
+                text = "Olá!",
+                fontSize = 64.sp,
+                fontWeight = FontWeight.Normal,
+                letterSpacing = (-0.333333).sp,
+                color = primaryBlue
+            )
+            
+            Text(
+                text = "Seja bem-vindo ao QuixAlert!",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Normal,
+                letterSpacing = (-0.333333).sp,
+                color = primaryBlue,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+
+            Spacer(modifier = Modifier.height(37.dp))
 
             // Profile Image Selection
             Box(
                 modifier = Modifier
-                    .size(120.dp)
-                    .clip(CircleShape)
-                    .background(Color.White)
+                    .size(86.dp)  // Exact size from Figma
+                    .shadow(
+                        elevation = 4.dp,
+                        shape = CircleShape,
+                        spotColor = Color(0x40000000)
+                    )
+                    .background(Color(0xFFD9D9D9), CircleShape)  // Matches Figma color
+                    .border(
+                        width = 1.dp,
+                        color = Color.White,
+                        shape = CircleShape
+                    )
                     .clickable { imagePickerLauncher.launch("image/*") },
                 contentAlignment = Alignment.Center
             ) {
@@ -80,74 +108,54 @@ fun RegisterStepTwoScreen(
                     Icon(
                         painter = painterResource(id = R.drawable.ic_add_photo),
                         contentDescription = "Add photo",
-                        modifier = Modifier.size(40.dp),
-                        tint = primaryBlue
+                        modifier = Modifier.size(24.dp),
+                        tint = Color(0xFF50555C)
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
-
             Text(
                 text = "Adicionar foto de perfil",
                 color = primaryBlue,
-                fontSize = 16.sp
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Normal,
+                letterSpacing = (-0.333333).sp,
+                modifier = Modifier.padding(top = 8.dp)
             )
 
             Spacer(modifier = Modifier.height(32.dp))
 
             // Username field
-            TextField(
+            StyledTextField(
                 value = username,
                 onValueChange = { username = it },
-                label = { Text("Nome de usuário") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White, RoundedCornerShape(8.dp)),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    focusedIndicatorColor = primaryBlue,
-                    unfocusedIndicatorColor = Color.Gray
-                )
+                label = "Usuário:",
+                placeholder = "usuario.exemplo",
+                modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(35.dp))
 
             // Password field
-            TextField(
+            StyledTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Senha") },
-                visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White, RoundedCornerShape(8.dp)),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    focusedIndicatorColor = primaryBlue,
-                    unfocusedIndicatorColor = Color.Gray
-                )
+                label = "Senha:",
+                placeholder = "••••••••",
+                isPassword = true,
+                modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(35.dp))
 
             // Confirm Password field
-            TextField(
+            StyledTextField(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
-                label = { Text("Confirmar senha") },
-                visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White, RoundedCornerShape(8.dp)),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    focusedIndicatorColor = primaryBlue,
-                    unfocusedIndicatorColor = Color.Gray
-                )
+                label = "Confirmar senha:",
+                placeholder = "••••••••",
+                isPassword = true,
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -165,15 +173,52 @@ fun RegisterStepTwoScreen(
                     }
                 },
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(59.dp),
+                    .width(172.dp)  // Exact width from Figma
+                    .height(53.dp),  // Exact height from Figma
                 colors = ButtonDefaults.buttonColors(primaryBlue),
                 shape = RoundedCornerShape(40.dp)
             ) {
                 Text(
-                    text = "Cadastrar",
+                    text = "Registrar",
                     fontSize = 24.sp,
+                    letterSpacing = (-0.333333).sp,
                     color = Color.White
+                )
+            }
+
+            Spacer(modifier = Modifier.height(27.dp))
+
+            Text(
+                text = "Ou conecte-se usando",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Normal,
+                letterSpacing = (-0.333333).sp,
+                color = primaryBlue
+            )
+
+            Spacer(modifier = Modifier.height(27.dp))
+
+            // Social login icons
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 56.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.facebook_logo),
+                    contentDescription = "Facebook Login",
+                    modifier = Modifier.size(35.dp)
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.google_logo),
+                    contentDescription = "Google Login",
+                    modifier = Modifier.size(35.dp)
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.microsoft_logo),
+                    contentDescription = "Microsoft Login",
+                    modifier = Modifier.size(35.dp)
                 )
             }
         }
