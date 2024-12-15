@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.quixalert.br.R
@@ -15,6 +16,7 @@ import org.quixalert.br.model.UserRegistrationData
 import org.quixalert.br.view.ui.theme.primaryBlue
 import org.quixalert.br.view.ui.theme.primaryGreen
 import org.quixalert.br.view.components.StyledTextField
+import org.quixalert.br.view.ui.theme.poppinsFamily
 
 @Composable
 fun RegisterScreen(
@@ -39,21 +41,25 @@ fun RegisterScreen(
                 .padding(horizontal = 54.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(80.dp))
+            Spacer(modifier = Modifier.height(60.dp))
             
             Text(
                 text = "Olá!",
                 fontSize = 36.sp,
-                color = primaryBlue
+                color = primaryBlue,
+                fontFamily = poppinsFamily(),
+                fontWeight = FontWeight.Bold
             )
             
             Text(
                 text = "Seja bem-vindo ao QuixAlert!",
                 fontSize = 20.sp,
-                color = primaryBlue
+                color = primaryBlue,
+                fontFamily = poppinsFamily(),
+                fontWeight = FontWeight.Medium
             )
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(48.dp))
 
             // Name field
             StyledTextField(

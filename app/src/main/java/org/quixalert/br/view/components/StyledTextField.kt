@@ -24,66 +24,71 @@ fun StyledTextField(
 ) {
     Column(
         modifier = modifier
-            .padding(vertical = 4.dp)
+            .padding(vertical = 8.dp)
     ) {
         Text(
             text = label,
             style = TextStyle(
                 fontFamily = poppinsFamily(),
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 16.sp,
-                letterSpacing = (-0.333333).sp,
+                fontWeight = FontWeight.Medium,
+                fontSize = 14.sp,
+                letterSpacing = 0.sp,
                 color = Color(0xFF50555C)
             ),
-            modifier = Modifier.padding(start = 4.dp, bottom = 4.dp)
+            modifier = Modifier.padding(start = 8.dp, bottom = 8.dp)
         )
         
-        OutlinedTextField(
-            value = value,
-            onValueChange = onValueChange,
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(42.dp)
+                .height(48.dp)
                 .shadow(
-                    elevation = 4.dp,
-                    shape = RoundedCornerShape(15.dp),
-                    spotColor = Color(0x40000000)
+                    elevation = 2.dp,
+                    shape = RoundedCornerShape(24.dp),
+                    spotColor = Color(0x1A000000)
                 )
                 .border(
                     width = 1.dp,
                     color = Color.White,
-                    shape = RoundedCornerShape(15.dp)
-                ),
-            placeholder = {
-                Text(
-                    text = placeholder,
-                    style = TextStyle(
-                        fontFamily = poppinsFamily(),
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 13.sp,
-                        letterSpacing = (-0.333333).sp,
-                        color = Color(0x7A50555C), // opacity 0.48
-                        lineHeight = 20.sp
-                    ),
-                    modifier = Modifier.padding(start = 8.dp)
+                    shape = RoundedCornerShape(24.dp)
                 )
-            },
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = Color(0xE6D0D3D9),
-                unfocusedContainerColor = Color(0xE6D0D3D9),
-                focusedBorderColor = Color.Transparent,
-                unfocusedBorderColor = Color.Transparent,
-                focusedTextColor = Color(0xFF50555C),
-                unfocusedTextColor = Color(0xFF50555C)
-            ),
-            textStyle = TextStyle(
-                fontFamily = poppinsFamily(),
-                fontWeight = FontWeight.Medium,
-                fontSize = 13.sp,
-                letterSpacing = (-0.333333).sp
-            ),
-            singleLine = true,
-            shape = RoundedCornerShape(15.dp)
-        )
+        ) {
+            OutlinedTextField(
+                value = value,
+                onValueChange = onValueChange,
+                modifier = Modifier
+                    .fillMaxSize(),
+                placeholder = {
+                    Text(
+                        text = placeholder,
+                        style = TextStyle(
+                            fontFamily = poppinsFamily(),
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 14.sp,
+                            letterSpacing = 0.sp,
+                            color = Color(0x7A50555C),
+                            lineHeight = 20.sp
+                        )
+                    )
+                },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = Color(0xF2D0D3D9),
+                    unfocusedContainerColor = Color(0xF2D0D3D9),
+                    focusedBorderColor = Color.Transparent,
+                    unfocusedBorderColor = Color.Transparent,
+                    focusedTextColor = Color(0xFF50555C),
+                    unfocusedTextColor = Color(0xFF50555C),
+                    disabledContainerColor = Color(0xF2D0D3D9)
+                ),
+                textStyle = TextStyle(
+                    fontFamily = poppinsFamily(),
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 14.sp,
+                    letterSpacing = 0.sp
+                ),
+                singleLine = true,
+                shape = RoundedCornerShape(24.dp)
+            )
+        }
     }
 } 
