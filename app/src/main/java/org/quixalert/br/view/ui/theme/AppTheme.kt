@@ -28,6 +28,7 @@ import org.quixalert.br.view.ui.theme.charcoalGray
 import org.quixalert.br.view.ui.theme.deepOceanBlue
 import org.quixalert.br.view.ui.theme.grayLight32
 import org.quixalert.br.view.ui.theme.poppinsFamily
+import org.quixalert.br.view.ui.theme.primaryGreen
 import org.quixalert.br.view.ui.theme.pureWhite
 import org.quixalert.br.view.ui.theme.richNavyBlue
 import org.quixalert.br.view.ui.theme.softSkyBlue
@@ -35,7 +36,7 @@ import org.quixalert.br.view.ui.theme.softSkyBlue
 private val lightColorScheme = AppColorScheme(
     background = pureWhite,
     onBackground = softSkyBlue,
-    primary = deepOceanBlue,
+    primary = primaryGreen,
     onPrimary = richNavyBlue,
     secondary = grayLight32,
     onSecondary = charcoalGray
