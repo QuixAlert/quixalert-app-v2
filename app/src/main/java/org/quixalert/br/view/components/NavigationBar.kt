@@ -34,7 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
-//Padronização da Scaffold, para sempre que for chamada
 @Composable
 fun NavgationBarWithScaffold() {
     Scaffold (
@@ -66,9 +65,7 @@ fun NavgationBarWithScaffold() {
 
 @Composable
 fun NavigationBarM3(){
-    // Guardar os itens selecionadios, inicialmente será 0
     var selectedItem by remember { mutableStateOf(0) }
-    //Itens de Navegação da NavBar
     val barItems = listOf(
         BarItem(
             title = "Home",
@@ -104,13 +101,11 @@ fun NavigationBarM3(){
 
     NavigationBar{
         barItems.forEachIndexed { index, barItem ->
-            // Define se o item está selecionado ou não
             val selected = selectedItem == index
             NavigationBarItem(
                 selected =selectedItem == index,
                 onClick = {
                     selectedItem = index
-                    // Lógica de nevegação aqui
                 },
                 icon = {
                    Icon(
@@ -128,7 +123,6 @@ fun NavigationBarM3(){
                 label = {
                     Text(text = barItem.title)
                 },
-                //Só aparece o nome do icon quando ele tiver selecionado
                 alwaysShowLabel = selected
             )
         }
