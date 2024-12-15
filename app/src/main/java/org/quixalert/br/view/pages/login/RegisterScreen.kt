@@ -1,6 +1,5 @@
 package org.quixalert.br.view.pages.login
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,15 +8,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.quixalert.br.R
+import org.quixalert.br.model.UserRegistrationData
 import org.quixalert.br.view.ui.theme.primaryBlue
 import org.quixalert.br.view.ui.theme.primaryGreen
 
 @Composable
-fun RegisterScreen() {
+fun RegisterScreen(
+    onNextStep: (UserRegistrationData) -> Unit = {}
+) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
@@ -129,7 +130,16 @@ fun RegisterScreen() {
             Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = { /* TODO */ },
+                onClick = { 
+                    onNextStep(
+                        UserRegistrationData(
+                            name = name,
+                            email = email,
+                            phone = phone,
+                            birthDate = birthDate
+                        )
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(59.dp),
@@ -137,7 +147,7 @@ fun RegisterScreen() {
                 shape = RoundedCornerShape(40.dp)
             ) {
                 Text(
-                    text = "Cadastrar",
+                    text = "Próximo",
                     fontSize = 24.sp,
                     color = Color.White
                 )

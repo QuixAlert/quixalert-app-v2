@@ -16,11 +16,14 @@ import org.quixalert.br.view.pages.home.HomeScreen
 import org.quixalert.br.view.pages.login.LoginScreen
 import org.quixalert.br.view.pages.login.RegisterScreen
 import org.quixalert.br.view.pages.login.SignInScreen
+import org.quixalert.br.model.UserRegistrationData
+import org.quixalert.br.view.pages.login.RegisterStepTwoScreen
 
 @Composable
 @Preview
 fun App() {
     var currentScreen by remember { mutableStateOf("login") }
+    var registrationData by remember { mutableStateOf<UserRegistrationData?>(null) }
 
     AppTheme {
         Surface(
@@ -34,7 +37,19 @@ fun App() {
                     onLoginClick = { currentScreen = "signin" }
                 )
                 "signin" -> SignInScreen()
-                "register" -> RegisterScreen()
+                "register" -> RegisterScreen(
+                    onNextStep = { data ->
+                        registrationData = data
+                        currentScreen = "register_step_two"
+                    }
+                )
+                "register_step_two" -> RegisterStepTwoScreen(
+                    initialData = registrationData ?: UserRegistrationData(),
+                    onRegisterComplete = { finalData ->
+                        // Handle registration completion
+                        currentScreen = "login"
+                    }
+                )
             }
         }
     }

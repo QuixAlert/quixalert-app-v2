@@ -67,4 +67,7 @@ dependencies {
 
     // Lyricist
     implementation(libs.lyricist)
+
+    // Add Coil dependency
+    implementation("io.coil-kt:coil-compose:2.5.0")
 }
