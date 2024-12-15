@@ -120,9 +120,6 @@ fun NavigationBarM3(){
                        }
                    )
                 },
-                label = {
-                    Text(text = barItem.title)
-                },
                 alwaysShowLabel = selected
             )
         }
