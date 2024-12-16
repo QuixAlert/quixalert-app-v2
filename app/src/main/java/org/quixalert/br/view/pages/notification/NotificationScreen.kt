@@ -1,18 +1,14 @@
 package org.quixalert.br.view.pages.notification
 
-import AppTheme
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,60 +28,59 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+val notifications = listOf(
+    Notification(
+        id = 1,
+        data = SimpleDateFormat("dd/MM/yyyy").parse("15/12/2024"),
+        title = "Dicas de sustentabilidade",
+        message = "Todas as vezes que usamos uma folha de papel indevidamente, matamos praticamente uma árvore. Use papel de forma consciente.",
+        readCheck = false,
+        image = R.drawable.notification_icon1
+    ),
+    Notification(
+        id = 2,
+        data = SimpleDateFormat("dd/MM/yyyy").parse("12/12/2024"),
+        title = "Vacinação de animais",
+        message = "A partir do dia 30 de junho, teremos vacinação gratuita para gatos e cachorros. Você pode ir até qualquer posto de vacinação com o seu pet.",
+        readCheck = true,
+        image = R.drawable.notification_icon1
+    ),
+    Notification(
+        id = 3,
+        data = SimpleDateFormat("dd/MM/yyyy").parse("12/12/2024"),
+        title = "Ibama está na cidade",
+        message = "O Ibama está na cidade para promover o quinto ciclo de palestras sobre preservação ambiental. Será no auditório Raquel de Queiroz às 10h.",
+        readCheck = true,
+        image = R.drawable.notification_icon2
+    ),
+    Notification(
+        id = 4,
+        data =SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
+        title = "Castração de gatos gratuita",
+        message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
+        readCheck = true,
+        image = R.drawable.notification_icon4
+    ),
+    Notification(
+        id = 5,
+        data =SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
+        title = "Castração de gatos gratuita",
+        message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
+        readCheck = true,
+        image = R.drawable.notification_icon4
+    ),
+    Notification(
+        id = 6,
+        data =SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
+        title = "Castração de gatos gratuita",
+        message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
+        readCheck = true,
+        image = R.drawable.notification_icon4
+    ),
+)
+
 @Composable
 fun NotificationScreen() {
-    val notifications = listOf(
-        Notification(
-            id = 1,
-            data = SimpleDateFormat("dd/MM/yyyy").parse("15/12/2024"),
-            title = "Dicas de sustentabilidade",
-            message = "Todas as vezes que usamos uma folha de papel indevidamente, matamos praticamente uma árvore. Use papel de forma consciente.",
-            readCheck = false,
-            image = R.drawable.notification_icon1
-        ),
-        Notification(
-            id = 2,
-            data = SimpleDateFormat("dd/MM/yyyy").parse("12/12/2024"),
-            title = "Vacinação de animais",
-            message = "A partir do dia 30 de junho, teremos vacinação gratuita para gatos e cachorros. Você pode ir até qualquer posto de vacinação com o seu pet.",
-            readCheck = true,
-            image = R.drawable.notification_icon1
-        ),
-        Notification(
-            id = 3,
-            data = SimpleDateFormat("dd/MM/yyyy").parse("12/12/2024"),
-            title = "Ibama está na cidade",
-            message = "O Ibama está na cidade para promover o quinto ciclo de palestras sobre preservação ambiental. Será no auditório Raquel de Queiroz às 10h.",
-            readCheck = true,
-            image = R.drawable.notification_icon2
-        ),
-        Notification(
-            id = 4,
-            data =SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
-            title = "Castração de gatos gratuita",
-            message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
-            readCheck = true,
-            image = R.drawable.notification_icon4
-        ),
-        Notification(
-            id = 5,
-            data =SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
-            title = "Castração de gatos gratuita",
-            message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
-            readCheck = true,
-            image = R.drawable.notification_icon4
-        ),
-        Notification(
-            id = 6,
-            data =SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
-            title = "Castração de gatos gratuita",
-            message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
-            readCheck = true,
-            image = R.drawable.notification_icon4
-        ),
-    )
-
     Scaffold(
         topBar = {
             Column(
