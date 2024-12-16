@@ -13,6 +13,7 @@ val vibrantOrange = Color(0xE69810)
 val softSkyBlue = Color(0xCFF1F6)
 val deepOceanBlue = Color(0x348FD9)
 val richNavyBlue = Color(0x2A72AE)
+val principalBlue = Color(0x269996)
 
 val pureWhite = Color(0xFFFFFF)
 
