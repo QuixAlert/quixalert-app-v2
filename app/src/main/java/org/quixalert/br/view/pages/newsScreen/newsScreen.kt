@@ -45,7 +45,6 @@ import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 import org.quixalert.br.R
 import org.quixalert.br.model.News
-import org.quixalert.br.view.components.NavigationBarM3
 import org.quixalert.br.view.pages.home.IconTint
 
 val newsList = listOf(
@@ -259,10 +258,6 @@ fun newsScreen() {
                 GlobalNews()
                 LocalNews()
             }
-        },
-
-        bottomBar = {
-            NavigationBarM3()
         }
     )
 }

@@ -20,12 +20,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.quixalert.br.R
 import org.quixalert.br.model.EmergencyNumber
+import org.quixalert.br.view.pages.adoptions.HeaderSection
 
 val animalEmergencyNumbersList = listOf(
     EmergencyNumber(
@@ -106,14 +105,7 @@ fun EmergencyNumbersScreen() {
                     .fillMaxWidth()
                     .padding(16.dp, top = 32.dp)
             ) {
-                IconButton(onClick = { /* ajustar a navigatiton futuramente */ }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Voltar",
-                        modifier = Modifier.size(48.dp)
-                    )
-                }
-
+                HeaderSection()
                 Text(
                     text = "Números em caso de emergência",
                     style = TextStyle(
