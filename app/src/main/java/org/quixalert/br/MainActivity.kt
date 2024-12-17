@@ -1,3 +1,4 @@
+package org.quixalert.br
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -25,13 +26,13 @@ class MainActivity : ComponentActivity() {
 }
 
 // Mock Data
-private val mockUser = User(
+public val mockUser = User(
     name = "Mara Lopes",
     greeting = "Bom dia",
     profileImage = "https://picsum.photos/seed/user/300"
 )
 
-private val mockLocalNews = listOf(
+public val mockLocalNews = listOf(
     News(
         id = "1",
         title = "Novo Parque será inaugurado no centro da cidade",
@@ -55,7 +56,7 @@ private val mockLocalNews = listOf(
     )
 )
 
-private val mockGlobalNews = listOf(
+public val mockGlobalNews = listOf(
     News(
         id = "4",
         title = "Nova descoberta científica promete revolucionar medicina",
@@ -76,7 +77,7 @@ private val mockGlobalNews = listOf(
     )
 )
 
-private val mockPets = listOf(
+public val mockPets = listOf(
     Pet(
         id = "1",
         name = "Thor",
