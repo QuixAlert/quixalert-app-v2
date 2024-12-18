@@ -12,10 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import org.quixalert.br.model.UserRegistrationData
-import org.quixalert.br.view.pages.login.LoginScreen
-import org.quixalert.br.view.pages.login.RegisterScreen
-import org.quixalert.br.view.pages.login.RegisterStepTwoScreen
-import org.quixalert.br.view.pages.login.SignInScreen
+import org.quixalert.br.view.pages.reportsSolicitationScreen.reportsSolicitationScreen
 
 @Composable
 @Preview
@@ -23,36 +20,68 @@ fun App() {
     var currentScreen by remember { mutableStateOf("login") }
     var registrationData by remember { mutableStateOf<UserRegistrationData?>(null) }
 
-    //HomeScreen()
-    //EmergencyNumbersScreen()
-    //newsScreen()
 
     AppTheme {
         Surface(
+
             modifier = Modifier
                 .fillMaxSize()
                 .background(AppTheme.colorScheme.background)
         ) {
-            when (currentScreen) {
-                "login" -> LoginScreen(
-                    onRegisterClick = { currentScreen = "register" },
-                    onLoginClick = { currentScreen = "signin" }
-                )
-                "signin" -> SignInScreen()
-                "register" -> RegisterScreen(
-                    onNextStep = { data ->
-                        registrationData = data
-                        currentScreen = "register_step_two"
-                    }
-                )
-                "register_step_two" -> RegisterStepTwoScreen(
-                    initialData = registrationData ?: UserRegistrationData(),
-                    onRegisterComplete = { finalData ->
-                        // Handle registration completion
-                        currentScreen = "login"
-                    }
-                )
-            }
+            reportsSolicitationScreen()
+
+//            HomeScreen(
+//                user = mockUser,
+//                localNews = mockLocalNews,
+//                globalNews = mockGlobalNews,
+//                pets = mockPets,
+//            )
+
+//            AnimalDetailsScreen(
+//                pet = mockPetDetail
+//            )
+
+
+//            AdoptionScreen(
+//                pets = mockPets
+//            )
+
+//            AdoptionFormScreen(
+//                pet = mockPetDetail
+//            )
+
+//            DonationScreen {  }
+//
+//            newsScreen()
+//
+//            EmergencyNumbersScreen()
+
+//            NotificationScreen()
+
+//            ProfileScreen(
+//                user = mockUser,
+//            ) { }
+
+//            when (currentScreen) {
+//                "login" -> LoginScreen(
+//                    onRegisterClick = { currentScreen = "register" },
+//                    onLoginClick = { currentScreen = "signin" }
+//                )
+//                "signin" -> SignInScreen()
+//                "register" -> RegisterScreen(
+//                    onNextStep = { data ->
+//                        registrationData = data
+//                        currentScreen = "register_step_two"
+//                    }
+//                )
+//                "register_step_two" -> RegisterStepTwoScreen(
+//                    initialData = registrationData ?: UserRegistrationData(),
+//                    onRegisterComplete = { finalData ->
+//                        // Handle registration completion
+//                        currentScreen = "login"
+//                    }
+//                )
+//            }
         }
     }
 }

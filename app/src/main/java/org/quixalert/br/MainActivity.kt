@@ -1,10 +1,12 @@
 package org.quixalert.br
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import org.quixalert.br.App
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import org.quixalert.br.model.Adoption
 import org.quixalert.br.model.AdoptionStatus
 import org.quixalert.br.model.Bidding
@@ -16,9 +18,17 @@ import org.quixalert.br.model.Report
 import org.quixalert.br.model.User
 
 class MainActivity : ComponentActivity() {
+    @SuppressLint("WrongConstant", "NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        WindowInsetsControllerCompat(window, window.decorView).apply {
+            systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            hide(android.view.WindowInsets.Type.systemBars())
+        }
+
         setContent {
             App()
         }
