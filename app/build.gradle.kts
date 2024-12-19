@@ -78,4 +78,7 @@ dependencies {
 
     // Add Coil dependency
     implementation("io.coil-kt:coil-compose:2.5.0")
+
+    //Para o efeito blur
+    implementation("com.google.accompanist:accompanist-glide:0.15.0")
 }
