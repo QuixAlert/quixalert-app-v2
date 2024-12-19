@@ -1,82 +1,127 @@
 package org.quixalert.br.view.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.AddCircle
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import org.quixalert.br.R
+import org.quixalert.br.view.icons.NewsIcon
+
+data class BarItem(
+    val title: String,
+    val selectedIcon: ImageVector,
+    val unselectedIcon: ImageVector,
+    val route: String
+)
 
 @Composable
-fun NavgationBarWithScaffold() {
-    Scaffold (
-        bottomBar = { NavigationBarM3() }
-    ){ padding ->
-        LazyColumn (
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
-            contentPadding = PaddingValues( 16.dp)
-        ) {
-            items(50) {
-                ListItem(
-                    headlineContent = {Text("Item $it")},
-                    leadingContent = {
-                        Icon(
-                            imageVector = Icons.Default.Star,
-                            contentDescription = null
-                        )
-                    }
-                )
-            }
+fun FloatingMenu(modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 56.dp)
+            .background(Color.Transparent),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
 
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.background(Color.Transparent)
+        ) {
+            FloatingActionButton(
+                onClick = { /*onClick()*/ },
+                containerColor = Color(0xFFB2DFDB)
+            ) {
+                Icon(ImageVector.vectorResource(id = R.drawable.alert), "Floating action button.")
+            }
+            Text(
+                text = "Denúncias",
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+        }
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.offset(y = (-42).dp)
+        ) {
+            FloatingActionButton(
+                onClick = { /*onClick()*/ },
+                containerColor = Color(0xFFB2DFDB)
+            ) {
+                Icon(ImageVector.vectorResource(R.drawable.file), "Floating action button.")
+            }
+            Text(
+                text = "Documentos",
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+        }
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            FloatingActionButton(
+                onClick = { /*onClick()*/ },
+                containerColor = Color(0xFFB2DFDB)
+            ) {
+                Icon(ImageVector.vectorResource(id = R.drawable.phone), "Floating action button.")
+            }
+            Text(
+                text = "Emergência",
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
         }
 
     }
-
 }
 
 @Composable
-fun NavigationBarM3(){
+fun NavigationBarM3(onPlusClick: () -> Unit, onOtherCLick: () -> Unit) {
     var selectedItem by remember { mutableStateOf(0) }
+
     val barItems = listOf(
         BarItem(
             title = "Home",
-            selectedIcon = Icons.Filled.Home,
+            selectedIcon = Icons.Outlined.Home,
             unselectedIcon = Icons.Outlined.Home,
             route = "home"
         ),
         BarItem(
             title = "News",
-            selectedIcon = Icons.Filled.Info,
-            unselectedIcon = Icons.Outlined.Info,
+            selectedIcon = NewsIcon,
+            unselectedIcon = NewsIcon,
             route = "news"
         ),
         BarItem(
@@ -87,49 +132,45 @@ fun NavigationBarM3(){
         ),
         BarItem(
             title = "Animals",
-            selectedIcon = Icons.Filled.Star,
-            unselectedIcon = Icons.Outlined.Star,
+            unselectedIcon = ImageVector.vectorResource(id = R.drawable.paw),
+            selectedIcon = ImageVector.vectorResource(id = R.drawable.paw),
             route = "animals"
         ),
         BarItem(
-            title = "Perfil",
-            selectedIcon = Icons.Filled.Person,
+            title = "Profile",
+            selectedIcon = Icons.Outlined.Person,
             unselectedIcon = Icons.Outlined.Person,
-            route = "perfil"
+            route = "profile"
         ),
     )
 
-    NavigationBar{
+    NavigationBar() {
         barItems.forEachIndexed { index, barItem ->
             val selected = selectedItem == index
             NavigationBarItem(
-                selected =selectedItem == index,
+                selected = selected,
                 onClick = {
                     selectedItem = index
+                    if (barItem.title == "Add") {
+                        onPlusClick()
+                    } else {
+                        onOtherCLick()
+                    }
                 },
                 icon = {
-                   Icon(
-                       imageVector = if(selected){
-                           barItem.selectedIcon
-                       }else barItem.unselectedIcon,
-                       contentDescription = barItem.title,
-                       tint = if (selected){
-                           MaterialTheme.colorScheme.primary
-                       }else{
-                           MaterialTheme.colorScheme.onBackground
-                       }
-                   )
+                    Icon(
+                        imageVector = if (selected) {
+                            barItem.selectedIcon
+                        } else barItem.unselectedIcon,
+                        contentDescription = barItem.title,
+                    )
                 },
-                alwaysShowLabel = selected
+                alwaysShowLabel = selected,
+                colors = NavigationBarItemDefaults.colors(
+                    indicatorColor = Color(0xFFB2DFDB)
+                )
             )
         }
-
     }
 }
 
-data class BarItem(
-    val title: String,
-    val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector,
-    val route: String
-)

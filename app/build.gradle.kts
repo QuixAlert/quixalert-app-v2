@@ -67,4 +67,18 @@ dependencies {
 
     // Lyricist
     implementation(libs.lyricist)
+
+    implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.32.0")
+
+    //Carousel
+    implementation("com.google.accompanist:accompanist-pager:0.32.0")
+    implementation("com.google.accompanist:accompanist-pager:0.32.0")
+    implementation("com.google.accompanist:accompanist-pager-indicators:0.32.0")
+
+    // Add Coil dependency
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
+    //Para o efeito blur
+    implementation("com.google.accompanist:accompanist-glide:0.15.0")
 }
