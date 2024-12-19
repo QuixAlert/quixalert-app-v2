@@ -24,10 +24,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -236,29 +239,16 @@ fun NewsItem(news: News, isHorizontal: Boolean = true) {
 @Preview
 @Composable
 fun newsScreen() {
-    Scaffold(
-        topBar = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-            ) {
-                org.quixalert.br.view.pages.adoptions.HeaderSection()
+    var isFloatingMenuVisible by remember { mutableStateOf(true) }
 
-            }
-        },
-
-        content = { paddingValues ->
-            Column(modifier = Modifier
-                .padding(paddingValues)
-                .verticalScroll(rememberScrollState())
-            )
-            {
-                LastNews()
-                GlobalNews()
-                LocalNews()
-            }
-        }
-    )
+    Column (
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .padding(bottom = 100.dp)
+    ){
+        LastNews()
+        GlobalNews()
+        LocalNews()
+    }
 }
 

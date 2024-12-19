@@ -20,7 +20,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Button
@@ -100,18 +99,6 @@ fun ReportScreen(report: ReportDetail = mockReportDetail) {
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
-                IconButton(
-                    onClick = { },
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .align(Alignment.TopStart)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Voltar",
-                        tint = Color.White
-                    )
-                }
             }
 
             // Content Section
@@ -371,7 +358,7 @@ fun ReportScreen(report: ReportDetail = mockReportDetail) {
                             onClick = { },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(20.dp),
+                                .padding(bottom = 64.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color(0xFF269996)
                             )

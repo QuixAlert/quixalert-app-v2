@@ -2,14 +2,22 @@ package org.quixalert.br.view.pages.notification
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,13 +28,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.quixalert.br.R
 import org.quixalert.br.model.Notification
 import java.text.SimpleDateFormat
-import java.util.*
-
+import java.util.Locale
 
 val notifications = listOf(
     Notification(
@@ -77,42 +85,39 @@ val notifications = listOf(
         readCheck = true,
         image = R.drawable.notification_icon4
     ),
+    Notification(
+        id = 6,
+        data =SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
+        title = "Castração de gatos gratuita",
+        message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
+        readCheck = true,
+        image = R.drawable.notification_icon4
+    ),
+    Notification(
+        id = 6,
+        data =SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
+        title = "Castração de gatos gratuita",
+        message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
+        readCheck = true,
+        image = R.drawable.notification_icon4
+    ),
 )
 
+@Preview
 @Composable
 fun NotificationScreen() {
-    Scaffold(
-        topBar = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp, top = 32.dp)
-            ) {
-                IconButton(onClick = { /* ajustar a navigatiton futuramente */ }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Voltar",
-                        modifier = Modifier.size(48.dp)
-                    )
-                }
-
-                Text(
-                    text = "Notificações",
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
-                    ),
-                    modifier = Modifier.padding(top = 8.dp)
-                )
-            }
-        },
-
-        content = { paddingValues ->
-            Box(modifier = Modifier.padding(paddingValues)) {
-                NotificationList(notifications)
-            }
-        }
-    )
+    Column(
+    ) {
+        Text(
+            text = "Notificações",
+            style = TextStyle(
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp
+            ),
+            modifier = Modifier.padding(start = 16.dp)
+        )
+        NotificationList(notifications)
+    }
 }
 
 @Composable
@@ -120,7 +125,7 @@ fun NotificationList(notifications: List<Notification>) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 8.dp, start = 24.dp, end = 24.dp),
+            .padding(top = 8.dp, start = 24.dp, end = 24.dp, bottom = 100.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(notifications) { notification ->

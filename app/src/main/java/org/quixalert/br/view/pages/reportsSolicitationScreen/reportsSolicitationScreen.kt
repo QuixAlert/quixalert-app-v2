@@ -1,5 +1,6 @@
 package org.quixalert.br.view.pages.reportsSolicitationScreen
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,7 +21,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -44,43 +44,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import org.quixalert.br.R
-import org.quixalert.br.view.components.NavigationBarM3
-import org.quixalert.br.view.pages.adoptions.HeaderSection
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Preview
 @Composable
 fun reportsSolicitationScreen() {
-    Scaffold(
-        topBar = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp, top = 32.dp)
-            ) {
-                HeaderSection()
-                Text(
-                    text = "Fomulário de denúncia",
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
-                    ),
-                    modifier = Modifier.padding(top = 8.dp)
-                )
-            }
-        },
-        content = { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .verticalScroll(rememberScrollState())
-            ) {
-                ReportsSolicitationForm()
-            }
-        },
-        bottomBar = {
-            NavigationBarM3()
-        }
-    )
+    Column(
+        modifier = Modifier.verticalScroll(rememberScrollState())
+    ) {
+        Text(
+            text = "Fomulário de denúncia",
+            style = TextStyle(
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp
+            ),
+            modifier = Modifier.padding(top = 8.dp, start = 16.dp)
+        )
+
+        ReportsSolicitationForm()
+    }
 }
 
 @Composable
@@ -109,8 +91,8 @@ fun ReportsSolicitationForm() {
 
     Column(
         modifier = Modifier
-            //.fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .padding(bottom = 72.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
 

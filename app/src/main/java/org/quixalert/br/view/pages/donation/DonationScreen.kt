@@ -1,22 +1,20 @@
 package org.quixalert.br.view.pages.donation
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,10 +25,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.quixalert.br.R
 
 @Composable
 fun DonationScreen(onBackClick: () -> Unit) {
@@ -43,26 +44,13 @@ fun DonationScreen(onBackClick: () -> Unit) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp)
                 .background(Color(0xFFF8BC35))
         ) {
-            // Back Button
-            IconButton(
-                onClick = onBackClick,
-                modifier = Modifier.padding(16.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Voltar",
-                    tint = Color.White
-                )
-            }
-
             // Donation Text
             Column(
                 modifier = Modifier
                     .align(Alignment.CenterStart)
-                    .padding(start = 16.dp, end = 16.dp, top = 60.dp),
+                    .padding(16.dp),
             ) {
                 Text(
                     text = "Não pode adotar agora?\nFaça uma doação!",
@@ -85,8 +73,10 @@ fun DonationScreen(onBackClick: () -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(16.dp)
+                .padding(bottom = 54.dp)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Text(
                 text = "Realizar Doação",
@@ -123,18 +113,25 @@ fun DonationScreen(onBackClick: () -> Unit) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(1f)
+                    //.aspectRatio(1f)
                     .background(
                         Color.LightGray,
                         RoundedCornerShape(8.dp)
-                    )
-            )
+                    ),
+
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.maps),
+                    contentDescription = "Map",
+                    contentScale = ContentScale.FillHeight
+                )
+            }
 
             Button(
                 onClick = { /* Handle form submission */ },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp), // Defina uma altura fixa para o botão
+                    .padding(bottom = 32.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFF269996)
                 )

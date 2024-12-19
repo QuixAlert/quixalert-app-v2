@@ -42,7 +42,6 @@ fun App() {
         }
 
         Scaffold(
-
             modifier = Modifier
                 .fillMaxSize()
                 .background(AppTheme.colorScheme.background),
@@ -75,13 +74,11 @@ fun App() {
             bottomBar = {
                 Column()
                 {
-                    // Floating Menu
                     if (isFloatingMenuVisible) {
                         FloatingMenu(
                             modifier = Modifier.padding(bottom = 18.dp)
                         )
                     }
-                    // Navigation Bar
                     NavigationBarM3(
                         onPlusClick = { isFloatingMenuVisible = !isFloatingMenuVisible },
                         onOtherCLick = {isFloatingMenuVisible = false}

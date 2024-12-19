@@ -7,10 +7,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -24,7 +24,6 @@ import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -39,7 +38,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.quixalert.br.R
 import org.quixalert.br.model.EmergencyNumber
-import org.quixalert.br.view.pages.adoptions.HeaderSection
 
 val animalEmergencyNumbersList = listOf(
     EmergencyNumber(
@@ -98,36 +96,17 @@ val ambientalEmergencyNumbersList = listOf(
 
 @Composable
 fun EmergencyNumbersScreen() {
-    Scaffold(
-        topBar = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp, top = 32.dp)
-            ) {
-                HeaderSection()
-                Text(
-                    text = "Números em caso de emergência",
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
-                    ),
-                    modifier = Modifier.padding(top = 8.dp)
-                )
-            }
-        },
-        content = { paddingValues ->
-            Box(
-                modifier = Modifier
-                    .padding(paddingValues)
-            ) {
-                EmergencyNumbersList(
-                    animalEmergencyNumbersList,
-                    ambientalEmergencyNumbersList
-                )
-            }
-        }
-    )
+    Column() {
+        Text(
+            text = "Números em caso de emergência",
+            style = TextStyle(
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp
+            ),
+            modifier = Modifier.padding(start = 16.dp)
+        )
+        EmergencyNumbersList(animalEmergencyNumbersList, ambientalEmergencyNumbersList)
+    }
 }
 
 @Composable
@@ -135,7 +114,7 @@ fun EmergencyNumbersList(
     animalEmergencyNumbersList: List<EmergencyNumber>,
     ambientalEmergencyNumbersList: List<EmergencyNumber>
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
         Text(
             text = "Maus tratos animais",
             style = TextStyle(
