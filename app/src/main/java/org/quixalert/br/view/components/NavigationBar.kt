@@ -41,7 +41,7 @@ data class BarItem(
 )
 
 @Composable
-fun FloatingMenu(modifier: Modifier = Modifier) {
+fun FloatingMenu(modifier: Modifier = Modifier, onReportClick: () -> Unit, onDocumentClick: () -> Unit, onEmergencyClick: () -> Unit) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -57,7 +57,7 @@ fun FloatingMenu(modifier: Modifier = Modifier) {
             modifier = Modifier.background(Color.Transparent)
         ) {
             FloatingActionButton(
-                onClick = { /*onClick()*/ },
+                onClick = onReportClick,
                 containerColor = Color(0xFFB2DFDB)
             ) {
                 Icon(ImageVector.vectorResource(id = R.drawable.alert), "Floating action button.")
@@ -75,7 +75,7 @@ fun FloatingMenu(modifier: Modifier = Modifier) {
             modifier = Modifier.offset(y = (-42).dp)
         ) {
             FloatingActionButton(
-                onClick = { /*onClick()*/ },
+                onClick = onDocumentClick,
                 containerColor = Color(0xFFB2DFDB)
             ) {
                 Icon(ImageVector.vectorResource(R.drawable.file), "Floating action button.")
@@ -92,7 +92,7 @@ fun FloatingMenu(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             FloatingActionButton(
-                onClick = { /*onClick()*/ },
+                onClick = onEmergencyClick,
                 containerColor = Color(0xFFB2DFDB)
             ) {
                 Icon(ImageVector.vectorResource(id = R.drawable.phone), "Floating action button.")
@@ -108,7 +108,7 @@ fun FloatingMenu(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun NavigationBarM3(onPlusClick: () -> Unit, onOtherCLick: () -> Unit) {
+fun NavigationBarM3(onPlusClick: () -> Unit, onOtherCLick: (String) -> Unit) {
     var selectedItem by remember { mutableStateOf(0) }
 
     val barItems = listOf(
@@ -154,7 +154,7 @@ fun NavigationBarM3(onPlusClick: () -> Unit, onOtherCLick: () -> Unit) {
                     if (barItem.title == "Add") {
                         onPlusClick()
                     } else {
-                        onOtherCLick()
+                        onOtherCLick(barItem.route)
                     }
                 },
                 icon = {

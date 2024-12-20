@@ -25,9 +25,14 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,6 +48,8 @@ import org.quixalert.br.model.News
 import org.quixalert.br.model.Pet
 import org.quixalert.br.model.PetType
 import org.quixalert.br.model.User
+import org.quixalert.br.model.UserRegistrationData
+import org.quixalert.br.view.components.NavigationBarM3
 
 val IconTint = Color(0xFF269996)
 
@@ -52,7 +59,8 @@ fun HomeScreen(
     user: User,
     localNews: List<News>,
     globalNews: List<News>,
-    pets: List<Pet>
+    pets: List<Pet>,
+    onNotificationClick: () -> Unit
 ) {
     LazyColumn(
         modifier = modifier
@@ -62,7 +70,7 @@ fun HomeScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
-            TopBar(user = user)
+            TopBar(user = user, onNotificationClick)
         }
 
         item {
@@ -149,7 +157,7 @@ fun HomeScreen(
 }
 
 @Composable
-fun TopBar(user: User) {
+fun TopBar(user: User, onNotificationClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -181,14 +189,16 @@ fun TopBar(user: User) {
                 )
             }
         }
-        Icon(
-            imageVector = Icons.Default.Notifications,
-            contentDescription = "Notifications",
-            modifier = Modifier
-                .size(24.dp)
-                .shadow(2.dp, CircleShape),
-            tint = IconTint
-        )
+        IconButton (onNotificationClick) {
+            Icon(
+                imageVector = Icons.Default.Notifications,
+                contentDescription = "Notifications",
+                modifier = Modifier
+                    .size(24.dp)
+                    .shadow(2.dp, CircleShape),
+                tint = IconTint
+            )
+        }
     }
 }
 

@@ -61,7 +61,8 @@ fun ProfileScreen(
     onBackClick: () -> Unit,
     onMenuClick: () -> Unit,
     onEditProfileClick: () -> Unit,
-    onBiddingClick: (Bidding) -> Unit // Novo parâmetro
+    onBiddingClick: (Bidding) -> Unit, // Novo parâmetro
+    onReportClick: (Report) -> Unit // Novo parâmetro
 ) {
     LazyColumn(
         modifier = modifier
@@ -97,7 +98,7 @@ fun ProfileScreen(
                 contentPadding = PaddingValues(vertical = 8.dp)
             ) {
                 items(reports) { report ->
-                    ReportItem(report = report)
+                    ReportItem(report = report, onReportClick = onReportClick)
                 }
             }
         }
@@ -211,13 +212,14 @@ private fun ProfileHeader(
 }
 
 @Composable
-fun ReportItem(report: Report) {
+fun ReportItem(report: Report, onReportClick: (Report) -> Unit) {
     Box(
         modifier = Modifier
             .width(200.dp)
             .shadow(4.dp, RoundedCornerShape(12.dp))
             .clip(RoundedCornerShape(12.dp))
             .background(MaterialTheme.colorScheme.surface)
+            .clickable { onReportClick(report) }
     ) {
         Column {
             AsyncImage(

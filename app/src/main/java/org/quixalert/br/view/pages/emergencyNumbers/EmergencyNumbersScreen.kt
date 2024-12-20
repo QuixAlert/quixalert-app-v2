@@ -20,10 +20,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.quixalert.br.R
 import org.quixalert.br.model.EmergencyNumber
+import org.quixalert.br.view.pages.profile.IconTint
 
 val animalEmergencyNumbersList = listOf(
     EmergencyNumber(
@@ -95,8 +99,12 @@ val ambientalEmergencyNumbersList = listOf(
 )
 
 @Composable
-fun EmergencyNumbersScreen() {
+fun EmergencyNumbersScreen(onBackClick: () -> Unit = {}, onMenuClick: () -> Unit = {}) {
     Column() {
+        org.quixalert.br.view.pages.reportsSolicitationScreen.TopBar(
+            onBackClick = onBackClick,
+            onMenuClick = onMenuClick
+        )
         Text(
             text = "Números em caso de emergência",
             style = TextStyle(
@@ -239,6 +247,36 @@ fun EmergencyNumberItem(emergencyNumber: EmergencyNumber) {
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun TopBar(
+    onBackClick: () -> Unit,
+    onMenuClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconButton(onClick = onBackClick) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Voltar",
+                tint = IconTint
+            )
+        }
+
+        IconButton(onClick = onMenuClick) {
+            Icon(
+                imageVector = Icons.Default.Menu,
+                contentDescription = "Menu",
+                tint = IconTint
+            )
         }
     }
 }

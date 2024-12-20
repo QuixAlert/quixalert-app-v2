@@ -16,11 +16,16 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -43,12 +48,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import org.quixalert.br.R
-import org.quixalert.br.view.pages.animal.PetDetail
+import org.quixalert.br.model.Pet
+import org.quixalert.br.view.pages.profile.IconTint
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdoptionFormScreen(pet: PetDetail, onBackClick: () -> Unit) {
+fun AdoptionFormScreen(pet: Pet, onBackClick: () -> Unit) { //Alterado PetDetais para Pet, por já está mockado
     var address by remember { mutableStateOf("") }
     var livingDescription by remember { mutableStateOf("") }
     var otherAnimals by remember { mutableStateOf("") }
@@ -66,6 +72,7 @@ fun AdoptionFormScreen(pet: PetDetail, onBackClick: () -> Unit) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
+            TopBar(onBackClick = onBackClick)
             // Header Image with Back Button
             Box(
                 modifier = Modifier
@@ -287,6 +294,27 @@ fun AdoptionFormScreen(pet: PetDetail, onBackClick: () -> Unit) {
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun TopBar(
+    onBackClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconButton(onClick = onBackClick) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Voltar",
+                tint = IconTint
+            )
         }
     }
 }

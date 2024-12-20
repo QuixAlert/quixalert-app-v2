@@ -8,8 +8,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -29,9 +34,10 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.quixalert.br.view.pages.profile.IconTint
 
 @Composable
-fun DocumentsSolicitationScreen() {
+fun DocumentsSolicitationScreen(onBackClick: () -> Unit = {}, onMenuClick: () -> Unit = {}) {
     var selectedTypeDocument by remember { mutableStateOf("Alvará") }
     var description by remember { mutableStateOf(TextFieldValue("")) }
     var motivation by remember { mutableStateOf(TextFieldValue("")) }
@@ -52,6 +58,11 @@ fun DocumentsSolicitationScreen() {
             .padding(horizontal = 16.dp)
             .padding(bottom = 32.dp)
     ) {
+        TopBar(
+            onBackClick = onBackClick,
+            onMenuClick = onMenuClick
+        )
+
         Text(
             text = "Fomulário de solicitação de documentos",
             style = TextStyle(
@@ -159,6 +170,36 @@ fun DocumentsSolicitationScreen() {
                 text = "Solicitar Documento",
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
+            )
+        }
+    }
+}
+
+@Composable
+fun TopBar(
+    onBackClick: () -> Unit,
+    onMenuClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconButton(onClick = onBackClick) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Voltar",
+                tint = IconTint
+            )
+        }
+
+        IconButton(onClick = onMenuClick) {
+            Icon(
+                imageVector = Icons.Default.Menu,
+                contentDescription = "Menu",
+                tint = IconTint
             )
         }
     }

@@ -19,11 +19,15 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -42,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import org.quixalert.br.view.pages.profile.IconTint
 
 data class PetDetail(
     val id: String,
@@ -79,7 +84,10 @@ val mockPetDetail = PetDetail(
 @Composable
 fun PetScreenBase(
     pet: PetDetail,
+    onBackClick: () -> Unit,
+    onMenuClick: () -> Unit,
     content: @Composable ColumnScope.() -> Unit
+
 ) {
     Box(
         modifier = Modifier
@@ -89,6 +97,10 @@ fun PetScreenBase(
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
+            TopBar(
+                onBackClick = onBackClick,
+                onMenuClick = onMenuClick
+            )
             // Header Image with Back Button
             Box(
                 modifier = Modifier
@@ -204,11 +216,14 @@ fun PetScreenBase(
 }
 
 @Composable
-fun AnimalDetailsScreen(pet: PetDetail = mockPetDetail) {
-    PetScreenBase(pet = pet) {
+fun AnimalDetailsScreen(pet: PetDetail = mockPetDetail, onBackClick: () -> Unit, onMenuClick: () -> Unit, onFormClick: () -> Unit) {
+
+
+    PetScreenBase(pet = pet, onBackClick = onBackClick, onMenuClick = onMenuClick ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            TopBar(onBackClick = onBackClick, onMenuClick = onMenuClick)
             // Characteristics Row
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -349,7 +364,7 @@ fun AnimalDetailsScreen(pet: PetDetail = mockPetDetail) {
             }
 
             Button(
-                onClick = { },
+                onClick = onFormClick,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 20.dp, bottom = 72.dp),
@@ -362,6 +377,36 @@ fun AnimalDetailsScreen(pet: PetDetail = mockPetDetail) {
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun TopBar(
+    onBackClick: () -> Unit,
+    onMenuClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconButton(onClick = onBackClick) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Voltar",
+                tint = IconTint
+            )
+        }
+
+        IconButton(onClick = onMenuClick) {
+            Icon(
+                imageVector = Icons.Default.Menu,
+                contentDescription = "Menu",
+                tint = IconTint
+            )
         }
     }
 }

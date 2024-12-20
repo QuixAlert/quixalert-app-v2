@@ -23,6 +23,7 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -58,7 +59,7 @@ data class Filter(
     val label: String
 )
 @Composable
-fun AdoptionScreen(pets: List<Pet>) {
+fun AdoptionScreen(pets: List<Pet>, onDonateClick: () -> Unit, onDetailsClick: () -> Unit) {
     var selectedFilter by remember { mutableStateOf<String?>(null) }
 
     Column(
@@ -75,7 +76,7 @@ fun AdoptionScreen(pets: List<Pet>) {
         )
 
         // Donation Section
-        DonationSection()
+        DonationSection(onDonateClick)
 
         // Filters
         FilterSection(
@@ -84,12 +85,12 @@ fun AdoptionScreen(pets: List<Pet>) {
         )
 
         // Pet List
-        PetList(pets)
+        PetList(pets, onDetailsClick)
     }
 }
 
 @Composable
-fun DonationSection() {
+fun DonationSection(onDonateClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -114,7 +115,7 @@ fun DonationSection() {
         )
 
         Button(
-            onClick = { },
+            onClick = onDonateClick,
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFF269996)
             )
@@ -158,20 +159,20 @@ fun FilterSection(
 }
 
 @Composable
-fun PetList(pets: List<Pet>) {
+fun PetList(pets: List<Pet>, onDetailsClick: () -> Unit) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth().padding(bottom = 82.dp),
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(pets) { pet ->
-            AdoptionItem(pet = pet)
+            AdoptionItem(pet = pet, onDetailsClick)
         }
     }
 }
 
 @Composable
-fun AdoptionItem(pet: Pet) {
+fun AdoptionItem(pet: Pet, onDetailsClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -193,18 +194,19 @@ fun AdoptionItem(pet: Pet) {
                     contentScale = ContentScale.Crop
                 )
 
-                Text(
-                    text = "Disponível",
-                    style = MaterialTheme.typography.bodySmall.copy(color = Color.White),
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(8.dp)
-                        .background(
-                            color = Color(0xFF0B5DA2),
-                            shape = RoundedCornerShape(12.dp)
-                        )
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
-                )
+                TextButton (onDetailsClick){
+                    Text(
+                        text = "Disponível",
+                        style = MaterialTheme.typography.bodySmall.copy(color = Color.White),
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .background(
+                                color = Color(0xFF0B5DA2),
+                                shape = RoundedCornerShape(12.dp)
+                            )
+                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                    )
+                }
             }
 
             Row(
