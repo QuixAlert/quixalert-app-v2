@@ -58,8 +58,7 @@ fun App() {
 
             content = {
                 Box(modifier = Modifier.fillMaxSize()) {
-//                    HomeScreen(user = mockUser, localNews = mockLocalNews, globalNews = mockGlobalNews, pets = mockPets)
-                    AdoptionScreen(pets = mockPets)
+                    AdoptionScreen()
 
                     if (isFloatingMenuVisible) {
                         Box(
