@@ -21,10 +21,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.quixalert.br.domain.model.UserRegistrationData
-import org.quixalert.br.view.components.FloatingMenu
-import org.quixalert.br.view.components.HeaderSection
-import org.quixalert.br.view.components.NavigationBarM3
-import org.quixalert.br.view.pages.home.HomeScreen
+import org.quixalert.br.presentation.view.components.FloatingMenu
+import org.quixalert.br.presentation.view.components.HeaderSection
+import org.quixalert.br.presentation.view.components.NavigationBarM3
+import org.quixalert.br.presentation.view.pages.adoptions.AdoptionScreen
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -58,7 +58,8 @@ fun App() {
 
             content = {
                 Box(modifier = Modifier.fillMaxSize()) {
-                    HomeScreen(user = mockUser, localNews = mockLocalNews, globalNews = mockGlobalNews, pets = mockPets)
+//                    HomeScreen(user = mockUser, localNews = mockLocalNews, globalNews = mockGlobalNews, pets = mockPets)
+                    AdoptionScreen(pets = mockPets)
 
                     if (isFloatingMenuVisible) {
                         Box(

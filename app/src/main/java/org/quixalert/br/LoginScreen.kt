@@ -3,10 +3,8 @@ package org.quixalert.br.view.pages.login
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.platform.LocalConfiguration
@@ -17,15 +15,14 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
 import org.quixalert.br.R
-import org.quixalert.br.view.ui.theme.primaryGreen
-import org.quixalert.br.view.ui.theme.primaryBlue
+import org.quixalert.br.presentation.view.ui.theme.primaryGreen
+import org.quixalert.br.presentation.view.ui.theme.primaryBlue
 
 @Composable
 fun LoginScreen(
