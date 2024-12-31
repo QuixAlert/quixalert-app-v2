@@ -1,4 +1,4 @@
-package org.quixalert.br.model
+package org.quixalert.br.domain.model
 
 data class User(
     val name: String,

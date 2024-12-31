@@ -1,4 +1,4 @@
-package org.quixalert.br.model
+package org.quixalert.br.domain.model
 import java.util.Date
 
 data class Notification(
