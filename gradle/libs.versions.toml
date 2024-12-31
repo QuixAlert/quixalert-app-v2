@@ -1,5 +1,6 @@
 [versions]
 agp = "8.7.3"
+hiltAndroid = "2.46.1"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -11,12 +12,15 @@ composeBom = "2024.04.01"
 ksp = "2.0.20-1.0.24"
 lyricist = "1.7.0"
 androidx-material = "1.12.0"
+hiltCompiler = "2.46.1"
+hiltNavigationCompose = "1.0.0"
 
 
 
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -34,6 +38,8 @@ androidx-material = { group = "com.google.android.material", name = "material", 
 firebase-firestore = { module = "com.google.firebase:firebase-firestore"}
 firebase-firestore-ktx = { module = "com.google.firebase:firebase-firestore-ktx"}
 lyricist = { module = "cafe.adriel.lyricist:lyricist", version.ref = "lyricist" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltCompiler" }
+hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 
 
 
