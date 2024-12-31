@@ -11,8 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.quixalert.br.R
-import org.quixalert.br.model.UserRegistrationData
+import org.quixalert.br.domain.model.UserRegistrationData
 import org.quixalert.br.view.ui.theme.primaryBlue
 import org.quixalert.br.view.ui.theme.primaryGreen
 import org.quixalert.br.view.components.StyledTextField

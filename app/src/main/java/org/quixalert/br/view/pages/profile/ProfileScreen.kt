@@ -42,11 +42,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.AsyncImage
-import org.quixalert.br.model.Adoption
-import org.quixalert.br.model.AdoptionStatus
-import org.quixalert.br.model.Bidding
-import org.quixalert.br.model.Report
-import org.quixalert.br.model.User
+import org.quixalert.br.domain.model.Adoption
+import org.quixalert.br.domain.model.AdoptionStatus
+import org.quixalert.br.domain.model.Bidding
+import org.quixalert.br.domain.model.Report
+import org.quixalert.br.domain.model.User
 
 val IconTint = Color(0xFF269996)
 

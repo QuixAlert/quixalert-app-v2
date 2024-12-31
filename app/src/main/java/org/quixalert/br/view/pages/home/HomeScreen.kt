@@ -37,12 +37,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import org.quixalert.br.model.Gender
-import org.quixalert.br.model.News
-import org.quixalert.br.model.Pet
-import org.quixalert.br.model.PetType
-import org.quixalert.br.model.User
+import org.quixalert.br.domain.model.Gender
+import org.quixalert.br.domain.model.News
+import org.quixalert.br.domain.model.Pet
+import org.quixalert.br.domain.model.PetType
+import org.quixalert.br.domain.model.User
 
 val IconTint = Color(0xFF269996)
 
@@ -122,7 +123,8 @@ fun HomeScreen(
             Text(
                 text = "Animais para Adoção",
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp
             )
         }
 

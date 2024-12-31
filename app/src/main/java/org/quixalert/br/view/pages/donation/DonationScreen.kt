@@ -121,7 +121,7 @@ fun DonationScreen(onBackClick: () -> Unit) {
 
             ) {
                 Image(
-                    painter = painterResource(R.drawable.maps),
+                    painter = painterResource(R.drawable.news1),
                     contentDescription = "Map",
                     contentScale = ContentScale.FillHeight
                 )

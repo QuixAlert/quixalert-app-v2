@@ -38,7 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import org.quixalert.br.model.Pet
+import org.quixalert.br.domain.model.Pet
 
 // Models
 /*

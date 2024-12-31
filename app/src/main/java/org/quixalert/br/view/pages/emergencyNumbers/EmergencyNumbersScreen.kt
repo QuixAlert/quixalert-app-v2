@@ -37,7 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.quixalert.br.R
-import org.quixalert.br.model.EmergencyNumber
+import org.quixalert.br.domain.model.EmergencyNumber
 
 val animalEmergencyNumbersList = listOf(
     EmergencyNumber(

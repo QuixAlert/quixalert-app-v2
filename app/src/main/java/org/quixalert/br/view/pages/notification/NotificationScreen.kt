@@ -32,7 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.quixalert.br.R
-import org.quixalert.br.model.Notification
+import org.quixalert.br.domain.model.Notification
 import java.text.SimpleDateFormat
 import java.util.Locale
 
