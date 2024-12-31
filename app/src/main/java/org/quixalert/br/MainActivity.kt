@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.google.firebase.FirebaseApp
+import dagger.hilt.android.AndroidEntryPoint
 import org.quixalert.br.domain.model.Adoption
 import org.quixalert.br.domain.model.AdoptionStatus
 import org.quixalert.br.domain.model.Bidding
@@ -18,11 +19,12 @@ import org.quixalert.br.domain.model.PetType
 import org.quixalert.br.domain.model.Report
 import org.quixalert.br.domain.model.User
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @SuppressLint("WrongConstant", "NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        FirebaseApp.initializeApp(this);
+        FirebaseApp.initializeApp(this)
 
         enableEdgeToEdge()
         WindowCompat.setDecorFitsSystemWindows(window, false)
