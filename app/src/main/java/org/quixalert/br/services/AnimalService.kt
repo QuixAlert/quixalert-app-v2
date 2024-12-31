@@ -3,8 +3,9 @@ package org.quixalert.br.services
 import kotlinx.coroutines.Deferred
 import org.quixalert.br.domain.model.Animal
 import org.quixalert.br.domain.repository.AnimalRepository
+import javax.inject.Inject
 
-class AnimalService(
+class AnimalService @Inject constructor(
     private val animalRepository: AnimalRepository
 ): IGenericService<Animal, String> {
 
