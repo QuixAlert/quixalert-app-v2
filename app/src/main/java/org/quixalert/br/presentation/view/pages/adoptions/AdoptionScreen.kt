@@ -19,11 +19,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,8 +40,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import org.quixalert.br.domain.model.Animal
 import org.quixalert.br.domain.model.Pet
+
 
 // Models
 /*
@@ -57,16 +63,23 @@ data class Filter(
     val id: String,
     val label: String
 )
+
 @Composable
-fun AdoptionScreen(pets: List<Pet>) {
+fun AdoptionScreen(
+    viewModel: AdoptionViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
     var selectedFilter by remember { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(Unit) {
+        viewModel.loadPets()
+    }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
-        // Title
         Text(
             text = "Animais disponíveis para adoção",
             fontSize = 20.sp,
@@ -74,19 +87,41 @@ fun AdoptionScreen(pets: List<Pet>) {
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
         )
 
-        // Donation Section
         DonationSection()
 
-        // Filters
         FilterSection(
             selectedFilter = selectedFilter,
             onFilterSelected = { selectedFilter = it }
         )
 
-        // Pet List
-        PetList(pets)
+        when {
+            uiState.isLoading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+            !uiState.errorMessage.isNullOrEmpty() -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = uiState.errorMessage!!,
+                        color = Color.Red
+                    )
+                }
+            }
+            else -> {
+                AnimalsList(uiState.animals)
+            }
+        }
     }
 }
+
+
 
 @Composable
 fun DonationSection() {
@@ -158,20 +193,20 @@ fun FilterSection(
 }
 
 @Composable
-fun PetList(pets: List<Pet>) {
+fun AnimalsList(animals: List<Animal>) {
     LazyColumn(
         modifier = Modifier.fillMaxWidth().padding(bottom = 82.dp),
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        items(pets) { pet ->
-            AdoptionItem(pet = pet)
+        items(animals) { animal ->
+            AdoptionItem(animal = animal)
         }
     }
 }
 
 @Composable
-fun AdoptionItem(pet: Pet) {
+fun AdoptionItem(animal: Animal) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -185,8 +220,8 @@ fun AdoptionItem(pet: Pet) {
         ) {
             Box {
                 AsyncImage(
-                    model = pet.image,
-                    contentDescription = pet.name,
+                    model = animal.image,
+                    contentDescription = animal.name,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(160.dp),
@@ -214,7 +249,7 @@ fun AdoptionItem(pet: Pet) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 AsyncImage(
-                    model = pet.image,
+                    model = animal.image,
                     contentDescription = null,
                     modifier = Modifier
                         .size(32.dp)
@@ -225,7 +260,7 @@ fun AdoptionItem(pet: Pet) {
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Text(
-                    text = pet.name,
+                    text = animal.name,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold
                 )
