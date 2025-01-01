@@ -24,7 +24,10 @@ import org.quixalert.br.domain.model.UserRegistrationData
 import org.quixalert.br.presentation.view.components.FloatingMenu
 import org.quixalert.br.presentation.view.components.HeaderSection
 import org.quixalert.br.presentation.view.components.NavigationBarM3
+import org.quixalert.br.presentation.view.pages.adoptions.AdoptionFormScreen
 import org.quixalert.br.presentation.view.pages.adoptions.AdoptionScreen
+import org.quixalert.br.presentation.view.pages.animal.AnimalDetailsScreen
+import org.quixalert.br.presentation.view.pages.animal.mockPetDetail
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -59,6 +62,8 @@ fun App() {
             content = {
                 Box(modifier = Modifier.fillMaxSize()) {
                     AdoptionScreen()
+//                    AdoptionFormScreen(pet = mockPetDetail) { }
+//                    AnimalDetailsScreen(animalId = "b49586c0-ad3b-4163-8856-7f88551a77ea")
 
                     if (isFloatingMenuVisible) {
                         Box(
