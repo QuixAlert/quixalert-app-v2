@@ -8,5 +8,6 @@ data class Animal(
     val type: AnimalType = AnimalType.DOG,
     val age: Int = 0,
     val species: String = "",
-    val size: AnimalSize = AnimalSize.MEDIUM
+    val size: AnimalSize = AnimalSize.MEDIUM,
+    val extraInfo: AnimalExtraInfo
 ) : BaseModel(id)
