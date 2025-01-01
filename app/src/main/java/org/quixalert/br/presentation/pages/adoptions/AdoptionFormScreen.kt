@@ -2,6 +2,7 @@ package org.quixalert.br.presentation.pages.adoptions
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,8 +17,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,6 +31,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,22 +45,38 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import org.quixalert.br.R
+import org.quixalert.br.domain.model.Adoption
+import org.quixalert.br.domain.model.AdoptionStatus
 import org.quixalert.br.presentation.pages.animal.PetDetail
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdoptionFormScreen(pet: PetDetail, onBackClick: () -> Unit) {
+fun AdoptionFormScreen(
+    pet: PetDetail,
+    onBackClick: () -> Unit,
+    viewModel: AdoptionViewModel = hiltViewModel()
+) {
     var address by remember { mutableStateOf("") }
     var livingDescription by remember { mutableStateOf("") }
     var otherAnimals by remember { mutableStateOf("") }
     var monthlyIncome by remember { mutableStateOf("") }
     var householdDescription by remember { mutableStateOf("") }
     var adoptionReason by remember { mutableStateOf("") }
+    var showSuccessDialog by remember { mutableStateOf(false) }
     var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
     var showDatePicker by remember { mutableStateOf(false) }
+    val datePickerState = rememberDatePickerState()
+
+    val uiState by viewModel.uiState.collectAsState()
+
+    if (uiState.submissionSuccess && !showSuccessDialog) {
+        showSuccessDialog = true
+    }
 
     Box(
         modifier = Modifier
@@ -66,7 +86,6 @@ fun AdoptionFormScreen(pet: PetDetail, onBackClick: () -> Unit) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            // Header Image with Back Button
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -80,7 +99,6 @@ fun AdoptionFormScreen(pet: PetDetail, onBackClick: () -> Unit) {
                 )
             }
 
-            // Content Section
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -92,14 +110,12 @@ fun AdoptionFormScreen(pet: PetDetail, onBackClick: () -> Unit) {
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Pet Name
                 Text(
                     text = pet.name,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
                 )
 
-                // Responsible and Status Row
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -144,7 +160,6 @@ fun AdoptionFormScreen(pet: PetDetail, onBackClick: () -> Unit) {
                     }
                 }
 
-                // Form Title
                 Text(
                     text = "Formulário de Adoção",
                     fontSize = 20.sp,
@@ -152,7 +167,6 @@ fun AdoptionFormScreen(pet: PetDetail, onBackClick: () -> Unit) {
                     modifier = Modifier.padding(top = 16.dp)
                 )
 
-                // Form Fields
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -160,7 +174,6 @@ fun AdoptionFormScreen(pet: PetDetail, onBackClick: () -> Unit) {
                         .padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    // Address
                     OutlinedTextField(
                         value = address,
                         onValueChange = { address = it },
@@ -173,7 +186,6 @@ fun AdoptionFormScreen(pet: PetDetail, onBackClick: () -> Unit) {
                         )
                     )
 
-                    // Living Description
                     OutlinedTextField(
                         value = livingDescription,
                         onValueChange = { livingDescription = it },
@@ -186,7 +198,6 @@ fun AdoptionFormScreen(pet: PetDetail, onBackClick: () -> Unit) {
                         )
                     )
 
-                    // Other Animals
                     OutlinedTextField(
                         value = otherAnimals,
                         onValueChange = { otherAnimals = it },
@@ -199,7 +210,6 @@ fun AdoptionFormScreen(pet: PetDetail, onBackClick: () -> Unit) {
                         )
                     )
 
-                    // Monthly Income
                     OutlinedTextField(
                         value = monthlyIncome,
                         onValueChange = { monthlyIncome = it },
@@ -212,7 +222,6 @@ fun AdoptionFormScreen(pet: PetDetail, onBackClick: () -> Unit) {
                         )
                     )
 
-                    // Household Description
                     OutlinedTextField(
                         value = householdDescription,
                         onValueChange = { householdDescription = it },
@@ -224,7 +233,6 @@ fun AdoptionFormScreen(pet: PetDetail, onBackClick: () -> Unit) {
                         )
                     )
 
-                    // Adoption Reason
                     OutlinedTextField(
                         value = adoptionReason,
                         onValueChange = { adoptionReason = it },
@@ -237,56 +245,122 @@ fun AdoptionFormScreen(pet: PetDetail, onBackClick: () -> Unit) {
                         )
                     )
 
-                    // Visit Date
                     OutlinedTextField(
                         value = selectedDate?.toString() ?: "",
                         onValueChange = { },
                         label = { Text("Agendar visita presencial") },
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { showDatePicker = true },
                         shape = RoundedCornerShape(8.dp),
                         colors = TextFieldDefaults.outlinedTextFieldColors(
                             containerColor = Color(0xFFEEEEEE)
                         ),
                         readOnly = true,
-                        enabled = false
+                        enabled = true
                     )
 
-                    // Date Picker Dialog
                     if (showDatePicker) {
                         DatePickerDialog(
                             onDismissRequest = { showDatePicker = false },
                             confirmButton = {
                                 TextButton(onClick = {
+                                    val epochMillis = datePickerState.selectedDateMillis
+                                    if (epochMillis != null) {
+                                        val selectedEpoch = java.time.Instant.ofEpochMilli(epochMillis)
+                                            .atZone(java.time.ZoneId.systemDefault())
+                                            .toLocalDate()
+                                        selectedDate = selectedEpoch
+                                    }
                                     showDatePicker = false
-                                    // Handle date selection
                                 }) {
                                     Text("OK")
                                 }
+                            },
+                            dismissButton = {
+                                TextButton(onClick = { showDatePicker = false }) {
+                                    Text("Cancel")
+                                }
                             }
                         ) {
-                            DatePicker(
-                                state = rememberDatePickerState()
-                            )
+                            DatePicker(state = datePickerState)
                         }
                     }
                 }
 
-                // Submit Button
                 Button(
-                    onClick = { /* Handle form submission */ },
+                    onClick = {
+                        if (address.isBlank() || adoptionReason.isBlank()) {
+                            return@Button
+                        }
+
+                        val adoption = Adoption(
+                            id = "",
+                            petName = pet.name,
+                            petImage = pet.image,
+                            petIcon = "",
+                            status = AdoptionStatus.PENDING,
+                            address = address,
+                            livingDescription = livingDescription,
+                            otherAnimals = otherAnimals,
+                            monthlyIncome = monthlyIncome,
+                            householdDescription = householdDescription,
+                            adoptionReason = adoptionReason,
+                            visitDate = selectedDate
+                        )
+                        viewModel.submitAdoption(adoption)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp, bottom = 54.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF269996)
-                    )
+                        containerColor = if (uiState.isSubmitting) Color.Gray else Color(0xFF269996)
+                    ),
+                    enabled = !uiState.isSubmitting
                 ) {
-                    Text(
-                        text = "Enviar Candidatura",
-                        modifier = Modifier.padding(vertical = 8.dp)
-                    )
+                    if (uiState.isSubmitting) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            color = Color.White,
+                            strokeWidth = 2.dp
+                        )
+                    } else {
+                        Text(
+                            text = "Enviar Candidatura",
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
+                    }
                 }
             }
         }
+    }
+
+    if (showSuccessDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                showSuccessDialog = false
+                viewModel.resetSubmissionSuccess()
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showSuccessDialog = false
+                        viewModel.resetSubmissionSuccess()
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF269996)
+                    )
+                ) {
+                    Text(text = "Ok")
+                }
+            },
+            text = {
+                Text(
+                    text = "Solicitação enviada com sucesso!",
+                    fontSize = 16.sp,
+                    color = Color.Gray
+                )
+            }
+        )
     }
 }
