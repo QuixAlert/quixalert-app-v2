@@ -38,7 +38,6 @@ import java.util.Locale
 
 val notifications = listOf(
     Notification(
-        id = 1,
         data = SimpleDateFormat("dd/MM/yyyy").parse("15/12/2024"),
         title = "Dicas de sustentabilidade",
         message = "Todas as vezes que usamos uma folha de papel indevidamente, matamos praticamente uma árvore. Use papel de forma consciente.",
@@ -46,7 +45,6 @@ val notifications = listOf(
         image = R.drawable.notification_icon1
     ),
     Notification(
-        id = 2,
         data = SimpleDateFormat("dd/MM/yyyy").parse("12/12/2024"),
         title = "Vacinação de animais",
         message = "A partir do dia 30 de junho, teremos vacinação gratuita para gatos e cachorros. Você pode ir até qualquer posto de vacinação com o seu pet.",
@@ -54,7 +52,6 @@ val notifications = listOf(
         image = R.drawable.notification_icon1
     ),
     Notification(
-        id = 3,
         data = SimpleDateFormat("dd/MM/yyyy").parse("12/12/2024"),
         title = "Ibama está na cidade",
         message = "O Ibama está na cidade para promover o quinto ciclo de palestras sobre preservação ambiental. Será no auditório Raquel de Queiroz às 10h.",
@@ -62,7 +59,6 @@ val notifications = listOf(
         image = R.drawable.notification_icon2
     ),
     Notification(
-        id = 4,
         data =SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
         title = "Castração de gatos gratuita",
         message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
@@ -70,7 +66,6 @@ val notifications = listOf(
         image = R.drawable.notification_icon4
     ),
     Notification(
-        id = 5,
         data =SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
         title = "Castração de gatos gratuita",
         message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
@@ -78,7 +73,6 @@ val notifications = listOf(
         image = R.drawable.notification_icon4
     ),
     Notification(
-        id = 6,
         data =SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
         title = "Castração de gatos gratuita",
         message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
@@ -86,7 +80,6 @@ val notifications = listOf(
         image = R.drawable.notification_icon4
     ),
     Notification(
-        id = 6,
         data =SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
         title = "Castração de gatos gratuita",
         message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
@@ -94,7 +87,6 @@ val notifications = listOf(
         image = R.drawable.notification_icon4
     ),
     Notification(
-        id = 6,
         data =SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
         title = "Castração de gatos gratuita",
         message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",

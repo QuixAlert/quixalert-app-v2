@@ -41,21 +41,18 @@ import org.quixalert.br.domain.model.EmergencyNumber
 
 val animalEmergencyNumbersList = listOf(
     EmergencyNumber(
-        id = 1,
         name = "Prefeitura de Quixadá",
         image = R.drawable.emergency_icon1,
         phone = "(88) 99920-4550",
         openingHours = "Disponível de 8h até 17h",
     ),
     EmergencyNumber(
-        id = 2,
         name = "AMMA",
         image = R.drawable.emergency_icon2,
         phone = "(88) 99920-4550",
         openingHours = "Disponível de 8h até 17h",
     ),
     EmergencyNumber(
-        id = 3,
         name = "Polícia Municipal",
         image = R.drawable.emergency_icon3,
         phone = "(88) 3445-1047",
@@ -65,28 +62,24 @@ val animalEmergencyNumbersList = listOf(
 
 val ambientalEmergencyNumbersList = listOf(
     EmergencyNumber(
-        id = 1,
         name = "Prefeitura de Quixadá",
         image = R.drawable.emergency_icon1,
         phone = "(88) 99920-4550",
         openingHours = "Disponível de 8h até 17h",
     ),
     EmergencyNumber(
-        id = 2,
         name = "Corpo de Bombeiros",
         image = R.drawable.emergency_icon4,
         phone = "(85) 98878-7260",
         openingHours = "Disponível de 8h até 17h",
     ),
     EmergencyNumber(
-        id = 3,
         name = "AMMA",
         image = R.drawable.emergency_icon2,
         phone = "(88) 99920-4550",
         openingHours = "Disponível de 8h até 17h",
     ),
     EmergencyNumber(
-        id = 3,
         name = "IBAMA",
         image = R.drawable.emergency_icon5,
         phone = "0800 061 8080",
