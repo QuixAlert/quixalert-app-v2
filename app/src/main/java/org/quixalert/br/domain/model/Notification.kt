@@ -1,12 +1,12 @@
 package org.quixalert.br.domain.model
+import java.time.Instant
 import java.util.Date
 
 data class Notification(
-    val id: Int,
-    val data: Date,
-    val title: String,
-    val message: String,
-    val readCheck: Boolean,
-    val image: Int,
-    //val user: User
-)
+    override var id: String = "",
+    val data: Date = Date.from(Instant.now()),
+    val title: String = "",
+    val message: String = "",
+    val readCheck: Boolean = false,
+    val image: Int = 0
+): BaseModel(id)
