@@ -1,4 +1,4 @@
-package org.quixalert.br.presentation.view.pages.login
+package org.quixalert.br.presentation.pages.login
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -24,10 +24,10 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import org.quixalert.br.R
 import org.quixalert.br.domain.model.UserRegistrationData
-import org.quixalert.br.presentation.view.ui.theme.primaryBlue
-import org.quixalert.br.presentation.view.ui.theme.primaryGreen
-import org.quixalert.br.presentation.view.components.StyledTextField
-import org.quixalert.br.view.pages.login.WaveBackground
+import org.quixalert.br.presentation.components.StyledTextField
+import org.quixalert.br.presentation.components.WaveBackground
+import org.quixalert.br.presentation.ui.theme.primaryBlue
+import org.quixalert.br.presentation.ui.theme.primaryGreen
 
 @Composable
 fun RegisterStepTwoScreen(

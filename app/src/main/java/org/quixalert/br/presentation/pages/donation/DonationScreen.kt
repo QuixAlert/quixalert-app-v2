@@ -1,4 +1,4 @@
-package org.quixalert.br.presentation.view.pages.donation
+package org.quixalert.br.presentation.pages.donation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

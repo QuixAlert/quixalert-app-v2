@@ -1,4 +1,4 @@
-package org.quixalert.br.presentation.view.pages.profile
+package org.quixalert.br.presentation.pages.profile
 
 import android.webkit.WebView
 import androidx.compose.foundation.background

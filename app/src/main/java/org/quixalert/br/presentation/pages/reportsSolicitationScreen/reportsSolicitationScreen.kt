@@ -1,4 +1,4 @@
-package org.quixalert.br.presentation.view.pages.reportsSolicitationScreen
+package org.quixalert.br.presentation.pages.reportsSolicitationScreen
 
 import android.annotation.SuppressLint
 import android.net.Uri

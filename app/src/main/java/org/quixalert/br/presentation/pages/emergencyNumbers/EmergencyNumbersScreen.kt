@@ -1,4 +1,4 @@
-package org.quixalert.br.presentation.view.pages.emergencyNumbers
+package org.quixalert.br.presentation.pages.emergencyNumbers
 
 import android.content.Context
 import android.content.Intent

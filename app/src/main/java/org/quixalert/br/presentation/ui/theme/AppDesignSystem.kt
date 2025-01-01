@@ -1,4 +1,4 @@
-package org.quixalert.br.presentation.view.ui.theme
+package org.quixalert.br.presentation.ui.theme
 
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color

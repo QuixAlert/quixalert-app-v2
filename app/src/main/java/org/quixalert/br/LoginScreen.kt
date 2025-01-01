@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
 import org.quixalert.br.R
-import org.quixalert.br.presentation.view.ui.theme.primaryGreen
-import org.quixalert.br.presentation.view.ui.theme.primaryBlue
+import org.quixalert.br.presentation.ui.theme.primaryBlue
+import org.quixalert.br.presentation.ui.theme.primaryGreen
 
 @Composable
 fun LoginScreen(

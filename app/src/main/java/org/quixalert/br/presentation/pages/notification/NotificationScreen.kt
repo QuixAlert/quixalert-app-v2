@@ -1,4 +1,4 @@
-package org.quixalert.br.presentation.view.pages.notification
+package org.quixalert.br.presentation.pages.notification
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

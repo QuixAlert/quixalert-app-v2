@@ -1,4 +1,4 @@
-package org.quixalert.br.presentation.view.pages.adoptions
+package org.quixalert.br.presentation.pages.adoptions
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -43,7 +43,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import org.quixalert.br.domain.model.Animal
-import org.quixalert.br.domain.model.Pet
 
 
 // Models

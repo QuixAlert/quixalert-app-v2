@@ -1,4 +1,4 @@
-package org.quixalert.br.view.pages.login
+package org.quixalert.br.presentation.components
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas

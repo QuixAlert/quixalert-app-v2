@@ -1,4 +1,4 @@
-package org.quixalert.br.presentation.view.icons
+package org.quixalert.br.presentation.icons
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType

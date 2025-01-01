@@ -1,4 +1,4 @@
-package org.quixalert.br.presentation.view.pages.documentsSolicitationScreen
+package org.quixalert.br.presentation.pages.documentsSolicitationScreen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

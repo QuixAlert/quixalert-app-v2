@@ -1,4 +1,4 @@
-package org.quixalert.br.presentation.view.pages.home
+package org.quixalert.br.presentation.pages.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

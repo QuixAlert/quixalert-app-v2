@@ -1,4 +1,4 @@
-package org.quixalert.br.presentation.view.pages.newsScreen
+package org.quixalert.br.presentation.pages.newsScreen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -48,7 +48,7 @@ import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 import org.quixalert.br.R
 import org.quixalert.br.domain.model.News
-import org.quixalert.br.presentation.view.pages.home.IconTint
+import org.quixalert.br.presentation.pages.home.IconTint
 
 val newsList = listOf(
     News(

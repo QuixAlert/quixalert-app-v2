@@ -1,4 +1,4 @@
-package org.quixalert.br.presentation.view.pages.login
+package org.quixalert.br.presentation.pages.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -15,10 +15,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.quixalert.br.R
-import org.quixalert.br.presentation.view.ui.theme.primaryBlue
-import org.quixalert.br.presentation.view.ui.theme.primaryGreen
-import org.quixalert.br.presentation.view.components.StyledTextField
-import org.quixalert.br.view.pages.login.WaveBackground
+import org.quixalert.br.presentation.components.StyledTextField
+import org.quixalert.br.presentation.components.WaveBackground
+import org.quixalert.br.presentation.ui.theme.primaryBlue
+import org.quixalert.br.presentation.ui.theme.primaryGreen
 
 @Composable
 fun SignInScreen() {

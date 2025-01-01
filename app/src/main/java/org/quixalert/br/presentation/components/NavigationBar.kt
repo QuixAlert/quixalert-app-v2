@@ -1,4 +1,4 @@
-package org.quixalert.br.presentation.view.components
+package org.quixalert.br.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -31,7 +31,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.quixalert.br.R
-import org.quixalert.br.presentation.view.icons.NewsIcon
+import org.quixalert.br.presentation.icons.NewsIcon
 
 data class BarItem(
     val title: String,

@@ -1,6 +1,5 @@
 package org.quixalert.br
 
-import AppTheme
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,13 +20,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.quixalert.br.domain.model.UserRegistrationData
-import org.quixalert.br.presentation.view.components.FloatingMenu
-import org.quixalert.br.presentation.view.components.HeaderSection
-import org.quixalert.br.presentation.view.components.NavigationBarM3
-import org.quixalert.br.presentation.view.pages.adoptions.AdoptionFormScreen
-import org.quixalert.br.presentation.view.pages.adoptions.AdoptionScreen
-import org.quixalert.br.presentation.view.pages.animal.AnimalDetailsScreen
-import org.quixalert.br.presentation.view.pages.animal.mockPetDetail
+import org.quixalert.br.presentation.components.FloatingMenu
+import org.quixalert.br.presentation.components.HeaderSection
+import org.quixalert.br.presentation.components.NavigationBarM3
+import org.quixalert.br.presentation.pages.adoptions.AdoptionScreen
+import org.quixalert.br.presentation.ui.theme.AppTheme
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable

@@ -1,4 +1,4 @@
-package org.quixalert.br.presentation.view.ui.location
+package org.quixalert.br.presentation.ui.location
 
 object Locales {
     const val EN = "en"

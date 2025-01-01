@@ -1,4 +1,4 @@
-package org.quixalert.br.presentation.view.pages.adoptions
+package org.quixalert.br.presentation.pages.adoptions
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -43,7 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import org.quixalert.br.R
-import org.quixalert.br.presentation.view.pages.animal.PetDetail
+import org.quixalert.br.presentation.pages.animal.PetDetail
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)

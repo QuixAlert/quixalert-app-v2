@@ -1,4 +1,4 @@
-package org.quixalert.br.presentation.view.pages.animal
+package org.quixalert.br.presentation.pages.animal
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -48,7 +48,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import org.quixalert.br.domain.model.Animal
-import org.quixalert.br.presentation.pages.animal.AnimalDetailsViewModel
 
 data class PetDetail(
     val id: String,

@@ -1,4 +1,4 @@
-package org.quixalert.br.presentation.view.components
+package org.quixalert.br.presentation.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -14,7 +14,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.quixalert.br.presentation.view.ui.theme.poppinsFamily
+import org.quixalert.br.presentation.ui.theme.poppinsFamily
 
 @Composable
 fun StyledTextField(

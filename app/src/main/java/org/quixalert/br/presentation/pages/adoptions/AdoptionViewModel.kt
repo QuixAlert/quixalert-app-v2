@@ -1,4 +1,4 @@
-package org.quixalert.br.presentation.view.pages.adoptions
+package org.quixalert.br.presentation.pages.adoptions
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

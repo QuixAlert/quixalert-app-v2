@@ -1,4 +1,4 @@
-package org.quixalert.br.presentation.view.pages.reports
+package org.quixalert.br.presentation.pages.reports
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background

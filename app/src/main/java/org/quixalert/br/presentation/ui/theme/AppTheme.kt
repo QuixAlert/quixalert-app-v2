@@ -1,6 +1,8 @@
+package org.quixalert.br.presentation.ui.theme
+
+//import androidx.compose.material.
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
-//import androidx.compose.material.
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
@@ -11,24 +13,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.lyricist.Lyricist
 import cafe.adriel.lyricist.rememberStrings
-import org.quixalert.br.presentation.view.ui.location.Locales
-import org.quixalert.br.presentation.view.ui.location.Strings
-import org.quixalert.br.presentation.view.ui.location.translations
-import org.quixalert.br.presentation.view.ui.theme.AppColorScheme
-import org.quixalert.br.presentation.view.ui.theme.AppShape
-import org.quixalert.br.presentation.view.ui.theme.AppSize
-import org.quixalert.br.presentation.view.ui.theme.AppTypography
-import org.quixalert.br.presentation.view.ui.theme.LocalAppColorScheme
-import org.quixalert.br.presentation.view.ui.theme.LocalAppShape
-import org.quixalert.br.presentation.view.ui.theme.LocalAppSize
-import org.quixalert.br.presentation.view.ui.theme.LocalAppTypography
-import org.quixalert.br.presentation.view.ui.theme.charcoalGray
-import org.quixalert.br.presentation.view.ui.theme.grayLight32
-import org.quixalert.br.presentation.view.ui.theme.poppinsFamily
-import org.quixalert.br.presentation.view.ui.theme.primaryGreen
-import org.quixalert.br.presentation.view.ui.theme.pureWhite
-import org.quixalert.br.presentation.view.ui.theme.richNavyBlue
-import org.quixalert.br.presentation.view.ui.theme.softSkyBlue
+import org.quixalert.br.presentation.ui.location.Locales
+import org.quixalert.br.presentation.ui.location.Strings
+import org.quixalert.br.presentation.ui.location.translations
 
 private val lightColorScheme = AppColorScheme(
     background = pureWhite,
