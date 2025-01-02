@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,8 +14,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,9 +38,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.quixalert.br.R
+import org.quixalert.br.presentation.pages.profile.IconTint
 
 @Composable
-fun DonationScreen(onBackClick: () -> Unit) {
+fun DonationScreen(onBackClick: () -> Unit, onMenuClick: () -> Unit) {
     var donationAmount by remember { mutableStateOf("") }
 
     Column(
@@ -52,6 +59,10 @@ fun DonationScreen(onBackClick: () -> Unit) {
                     .align(Alignment.CenterStart)
                     .padding(16.dp),
             ) {
+                TopBar(
+                    onBackClick = onBackClick,
+                    onMenuClick = onMenuClick
+                )
                 Text(
                     text = "Não pode adotar agora?\nFaça uma doação!",
                     fontSize = 20.sp,
@@ -142,6 +153,36 @@ fun DonationScreen(onBackClick: () -> Unit) {
                     color = Color.White
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun TopBar(
+    onBackClick: () -> Unit,
+    onMenuClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconButton(onClick = onBackClick) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Voltar",
+                tint = IconTint
+            )
+        }
+
+        IconButton(onClick = onMenuClick) {
+            Icon(
+                imageVector = Icons.Default.Menu,
+                contentDescription = "Menu",
+                tint = IconTint
+            )
         }
     }
 }

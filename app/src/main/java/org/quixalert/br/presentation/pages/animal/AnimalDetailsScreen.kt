@@ -19,6 +19,9 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -26,6 +29,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -48,6 +52,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import org.quixalert.br.domain.model.Animal
+import org.quixalert.br.presentation.pages.profile.IconTint
 
 data class PetDetail(
     val id: String,
@@ -85,6 +90,8 @@ val mockPetDetail = PetDetail(
 @Composable
 fun AnimalScreenBase(
     animal: Animal,
+    onBackClick: () -> Unit,
+    onMenuClick: () -> Unit,
     content: @Composable ColumnScope.() -> Unit
 ) {
     Box(
@@ -95,6 +102,10 @@ fun AnimalScreenBase(
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
+            TopBar(
+                onBackClick = onBackClick,
+                onMenuClick = onMenuClick
+            )
             // Header Image with Back Button
             Box(
                 modifier = Modifier
@@ -212,7 +223,10 @@ fun AnimalScreenBase(
 @Composable
 fun AnimalDetailsScreen(
     animalId: String,
-    viewModel: AnimalDetailsViewModel = hiltViewModel()
+    viewModel: AnimalDetailsViewModel = hiltViewModel(),
+    onBackClick: () -> Unit,
+    onMenuClick: () -> Unit,
+    onFormClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var showErrorDialog by remember { mutableStateOf(false) }
@@ -261,10 +275,11 @@ fun AnimalDetailsScreen(
         uiState.animal != null -> {
             val animal = uiState.animal
             if (animal != null) {
-                AnimalScreenBase(animal = animal) {
+                AnimalScreenBase(animal = animal, onBackClick = onBackClick, onMenuClick = onMenuClick ) {
                     Column(
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
+                        TopBar(onBackClick = onBackClick, onMenuClick = onMenuClick)
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
@@ -446,174 +461,32 @@ fun AnimalDetailsScreen(
     }
 }
 
-//@Composable
-//fun AnimalDetailsScreen(
-//    animalId: String,
-//    viewModel: AnimalDetailsViewModel = hiltViewModel()
-//) {
-//    val uiState by viewModel.uiState.collectAsState()
-//
-//    LaunchedEffect(Unit) {
-//        viewModel.loadPet(animalId)
-//    }
-//
-//    AnimalScreenBase(animal = pet) {
-//        Column(
-//            verticalArrangement = Arrangement.spacedBy(16.dp)
-//        ) {
-//            // Characteristics Row
-//            Row(
-//                modifier = Modifier.fillMaxWidth(),
-//                horizontalArrangement = Arrangement.SpaceBetween
-//            ) {
-//                // Breed
-//                Column(modifier = Modifier.weight(2f)) {
-//                    Text(
-//                        text = "Raça",
-//                        fontSize = 14.sp,
-//                        color = Color.Gray
-//                    )
-//                    Text(
-//                        text = pet.breed,
-//                        fontSize = 16.sp,
-//                        fontWeight = FontWeight.Bold
-//                    )
-//                }
-//                // Size
-//                Column(modifier = Modifier.weight(2f)) {
-//                    Text(
-//                        text = "Porte",
-//                        fontSize = 14.sp,
-//                        color = Color.Gray
-//                    )
-//                    Text(
-//                        text = pet.size,
-//                        fontSize = 16.sp,
-//                        fontWeight = FontWeight.Bold
-//                    )
-//                }
-//                // Gender
-//                Column(modifier = Modifier.weight(2f)) {
-//                    Text(
-//                        text = "Sexo",
-//                        fontSize = 14.sp,
-//                        color = Color.Gray
-//                    )
-//                    Text(
-//                        text = pet.gender,
-//                        fontSize = 16.sp,
-//                        fontWeight = FontWeight.Bold
-//                    )
-//                }
-//            }
-//
-//            // Location Section
-//            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-//                Text(
-//                    text = "Local",
-//                    fontSize = 14.sp,
-//                    color = Color.Gray
-//                )
-//                Text(
-//                    text = pet.location,
-//                    fontSize = 16.sp,
-//                    fontWeight = FontWeight.Bold
-//                )
-//            }
-//
-//            // About Section
-//            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-//                Text(
-//                    text = "Sobre o Pet",
-//                    fontSize = 18.sp,
-//                    fontWeight = FontWeight.Bold
-//                )
-//                Text(
-//                    text = pet.about,
-//                    fontSize = 14.sp
-//                )
-//            }
-//
-//            // Gallery Section
-//            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-//                Text(
-//                    text = "Galeria",
-//                    fontSize = 18.sp,
-//                    fontWeight = FontWeight.Bold
-//                )
-//
-//                // Tabs
-//                var selectedTab by remember { mutableStateOf(0) }
-//                Row(
-//                    modifier = Modifier.fillMaxWidth(),
-//                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-//                ) {
-//                    FilterChip(
-//                        selected = selectedTab == 0,
-//                        onClick = { selectedTab = 0 },
-//                        label = { Text("Fotos") },
-//                        colors = FilterChipDefaults.filterChipColors(
-//                            selectedContainerColor = Color(0xFF269996),
-//                            selectedLabelColor = Color.White
-//                        )
-//                    )
-//                    FilterChip(
-//                        selected = selectedTab == 1,
-//                        onClick = { selectedTab = 1 },
-//                        label = { Text("Vídeos") },
-//                        colors = FilterChipDefaults.filterChipColors(
-//                            selectedContainerColor = Color(0xFF269996),
-//                            selectedLabelColor = Color.White
-//                        )
-//                    )
-//                }
-//
-//                if (selectedTab == 0) {
-//                    LazyVerticalGrid(
-//                        columns = GridCells.Fixed(2),
-//                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-//                        verticalArrangement = Arrangement.spacedBy(8.dp),
-//                        modifier = Modifier.fillMaxWidth().height(250.dp)  // Removida altura fixa
-//                    ) {
-//                        items(pet.gallery) { imageUrl ->
-//                            Surface(
-//                                modifier = Modifier
-//                                    .fillMaxWidth()
-//                                    .shadow(
-//                                        elevation = 4.dp,
-//                                        shape = RoundedCornerShape(8.dp)
-//                                    ),
-//                                shape = RoundedCornerShape(8.dp),
-//                                border = BorderStroke(1.dp, Color.White)
-//                            ) {
-//                                AsyncImage(
-//                                    model = imageUrl,
-//                                    contentDescription = null,
-//                                    modifier = Modifier
-//                                        .fillMaxWidth()
-//                                        .height(100.dp),
-//                                    contentScale = ContentScale.Crop
-//                                )
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//
-//            Button(
-//                onClick = { },
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(top = 20.dp, bottom = 72.dp),
-//                colors = ButtonDefaults.buttonColors(
-//                    containerColor = Color(0xFF269996)
-//                )
-//            ) {
-//                Text(
-//                    text = "Quero Adotar",
-//                    modifier = Modifier.padding(vertical = 8.dp)
-//                )
-//            }
-//        }
-//    }
-//}
+@Composable
+private fun TopBar(
+    onBackClick: () -> Unit,
+    onMenuClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconButton(onClick = onBackClick) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Voltar",
+                tint = IconTint
+            )
+        }
+
+        IconButton(onClick = onMenuClick) {
+            Icon(
+                imageVector = Icons.Default.Menu,
+                contentDescription = "Menu",
+                tint = IconTint
+            )
+        }
+    }
+}

@@ -18,8 +18,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -44,14 +49,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import org.quixalert.br.R
+import org.quixalert.br.presentation.pages.profile.IconTint
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Preview
 @Composable
-fun reportsSolicitationScreen() {
+fun ReportsSolicitationScreen(onBackClick: () -> Unit = {}, onMenuClick: () -> Unit = {}) {
     Column(
         modifier = Modifier.verticalScroll(rememberScrollState())
     ) {
+        TopBar(
+            onBackClick = onBackClick,
+            onMenuClick = onMenuClick
+        )
         Text(
             text = "Fomulário de denúncia",
             style = TextStyle(
@@ -60,6 +70,7 @@ fun reportsSolicitationScreen() {
             ),
             modifier = Modifier.padding(top = 8.dp, start = 16.dp)
         )
+
 
         ReportsSolicitationForm()
     }
@@ -226,6 +237,35 @@ fun ReportsSolicitationForm() {
                 text = "Enviar Denúncia",
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
+            )
+        }
+    }
+}
+@Composable
+fun TopBar(
+    onBackClick: () -> Unit,
+    onMenuClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconButton(onClick = onBackClick) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Voltar",
+                tint = IconTint
+            )
+        }
+
+        IconButton(onClick = onMenuClick) {
+            Icon(
+                imageVector = Icons.Default.Menu,
+                contentDescription = "Menu",
+                tint = IconTint
             )
         }
     }

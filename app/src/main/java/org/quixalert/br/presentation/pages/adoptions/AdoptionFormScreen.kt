@@ -17,6 +17,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -24,6 +26,8 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -46,12 +50,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import org.quixalert.br.R
 import org.quixalert.br.domain.model.Adoption
 import org.quixalert.br.domain.model.AdoptionStatus
 import org.quixalert.br.presentation.pages.animal.PetDetail
+import org.quixalert.br.presentation.pages.home.IconTint
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -86,6 +90,8 @@ fun AdoptionFormScreen(
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
+            TopBar(onBackClick = onBackClick)
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -362,5 +368,26 @@ fun AdoptionFormScreen(
                 )
             }
         )
+    }
+}
+
+@Composable
+private fun TopBar(
+    onBackClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconButton(onClick = onBackClick) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Voltar",
+                tint = IconTint
+            )
+        }
     }
 }

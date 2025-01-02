@@ -21,7 +21,7 @@ import org.quixalert.br.presentation.ui.theme.primaryBlue
 import org.quixalert.br.presentation.ui.theme.primaryGreen
 
 @Composable
-fun SignInScreen() {
+fun SignInScreen(onSignInClick: () -> Unit ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -96,7 +96,7 @@ fun SignInScreen() {
             Spacer(modifier = Modifier.height(48.dp))
 
             Button(
-                onClick = { /* TODO */ },
+                onClick = { onSignInClick() },
                 modifier = Modifier
                     .width(172.dp)
                     .height(53.dp),

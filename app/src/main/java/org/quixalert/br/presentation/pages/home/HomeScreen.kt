@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,7 +38,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import org.quixalert.br.domain.model.Gender
 import org.quixalert.br.domain.model.News
@@ -53,7 +53,8 @@ fun HomeScreen(
     user: User,
     localNews: List<News>,
     globalNews: List<News>,
-    pets: List<Pet>
+    pets: List<Pet>,
+    onNotificationClick: () -> Unit
 ) {
     LazyColumn(
         modifier = modifier
@@ -63,7 +64,7 @@ fun HomeScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
-            TopBar(user = user)
+            TopBar(user = user, onNotificationClick)
         }
 
         item {
@@ -123,8 +124,7 @@ fun HomeScreen(
             Text(
                 text = "Animais para Adoção",
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp
+                fontWeight = FontWeight.Bold
             )
         }
 
@@ -151,7 +151,7 @@ fun HomeScreen(
 }
 
 @Composable
-fun TopBar(user: User) {
+fun TopBar(user: User, onNotificationClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -183,14 +183,16 @@ fun TopBar(user: User) {
                 )
             }
         }
-        Icon(
-            imageVector = Icons.Default.Notifications,
-            contentDescription = "Notifications",
-            modifier = Modifier
-                .size(24.dp)
-                .shadow(2.dp, CircleShape),
-            tint = IconTint
-        )
+        IconButton (onNotificationClick) {
+            Icon(
+                imageVector = Icons.Default.Notifications,
+                contentDescription = "Notifications",
+                modifier = Modifier
+                    .size(24.dp)
+                    .shadow(2.dp, CircleShape),
+                tint = IconTint
+            )
+        }
     }
 }
 
