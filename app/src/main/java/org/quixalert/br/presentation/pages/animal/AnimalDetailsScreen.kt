@@ -327,7 +327,7 @@ fun AnimalDetailsScreen(
                                 fontWeight = FontWeight.Bold
                             )
                             Text(
-                                text = "Detalhes adicionais sobre o animal.",
+                                text = animal.description.ifEmpty { "Nenhuma descrição cadastrada" },
                                 fontSize = 14.sp
                             )
                         }
