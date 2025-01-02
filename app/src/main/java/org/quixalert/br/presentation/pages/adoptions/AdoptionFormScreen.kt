@@ -54,9 +54,8 @@ import coil.compose.AsyncImage
 import org.quixalert.br.R
 import org.quixalert.br.domain.model.Adoption
 import org.quixalert.br.domain.model.AdoptionStatus
-import org.quixalert.br.presentation.pages.adoptions.AdoptionViewModel
 import org.quixalert.br.presentation.pages.animal.PetDetail
-import org.quixalert.br.view.pages.home.IconTint
+import org.quixalert.br.presentation.pages.home.IconTint
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)

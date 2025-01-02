@@ -46,7 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import org.quixalert.br.view.pages.profile.IconTint
+import org.quixalert.br.presentation.pages.profile.IconTint
 
 data class PetDetail(
     val id: String,

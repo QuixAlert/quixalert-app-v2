@@ -34,7 +34,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.quixalert.br.view.pages.profile.IconTint
+import org.quixalert.br.presentation.pages.profile.IconTint
 
 @Composable
 fun DocumentsSolicitationScreen(onBackClick: () -> Unit = {}, onMenuClick: () -> Unit = {}) {

@@ -1,4 +1,4 @@
-package org.quixalert.br.view.pages.emergencyNumbers
+package org.quixalert.br.presentation.pages.emergencyNumbers
 
 import android.content.Context
 import android.content.Intent
@@ -40,26 +40,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.quixalert.br.R
-import org.quixalert.br.model.EmergencyNumber
-import org.quixalert.br.view.pages.profile.IconTint
+import org.quixalert.br.domain.model.EmergencyNumber
+import org.quixalert.br.presentation.pages.profile.IconTint
 
 val animalEmergencyNumbersList = listOf(
     EmergencyNumber(
-        id = 1,
         name = "Prefeitura de Quixadá",
         image = R.drawable.emergency_icon1,
         phone = "(88) 99920-4550",
         openingHours = "Disponível de 8h até 17h",
     ),
     EmergencyNumber(
-        id = 2,
         name = "AMMA",
         image = R.drawable.emergency_icon2,
         phone = "(88) 99920-4550",
         openingHours = "Disponível de 8h até 17h",
     ),
     EmergencyNumber(
-        id = 3,
         name = "Polícia Municipal",
         image = R.drawable.emergency_icon3,
         phone = "(88) 3445-1047",
@@ -69,28 +66,24 @@ val animalEmergencyNumbersList = listOf(
 
 val ambientalEmergencyNumbersList = listOf(
     EmergencyNumber(
-        id = 1,
         name = "Prefeitura de Quixadá",
         image = R.drawable.emergency_icon1,
         phone = "(88) 99920-4550",
         openingHours = "Disponível de 8h até 17h",
     ),
     EmergencyNumber(
-        id = 2,
         name = "Corpo de Bombeiros",
         image = R.drawable.emergency_icon4,
         phone = "(85) 98878-7260",
         openingHours = "Disponível de 8h até 17h",
     ),
     EmergencyNumber(
-        id = 3,
         name = "AMMA",
         image = R.drawable.emergency_icon2,
         phone = "(88) 99920-4550",
         openingHours = "Disponível de 8h até 17h",
     ),
     EmergencyNumber(
-        id = 3,
         name = "IBAMA",
         image = R.drawable.emergency_icon5,
         phone = "0800 061 8080",
@@ -101,7 +94,7 @@ val ambientalEmergencyNumbersList = listOf(
 @Composable
 fun EmergencyNumbersScreen(onBackClick: () -> Unit = {}, onMenuClick: () -> Unit = {}) {
     Column() {
-        org.quixalert.br.view.pages.reportsSolicitationScreen.TopBar(
+        TopBar(
             onBackClick = onBackClick,
             onMenuClick = onMenuClick
         )

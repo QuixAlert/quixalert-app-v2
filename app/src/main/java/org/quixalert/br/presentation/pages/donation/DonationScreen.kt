@@ -38,7 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.quixalert.br.R
-import org.quixalert.br.view.pages.profile.IconTint
+import org.quixalert.br.presentation.pages.profile.IconTint
 
 @Composable
 fun DonationScreen(onBackClick: () -> Unit, onMenuClick: () -> Unit) {
