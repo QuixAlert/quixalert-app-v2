@@ -1,6 +1,5 @@
 package org.quixalert.br
 
-import AppTheme
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -20,11 +19,15 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.quixalert.br.model.UserRegistrationData
-import org.quixalert.br.view.components.FloatingMenu
-import org.quixalert.br.view.components.HeaderSection
-import org.quixalert.br.view.components.NavigationBarM3
-import org.quixalert.br.view.pages.notification.NotificationScreen
+import org.quixalert.br.domain.model.UserRegistrationData
+import org.quixalert.br.presentation.components.FloatingMenu
+import org.quixalert.br.presentation.components.HeaderSection
+import org.quixalert.br.presentation.components.NavigationBarM3
+import org.quixalert.br.presentation.pages.adoptions.AdoptionFormScreen
+import org.quixalert.br.presentation.pages.adoptions.AdoptionScreen
+import org.quixalert.br.presentation.pages.animal.AnimalDetailsScreen
+import org.quixalert.br.presentation.pages.animal.mockPetDetail
+import org.quixalert.br.presentation.ui.theme.AppTheme
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -58,7 +61,9 @@ fun App() {
 
             content = {
                 Box(modifier = Modifier.fillMaxSize()) {
-                    NotificationScreen()
+                    AdoptionScreen()
+//                    AdoptionFormScreen(pet = mockPetDetail, onBackClick = {})
+//                    AnimalDetailsScreen(animalId = "ac039f10-f695-4cd3-b4cb-e7982442b539")
 
                     if (isFloatingMenuVisible) {
                         Box(
