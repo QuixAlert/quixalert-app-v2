@@ -10,6 +10,7 @@ import org.quixalert.br.domain.model.Adoption
 import org.quixalert.br.domain.model.Animal
 import org.quixalert.br.services.AdoptionService
 import org.quixalert.br.services.AnimalService
+import org.quixalert.br.utils.populateAnimalData
 import javax.inject.Inject
 
 data class AdoptionUiState(
@@ -30,6 +31,7 @@ class AdoptionViewModel @Inject constructor(
     val uiState: StateFlow<AdoptionUiState> get() = _uiState
 
     fun loadPets() {
+//        registerAnimals()
         _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
         viewModelScope.launch {
             try {
@@ -63,5 +65,9 @@ class AdoptionViewModel @Inject constructor(
 
     fun resetSubmissionSuccess() {
         _uiState.value = _uiState.value.copy(submissionSuccess = false)
+    }
+
+    private fun registerAnimals(){
+        populateAnimalData().forEach { animal -> animalService.add(animal) }
     }
 }
