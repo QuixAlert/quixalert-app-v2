@@ -25,6 +25,7 @@ import org.quixalert.br.presentation.components.HeaderSection
 import org.quixalert.br.presentation.components.NavigationBarM3
 import org.quixalert.br.presentation.pages.adoptions.AdoptionFormScreen
 import org.quixalert.br.presentation.pages.adoptions.AdoptionScreen
+import org.quixalert.br.presentation.pages.animal.AnimalDetailsScreen
 import org.quixalert.br.presentation.pages.animal.mockPetDetail
 import org.quixalert.br.presentation.ui.theme.AppTheme
 
@@ -60,9 +61,9 @@ fun App() {
 
             content = {
                 Box(modifier = Modifier.fillMaxSize()) {
-//                    AdoptionScreen()
-                    AdoptionFormScreen(pet = mockPetDetail, onBackClick = {})
-//                    AnimalDetailsScreen(animalId = "b49586c0-ad3b-4163-8856-7f88551a77ea")
+                    AdoptionScreen()
+//                    AdoptionFormScreen(pet = mockPetDetail, onBackClick = {})
+//                    AnimalDetailsScreen(animalId = "ac039f10-f695-4cd3-b4cb-e7982442b539")
 
                     if (isFloatingMenuVisible) {
                         Box(
