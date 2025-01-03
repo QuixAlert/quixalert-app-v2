@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import org.quixalert.br.domain.model.Animal
+import org.quixalert.br.presentation.pages.animal.AnimalDetailsViewModel
 
 data class Filter(
     val id: String,
@@ -153,7 +154,12 @@ fun AnimalsList(animals: List<Animal>, onDetailsClick: (Animal) -> Unit) {
 }
 
 @Composable
-fun AdoptionItem(animal: Animal, onDetailsClick: (Animal) -> Unit) {
+fun AdoptionItem(
+    animal: Animal,
+    onDetailsClick: (Animal) -> Unit,
+    viewModel: AnimalDetailsViewModel = hiltViewModel()
+)
+{
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -176,7 +182,10 @@ fun AdoptionItem(animal: Animal, onDetailsClick: (Animal) -> Unit) {
                 )
 
                 Button(
-                    onClick = { onDetailsClick(animal) },
+                    onClick = {
+                        onDetailsClick(animal)
+                        viewModel.setAnimalId(animal.id)
+                    },
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .padding(8.dp),

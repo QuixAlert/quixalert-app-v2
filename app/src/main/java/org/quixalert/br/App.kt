@@ -136,7 +136,6 @@ fun App() {
                             onMenuClick = { isFloatingMenuVisible = !isFloatingMenuVisible }
                         )
                         "pet_details" -> AnimalDetailsScreen(
-                            animalId = "",
                             onBackClick = { currentScreen = "animals" },
                             onMenuClick = { isFloatingMenuVisible = !isFloatingMenuVisible },
                             onFormClick = { currentScreen = "form_adote" }

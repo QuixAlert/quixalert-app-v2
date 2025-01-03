@@ -222,7 +222,7 @@ fun AnimalScreenBase(
 
 @Composable
 fun AnimalDetailsScreen(
-    animalId: String,
+//    animalId: String,
     viewModel: AnimalDetailsViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
     onMenuClick: () -> Unit,
@@ -231,8 +231,8 @@ fun AnimalDetailsScreen(
     val uiState by viewModel.uiState.collectAsState()
     var showErrorDialog by remember { mutableStateOf(false) }
 
-    LaunchedEffect(animalId) {
-        viewModel.loadPet(animalId)
+    LaunchedEffect("loadingPet") {
+        viewModel.loadPet()
     }
 
     if (showErrorDialog) {
