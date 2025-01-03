@@ -19,6 +19,7 @@ abstract class FirebaseRepository<T : BaseModel, R>(
         scope.launch {
             try {
                 val documentId = if (entity.id.isBlank()) UUID.randomUUID().toString() else entity.id
+                entity.id = documentId
                 collection.document(documentId).set(entity).await()
                 withContext(Dispatchers.Main) {
                     Log.d("${this@FirebaseRepository::class.java}", "Successfully saved data.")
