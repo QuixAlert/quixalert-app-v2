@@ -8,17 +8,22 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.quixalert.br.domain.model.Adoption
 import org.quixalert.br.domain.model.Animal
+import org.quixalert.br.domain.model.AnimalType
 import org.quixalert.br.services.AdoptionService
 import org.quixalert.br.services.AnimalService
 import org.quixalert.br.utils.populateAnimalData
 import javax.inject.Inject
 
 data class AdoptionUiState(
-    val animals: List<Animal> = emptyList(),
+    val currentAnimals: List<Animal> = emptyList(),
+    val allAnimals: List<Animal> = emptyList(),
+    val dogs: List<Animal> = emptyList(),
+    val cats: List<Animal> = emptyList(),
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val isSubmitting: Boolean = false,
-    val submissionSuccess: Boolean = false
+    val submissionSuccess: Boolean = false,
+    val currentFilterType: FilterType = FilterType.ALL
 )
 
 @HiltViewModel
@@ -36,9 +41,18 @@ class AdoptionViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val animals = animalService.getAll().await()
-                _uiState.value = AdoptionUiState(animals = animals, isLoading = false)
+                val dogs = animals.filter { animal -> animal.type == AnimalType.DOG }
+                val cats = animals.filter { animal -> animal.type == AnimalType.CAT }
+
+                _uiState.value = AdoptionUiState(
+                    allAnimals = animals,
+                    currentAnimals = animals,
+                    dogs = dogs,
+                    cats = cats,
+                    isLoading = false
+                )
             } catch (e: Exception) {
-                _uiState.value = AdoptionUiState(isLoading = false, errorMessage = "Failed to load pets: ${e.message}")
+                _uiState.value = _uiState.value.copy(isLoading = false, errorMessage = "Failed to load pets: ${e.message}")
             }
         }
     }
@@ -65,6 +79,16 @@ class AdoptionViewModel @Inject constructor(
 
     fun resetSubmissionSuccess() {
         _uiState.value = _uiState.value.copy(submissionSuccess = false)
+    }
+
+    fun updateFilterAndReloadAnimals(filter: FilterType) {
+        val currentAnimals = when(filter) {
+            FilterType.DOGS -> uiState.value.dogs
+            FilterType.CATS -> uiState.value.cats
+            else -> uiState.value.allAnimals
+        }
+
+        _uiState.value = _uiState.value.copy(currentAnimals = currentAnimals)
     }
 
     private fun registerAnimals(){
