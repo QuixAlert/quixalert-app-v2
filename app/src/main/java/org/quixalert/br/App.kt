@@ -30,6 +30,7 @@ import org.quixalert.br.presentation.pages.animal.mockPetDetail
 import org.quixalert.br.presentation.pages.documentsSolicitationScreen.DocumentsSolicitationScreen
 import org.quixalert.br.presentation.pages.donation.DonationScreen
 import org.quixalert.br.presentation.pages.emergencyNumbers.EmergencyNumbersScreen
+import org.quixalert.br.presentation.pages.home.HomeScreen
 import org.quixalert.br.presentation.pages.login.RegisterScreen
 import org.quixalert.br.presentation.pages.login.RegisterStepTwoScreen
 import org.quixalert.br.presentation.pages.login.SignInScreen
@@ -39,7 +40,6 @@ import org.quixalert.br.presentation.pages.profile.ProfileScreen
 import org.quixalert.br.presentation.pages.reports.ReportScreen
 import org.quixalert.br.presentation.pages.reportsSolicitationScreen.ReportsSolicitationScreen
 import org.quixalert.br.presentation.ui.theme.AppTheme
-import org.quixalert.br.presentation.pages.home.HomeScreen
 import org.quixalert.br.view.pages.login.LoginScreen
 
 @Composable

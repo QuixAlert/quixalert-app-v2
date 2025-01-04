@@ -1,9 +1,9 @@
 package org.quixalert.br.presentation.ui.theme
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.runtime.Composable
 import org.quixalert.br.R
 
 @Composable

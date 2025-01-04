@@ -1,7 +1,6 @@
 package org.quixalert.br.services
 
 import kotlinx.coroutines.Deferred
-import org.quixalert.br.domain.model.Adoption
 import org.quixalert.br.domain.model.UserRegistrationData
 import org.quixalert.br.domain.repository.UserRegistrationDataRepository
 import javax.inject.Inject

@@ -1,10 +1,16 @@
 package org.quixalert.br.domain.repository
+import android.util.Log
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import org.quixalert.br.domain.model.BaseModel
-import android.util.Log
 import java.util.UUID
 
 abstract class FirebaseRepository<T : BaseModel, R>(
