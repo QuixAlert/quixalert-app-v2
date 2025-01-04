@@ -128,30 +128,30 @@ object MockData {
         profileImage = "https://randomuser.me/api/portraits/men/1.jpg",
         greeting = "Ola"
     )
-
-    val reports = listOf(
-        Report(
-            id = "1",
-            title = "Buraco na calçada",
-            image = "https://images.unsplash.com/photo-1584483766114-2cea6facdf57?ixlib=rb-4.0.3",
-            icon = "https://img.icons8.com/color/48/000000/light.png",
-            date = "2024-03-15"
-        ),
-        Report(
-            id = "2",
-            title = "Lâmpada queimada",
-            image = "https://images.unsplash.com/photo-1563461661026-49631dd5d68e?ixlib=rb-4.0.3",
-            icon = "https://img.icons8.com/color/48/000000/light.png",
-            date = "2024-03-14"
-        ),
-        Report(
-            id = "3",
-            title = "Lixo acumulado",
-            image = "https://images.unsplash.com/photo-1605600659908-0ef719419d41?ixlib=rb-4.0.3",
-            icon = "https://img.icons8.com/color/48/000000/trash.png",
-            date = "2024-03-13"
-        )
-    )
+    val reports = emptyList<Report>()
+//    val reports = listOf(
+//        Report(
+//            id = "1",
+//            title = "Buraco na calçada",
+//            image = "https://images.unsplash.com/photo-1584483766114-2cea6facdf57?ixlib=rb-4.0.3",
+//            icon = "https://img.icons8.com/color/48/000000/light.png",
+//            date = "2024-03-15"
+//        ),
+//        Report(
+//            id = "2",
+//            title = "Lâmpada queimada",
+//            image = "https://images.unsplash.com/photo-1563461661026-49631dd5d68e?ixlib=rb-4.0.3",
+//            icon = "https://img.icons8.com/color/48/000000/light.png",
+//            date = "2024-03-14"
+//        ),
+//        Report(
+//            id = "3",
+//            title = "Lixo acumulado",
+//            image = "https://images.unsplash.com/photo-1605600659908-0ef719419d41?ixlib=rb-4.0.3",
+//            icon = "https://img.icons8.com/color/48/000000/trash.png",
+//            date = "2024-03-13"
+//        )
+//    )
 
     val biddings = listOf(
         Bidding(
