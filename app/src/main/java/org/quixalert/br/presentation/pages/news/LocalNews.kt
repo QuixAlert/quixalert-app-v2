@@ -14,6 +14,17 @@ import org.quixalert.br.domain.model.News
 
 @Composable
 fun LocalNews(newsList: List<News>) {
+    if (newsList.isEmpty()) {
+        // Show placeholder or a message when there are no local news
+        Text(
+            text = "Nenhuma notícia local disponível",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(16.dp)
+        )
+        return
+    }
+
     Text(
         text = "Notícias locais",
         fontSize = 20.sp,
@@ -29,7 +40,7 @@ fun LocalNews(newsList: List<News>) {
             .fillMaxWidth()
     ) {
         newsList.forEach {
-            NewsItem(it, false)
+            NewsItem(news = it, isHorizontal = false)
         }
     }
 }

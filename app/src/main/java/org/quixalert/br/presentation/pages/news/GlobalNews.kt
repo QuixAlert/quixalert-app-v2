@@ -11,10 +11,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.quixalert.br.domain.model.News
-import org.quixalert.br.presentation.pages.news.NewsItem
 
 @Composable
 fun GlobalNews(newsList: List<News>) {
+    if (newsList.isEmpty()) {
+        // Show placeholder or a message when there are no global news
+        Text(
+            text = "Nenhuma notícia global disponível",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(16.dp)
+        )
+        return
+    }
+
     Text(
         text = "Notícias globais",
         fontSize = 20.sp,
@@ -27,8 +37,8 @@ fun GlobalNews(newsList: List<News>) {
         modifier = Modifier
             .padding(horizontal = 16.dp)
     ) {
-        items(newsList.filter { !it.isLocal }) { news ->
-            NewsItem(news = news)
+        items(newsList) { news ->
+            NewsItem(news = news, isHorizontal = true)
         }
     }
 }

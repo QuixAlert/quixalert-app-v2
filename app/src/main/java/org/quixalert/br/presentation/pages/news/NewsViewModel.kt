@@ -9,6 +9,8 @@ import kotlinx.coroutines.launch
 import org.quixalert.br.domain.model.News
 import org.quixalert.br.domain.model.NewsType
 import org.quixalert.br.services.NewsService
+import org.quixalert.br.utils.populateNews
+import java.time.Instant
 import javax.inject.Inject
 
 data class NewsUiState(
@@ -37,10 +39,13 @@ class NewsViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
+//                registerNews()
                 val allNews = newsService.getAll().await()
-                val latestNews = allNews.filterIndexed { index, _ -> index < 3 }
-                val globalNews = allNews.filter { news -> news.type == NewsType.GLOBAL }
-                val localNews = allNews.filter { news -> news.type == NewsType.LOCAL }
+                val latestNews = allNews
+                    .sortedByDescending { Instant.parse(it.date) }
+                    .take(3)
+                val globalNews = allNews.filter { it.type == NewsType.GLOBAL }
+                val localNews = allNews.filter { it.type == NewsType.LOCAL }
 
                 _uiState.value = _uiState.value.copy(
                     globalNews = globalNews,
@@ -51,22 +56,13 @@ class NewsViewModel @Inject constructor(
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
-                    errorMessage = "Failed to load news: ${e.message}"
+                    errorMessage = "Falha ao carregar notícias: ${e.message}"
                 )
             }
         }
     }
 
-//    fun updateFilterAndReloadNews(filterType: NewsType) {
-//        val filteredNewsList = when (filterType) {
-//            NewsType.LOCAL -> _uiState.value.newsList.filter { it.type == NewsType.LOCAL }
-//            NewsType.GLOBAL -> _uiState.value.newsList.filter { it.type == NewsType.GLOBAL }
-//            else -> _uiState.value.newsList
-//        }
-//
-//        _uiState.value = _uiState.value.copy(
-//            newsList = filteredNewsList,
-//            currentFilterType = filterType
-//        )
-//    }
+    fun registerNews(){
+        populateNews().forEach { new -> newsService.add(new) }
+    }
 }
