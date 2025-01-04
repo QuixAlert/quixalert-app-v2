@@ -121,7 +121,8 @@ fun App() {
                         )
                         "donate" -> DonationScreen(
                             onBackClick = { currentScreen = "animals" },
-                            onMenuClick = { isFloatingMenuVisible = !isFloatingMenuVisible }
+                            onMenuClick = { isFloatingMenuVisible = !isFloatingMenuVisible },
+                            onFormClick = { currentScreen = "animals" }
                         )
                         "reports_solicitation" -> ReportsSolicitationScreen(
                             onBackClick = { currentScreen = "home" },
