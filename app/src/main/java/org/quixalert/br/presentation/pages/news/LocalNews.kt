@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,9 +15,8 @@ import androidx.compose.ui.unit.sp
 import org.quixalert.br.domain.model.News
 
 @Composable
-fun LocalNews(newsList: List<News>) {
+fun LocalNews(newsList: List<News>, hasHeader: Boolean = true, hasPadding: Boolean = true, isHorizontal: Boolean = false) {
     if (newsList.isEmpty()) {
-        // Show placeholder or a message when there are no local news
         Text(
             text = "Nenhuma notícia local disponível",
             fontSize = 18.sp,
@@ -25,22 +26,44 @@ fun LocalNews(newsList: List<News>) {
         return
     }
 
-    Text(
-        text = "Notícias locais",
-        fontSize = 20.sp,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier
-            .padding(top = 32.dp, start = 16.dp, bottom = 12.dp)
-    )
+    if (hasHeader) {
+        Text(
+            text = "Notícias locais",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(top = 32.dp, start = 16.dp, bottom = 12.dp)
+        )
+    }
 
-    Column(
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier
-            .padding(horizontal = 16.dp)
-            .fillMaxWidth()
-    ) {
-        newsList.forEach {
-            NewsItem(news = it, isHorizontal = false)
+    if (isHorizontal) {
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier
+                .apply {
+                    if (hasPadding) {
+                        padding(horizontal = 16.dp)
+                    }
+                }
+        ) {
+            items(newsList) { news ->
+                NewsItem(news = news, isHorizontal = true)
+            }
+        }
+    } else {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier
+                .apply {
+                    if (hasPadding) {
+                        padding(horizontal = 16.dp)
+                    }
+                }
+                .fillMaxWidth()
+        ) {
+            newsList.forEach { news ->
+                NewsItem(news = news, isHorizontal = false)
+            }
         }
     }
 }

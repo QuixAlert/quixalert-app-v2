@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.sp
 import org.quixalert.br.domain.model.News
 
 @Composable
-fun GlobalNews(newsList: List<News>) {
+fun GlobalNews(newsList: List<News>, hasHeader: Boolean = true, hasPadding: Boolean = true) {
     if (newsList.isEmpty()) {
         // Show placeholder or a message when there are no global news
         Text(
@@ -25,17 +25,23 @@ fun GlobalNews(newsList: List<News>) {
         return
     }
 
-    Text(
-        text = "Notícias globais",
-        fontSize = 20.sp,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp)
-    )
+    if(hasHeader){
+        Text(
+            text = "Notícias globais",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp)
+        )
+    }
 
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier
-            .padding(horizontal = 16.dp)
+            .apply {
+                if (hasPadding) {
+                    padding(horizontal = 16.dp)
+                }
+            }
     ) {
         items(newsList) { news ->
             NewsItem(news = news, isHorizontal = true)
