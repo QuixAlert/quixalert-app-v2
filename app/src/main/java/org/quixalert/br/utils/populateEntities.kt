@@ -7,6 +7,8 @@ import org.quixalert.br.domain.model.AnimalSize
 import org.quixalert.br.domain.model.AnimalType
 import org.quixalert.br.domain.model.News
 import org.quixalert.br.domain.model.NewsType
+import org.quixalert.br.domain.model.Notification
+import java.text.SimpleDateFormat
 
 fun populateAnimalData(): List<Animal> {
     val animals = listOf(
@@ -211,4 +213,67 @@ fun populateNews(): List<News> {
         )
     )
     return news
+}
+
+fun populateNotifications(): List<Notification> {
+    val notifications = listOf(
+        Notification(
+            data = SimpleDateFormat("dd/MM/yyyy").parse("15/12/2024"),
+            title = "Dicas de sustentabilidade",
+            message = "Todas as vezes que usamos uma folha de papel indevidamente, matamos praticamente uma árvore. Use papel de forma consciente.",
+            readCheck = false,
+            imageUrl = "https://firebasestorage.googleapis.com/v0/b/quixalert.appspot.com/o/notifications_icons%2Fnotification_icon1.png?alt=media&token=e20f74a6-5988-4c96-b83b-e4e8810e194a"
+        ),
+        Notification(
+            data = SimpleDateFormat("dd/MM/yyyy").parse("12/12/2024"),
+            title = "Vacinação de animais",
+            message = "A partir do dia 30 de junho, teremos vacinação gratuita para gatos e cachorros. Você pode ir até qualquer posto de vacinação com o seu pet.",
+            readCheck = true,
+            imageUrl = "https://firebasestorage.googleapis.com/v0/b/quixalert.appspot.com/o/notifications_icons%2Fnotification_icon1.png?alt=media&token=e20f74a6-5988-4c96-b83b-e4e8810e194a"
+        ),
+        Notification(
+            data = SimpleDateFormat("dd/MM/yyyy").parse("12/12/2024"),
+            title = "Ibama está na cidade",
+            message = "O Ibama está na cidade para promover o quinto ciclo de palestras sobre preservação ambiental. Será no auditório Raquel de Queiroz às 10h.",
+            readCheck = true,
+            imageUrl = "https://firebasestorage.googleapis.com/v0/b/quixalert.appspot.com/o/notifications_icons%2Fnotification_icon2.png?alt=media&token=3118c4ca-1e53-4aa8-a643-f6ee33ee3a6a"
+        ),
+        Notification(
+            data = SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
+            title = "Castração de gatos gratuita",
+            message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
+            readCheck = true,
+            imageUrl = "https://firebasestorage.googleapis.com/v0/b/quixalert.appspot.com/o/notifications_icons%2Fnotification_icon4.png?alt=media&token=5de623e2-bed7-48c0-a836-c523509c739f"
+        ),
+        Notification(
+            data = SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
+            title = "Castração de gatos gratuita",
+            message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
+            readCheck = true,
+            imageUrl = "https://firebasestorage.googleapis.com/v0/b/quixalert.appspot.com/o/notifications_icons%2Fnotification_icon4.png?alt=media&token=5de623e2-bed7-48c0-a836-c523509c739f"
+        ),
+        Notification(
+            data = SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
+            title = "Castração de gatos gratuita",
+            message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
+            readCheck = true,
+            imageUrl = "https://firebasestorage.googleapis.com/v0/b/quixalert.appspot.com/o/notifications_icons%2Fnotification_icon4.png?alt=media&token=5de623e2-bed7-48c0-a836-c523509c739f"
+        ),
+        Notification(
+            data = SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
+            title = "Castração de gatos gratuita",
+            message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
+            readCheck = true,
+            imageUrl = "https://firebasestorage.googleapis.com/v0/b/quixalert.appspot.com/o/notifications_icons%2Fnotification_icon4.png?alt=media&token=5de623e2-bed7-48c0-a836-c523509c739f"
+        ),
+        Notification(
+            data = SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
+            title = "Castração de gatos gratuita",
+            message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
+            readCheck = true,
+            imageUrl = "https://firebasestorage.googleapis.com/v0/b/quixalert.appspot.com/o/notifications_icons%2Fnotification_icon4.png?alt=media&token=5de623e2-bed7-48c0-a836-c523509c739f"
+        )
+    )
+
+    return notifications
 }
