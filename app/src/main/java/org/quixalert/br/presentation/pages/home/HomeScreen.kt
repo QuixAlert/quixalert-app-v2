@@ -248,7 +248,7 @@ fun NewsItem(news: News) {
                     .height(150.dp)
             ) {
                 AsyncImage(
-                    model = news.image,
+                    model = news.imageUrl,
                     contentDescription = news.title,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
@@ -277,7 +277,7 @@ fun NewsItem(news: News) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 AsyncImage(
-                    model = news.icon,
+                    model = news.iconUrl,
                     contentDescription = "Profile Picture",
                     modifier = Modifier
                         .size(30.dp)
