@@ -18,6 +18,7 @@ import org.quixalert.br.domain.model.Pet
 import org.quixalert.br.domain.model.PetType
 import org.quixalert.br.domain.model.Report
 import org.quixalert.br.domain.model.User
+import java.util.UUID
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -41,6 +42,7 @@ class MainActivity : ComponentActivity() {
 
 // Mock Data
 public val mockUser = User(
+    id = UUID.randomUUID().toString(),
     name = "Mara Lopes",
     greeting = "Bom dia",
     profileImage = "https://picsum.photos/seed/user/300"

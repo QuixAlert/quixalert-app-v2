@@ -6,7 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import org.quixalert.br.domain.model.Adoption
+import org.quixalert.br.domain.model.AdoptionT
 import org.quixalert.br.domain.model.Animal
 import org.quixalert.br.domain.model.AnimalType
 import org.quixalert.br.services.AdoptionService
@@ -57,7 +57,7 @@ class AdoptionViewModel @Inject constructor(
         }
     }
 
-    fun submitAdoption(adoption: Adoption) {
+    fun submitAdoption(adoption: AdoptionT) {
         _uiState.value = _uiState.value.copy(isSubmitting = true, submissionSuccess = false)
         viewModelScope.launch {
             try {

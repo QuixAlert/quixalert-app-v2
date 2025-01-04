@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import org.quixalert.br.MockData.adoptions
 import org.quixalert.br.MockData.biddings
 import org.quixalert.br.MockData.reports
+import org.quixalert.br.domain.model.Animal
 import org.quixalert.br.domain.model.UserRegistrationData
 import org.quixalert.br.presentation.components.FloatingMenu
 import org.quixalert.br.presentation.components.HeaderSection
@@ -26,7 +27,6 @@ import org.quixalert.br.presentation.components.NavigationBarM3
 import org.quixalert.br.presentation.pages.adoptions.AdoptionFormScreen
 import org.quixalert.br.presentation.pages.adoptions.AdoptionScreen
 import org.quixalert.br.presentation.pages.animal.AnimalDetailsScreen
-import org.quixalert.br.presentation.pages.animal.mockPetDetail
 import org.quixalert.br.presentation.pages.documentsSolicitationScreen.DocumentsSolicitationScreen
 import org.quixalert.br.presentation.pages.donation.DonationScreen
 import org.quixalert.br.presentation.pages.emergencyNumbers.EmergencyNumbersScreen
@@ -47,6 +47,8 @@ fun App() {
     var currentScreen by remember { mutableStateOf("login") }
     var registrationData by remember { mutableStateOf<UserRegistrationData?>(null) }
     var isFloatingMenuVisible by remember { mutableStateOf(false) }
+    var selectedAnimal by remember { mutableStateOf<Animal?>(null) }
+
 
     AppTheme {
         val modifierTopBarBlur = if (isFloatingMenuVisible) {
@@ -97,9 +99,6 @@ fun App() {
                         )
                         "home" -> HomeScreen(
                             user = mockUser,
-                            localNews = mockLocalNews,
-                            globalNews = mockGlobalNews,
-                            pets = mockPets,
                             onNotificationClick = { currentScreen = "notification" }
                         )
                         "notification" -> NotificationScreen()
@@ -139,13 +138,17 @@ fun App() {
                             onMenuClick = { isFloatingMenuVisible = !isFloatingMenuVisible }
                         )
                         "pet_details" -> AnimalDetailsScreen(
+                            selectedAnimal = selectedAnimal,
                             onBackClick = { currentScreen = "animals" },
                             onMenuClick = { isFloatingMenuVisible = !isFloatingMenuVisible },
                             onFormClick = { currentScreen = "form_adote" }
                         )
                         "form_adote" -> AdoptionFormScreen(
-                            pet = mockPetDetail,
-                            onBackClick = { currentScreen = "pet_details" }
+                            user = mockUser,
+                            onBackClick = { animal ->
+                                selectedAnimal = animal
+                                currentScreen = "pet_details" },
+                            onFormClick = { currentScreen = "animals" }
                         )
                         "report_details" -> ReportScreen()
                     }

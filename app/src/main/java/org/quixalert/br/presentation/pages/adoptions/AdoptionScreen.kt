@@ -78,8 +78,6 @@ fun AdoptionScreen(
             .fillMaxSize()
             .background(Color.White)
     ) {
-        TopBar(onBackClick = { /* Handle back navigation */ })
-
         Text(
             text = "Animais disponíveis para adoção",
             fontSize = 20.sp,

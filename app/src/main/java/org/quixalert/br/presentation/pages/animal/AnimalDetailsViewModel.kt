@@ -1,5 +1,6 @@
 package org.quixalert.br.presentation.pages.animal
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,10 +20,15 @@ data class AnimalUiState(
 
 @HiltViewModel
 class AnimalDetailsViewModel @Inject constructor(
-    private val animalService: AnimalService
+    private val animalService: AnimalService,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(AnimalUiState())
+    private val _uiState = MutableStateFlow(
+        AnimalUiState(
+            animalId = savedStateHandle["animalId"]
+        )
+    )
     val uiState: StateFlow<AnimalUiState> get() = _uiState
 
     fun loadPet() {
@@ -40,6 +46,7 @@ class AnimalDetailsViewModel @Inject constructor(
     }
 
     fun setAnimalId(animalId: String) {
+        savedStateHandle["animalId"] = animalId
         _uiState.value = _uiState.value.copy(animalId = animalId)
     }
 }
