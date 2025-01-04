@@ -125,7 +125,8 @@ fun App() {
                         )
                         "reports_solicitation" -> ReportsSolicitationScreen(
                             onBackClick = { currentScreen = "home" },
-                            onMenuClick = { isFloatingMenuVisible = !isFloatingMenuVisible }
+                            onMenuClick = { isFloatingMenuVisible = !isFloatingMenuVisible },
+                            onFormClick = { currentScreen = "animals" }
                         )
                         "documents" -> DocumentsSolicitationScreen(
                             onBackClick = { currentScreen = "home" },
