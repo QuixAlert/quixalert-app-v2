@@ -2,11 +2,9 @@ package org.quixalert.br.domain.model
 
 import java.time.LocalDate
 
-data class Adoption(
+data class AdoptionT(
     override var id: String = "",
-    val petName: String = "",
-    val petImage: String = "",
-    val petIcon: String = "",
+    val animalId: String = "",
     val status: AdoptionStatus = AdoptionStatus.PENDING,
     val address: String = "",
     val livingDescription: String = "",
