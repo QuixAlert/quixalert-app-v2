@@ -168,3 +168,7 @@ fun populateAnimalData(): List<Animal> {
 
     return animals
 }
+
+fun populateNews(){
+
+}

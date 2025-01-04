@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.ui.components.NewsScreen
 import org.quixalert.br.MockData.adoptions
 import org.quixalert.br.MockData.biddings
 import org.quixalert.br.MockData.reports
@@ -34,7 +35,6 @@ import org.quixalert.br.presentation.pages.home.HomeScreen
 import org.quixalert.br.presentation.pages.login.RegisterScreen
 import org.quixalert.br.presentation.pages.login.RegisterStepTwoScreen
 import org.quixalert.br.presentation.pages.login.SignInScreen
-import org.quixalert.br.presentation.pages.newsScreen.newsScreen
 import org.quixalert.br.presentation.pages.notification.NotificationScreen
 import org.quixalert.br.presentation.pages.profile.ProfileScreen
 import org.quixalert.br.presentation.pages.reports.ReportScreen
@@ -114,7 +114,7 @@ fun App() {
                             onBiddingClick = { currentScreen = "bidding_pdf" },
                             onReportClick = { currentScreen = "report_details" }
                         )
-                        "news" -> newsScreen()
+                        "news" -> NewsScreen()
                         "animals" -> AdoptionScreen(
                             onDonateClick = { currentScreen = "donate" },
                             onDetailsClick = { currentScreen = "pet_details" }
