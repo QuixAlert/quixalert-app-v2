@@ -1,104 +1,37 @@
 package org.quixalert.br.presentation.pages.notification
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.quixalert.br.R
-import org.quixalert.br.domain.model.Notification
-import java.text.SimpleDateFormat
-import java.util.Locale
+import androidx.hilt.navigation.compose.hiltViewModel
 
-val notifications = listOf(
-    Notification(
-        data = SimpleDateFormat("dd/MM/yyyy").parse("15/12/2024"),
-        title = "Dicas de sustentabilidade",
-        message = "Todas as vezes que usamos uma folha de papel indevidamente, matamos praticamente uma árvore. Use papel de forma consciente.",
-        readCheck = false,
-        image = R.drawable.notification_icon1
-    ),
-    Notification(
-        data = SimpleDateFormat("dd/MM/yyyy").parse("12/12/2024"),
-        title = "Vacinação de animais",
-        message = "A partir do dia 30 de junho, teremos vacinação gratuita para gatos e cachorros. Você pode ir até qualquer posto de vacinação com o seu pet.",
-        readCheck = true,
-        image = R.drawable.notification_icon1
-    ),
-    Notification(
-        data = SimpleDateFormat("dd/MM/yyyy").parse("12/12/2024"),
-        title = "Ibama está na cidade",
-        message = "O Ibama está na cidade para promover o quinto ciclo de palestras sobre preservação ambiental. Será no auditório Raquel de Queiroz às 10h.",
-        readCheck = true,
-        image = R.drawable.notification_icon2
-    ),
-    Notification(
-        data =SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
-        title = "Castração de gatos gratuita",
-        message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
-        readCheck = true,
-        image = R.drawable.notification_icon4
-    ),
-    Notification(
-        data =SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
-        title = "Castração de gatos gratuita",
-        message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
-        readCheck = true,
-        image = R.drawable.notification_icon4
-    ),
-    Notification(
-        data =SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
-        title = "Castração de gatos gratuita",
-        message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
-        readCheck = true,
-        image = R.drawable.notification_icon4
-    ),
-    Notification(
-        data =SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
-        title = "Castração de gatos gratuita",
-        message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
-        readCheck = true,
-        image = R.drawable.notification_icon4
-    ),
-    Notification(
-        data =SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
-        title = "Castração de gatos gratuita",
-        message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
-        readCheck = true,
-        image = R.drawable.notification_icon4
-    ),
-)
 
-@Preview
 @Composable
-fun NotificationScreen() {
+fun NotificationScreen(
+    viewModel: NotificationViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect("news") {
+        viewModel.loadNotifications()
+    }
+
     Column(
+        modifier = Modifier.fillMaxSize()
     ) {
         Text(
             text = "Notificações",
@@ -106,82 +39,33 @@ fun NotificationScreen() {
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
             ),
-            modifier = Modifier.padding(start = 16.dp)
+            modifier = Modifier.padding(start = 16.dp, top = 16.dp)
         )
-        NotificationList(notifications)
-    }
-}
 
-@Composable
-fun NotificationList(notifications: List<Notification>) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 8.dp, start = 24.dp, end = 24.dp, bottom = 100.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        items(notifications) { notification ->
-            NotificationItem(notification)
+        if (uiState.isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = Color(0xFF269996))
+            }
         }
-    }
-}
 
-@Composable
-fun NotificationItem(notification: Notification) {
-    val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(min = 100.dp),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = notification.image),
-                contentDescription = "Ícone da Notificação",
-                modifier = Modifier
-                    .size(48.dp)
-                    .background(Color.LightGray, shape = CircleShape),
-                contentScale = ContentScale.Crop
-            )
-
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-                    .padding(start = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+        if (!uiState.errorMessage.isNullOrEmpty()) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = notification.title,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 13.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = notification.message,
-                    fontWeight = FontWeight.Light,
-                    fontSize = 13.sp,
-                    maxLines = 10,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = dateFormatter.format(notification.data),
-                    color = Color.Gray,
-                    textAlign = TextAlign.End,
-                    fontSize = 12.sp,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.End),
+                    text = uiState.errorMessage!!,
+                    color = Color.Red,
+                    fontWeight = FontWeight.Bold
                 )
             }
+        }
+
+        if (uiState.notifications.isNotEmpty() && !uiState.isLoading) {
+            NotificationList(uiState.notifications)
         }
     }
 }
