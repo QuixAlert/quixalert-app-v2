@@ -129,7 +129,8 @@ fun App() {
                         )
                         "documents" -> DocumentsSolicitationScreen(
                             onBackClick = { currentScreen = "home" },
-                            onMenuClick = { isFloatingMenuVisible = !isFloatingMenuVisible }
+                            onMenuClick = { isFloatingMenuVisible = !isFloatingMenuVisible },
+                            onFormClick = { currentScreen = "home" }
                         )
                         "emergency" -> EmergencyNumbersScreen(
                             onBackClick = { currentScreen = "home" },
