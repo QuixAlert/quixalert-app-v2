@@ -1,10 +1,9 @@
 package org.quixalert.br.domain.repository
 
-import org.quixalert.br.domain.model.Adoption
-import org.quixalert.br.domain.model.Animal
+import org.quixalert.br.domain.model.AdoptionT
 import javax.inject.Inject
 
-class AdoptionRepository  @Inject constructor() : FirebaseRepository<Adoption, String>(
+class AdoptionRepository  @Inject constructor() : FirebaseRepository<AdoptionT, String>(
     collectionName = "adoption",
-    entityClass = Adoption::class.java
+    entityClass = AdoptionT::class.java
 )

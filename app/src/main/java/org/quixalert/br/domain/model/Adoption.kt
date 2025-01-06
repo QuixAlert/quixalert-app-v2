@@ -14,5 +14,6 @@ data class Adoption(
     val monthlyIncome: String = "",
     val householdDescription: String = "",
     val adoptionReason: String = "",
-    val visitDate: LocalDate? = null
+    val visitDate: LocalDate? = null,
+    val userId: String = ""
 ) : BaseModel(id)

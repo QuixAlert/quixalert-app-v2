@@ -1,7 +1,5 @@
 package org.quixalert.br.domain.repository
 
-import org.quixalert.br.domain.model.Adoption
-import org.quixalert.br.domain.model.Animal
 import org.quixalert.br.domain.model.UserRegistrationData
 import javax.inject.Inject
 

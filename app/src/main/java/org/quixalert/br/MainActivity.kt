@@ -18,6 +18,7 @@ import org.quixalert.br.domain.model.Pet
 import org.quixalert.br.domain.model.PetType
 import org.quixalert.br.domain.model.Report
 import org.quixalert.br.domain.model.User
+import java.util.UUID
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -41,55 +42,35 @@ class MainActivity : ComponentActivity() {
 
 // Mock Data
 public val mockUser = User(
+    id = UUID.randomUUID().toString(),
     name = "Mara Lopes",
     greeting = "Bom dia",
     profileImage = "https://picsum.photos/seed/user/300"
 )
 
-public val mockLocalNews = listOf(
-    News(
-        id = "1",
-        title = "Novo Parque será inaugurado no centro da cidade",
-        image = "https://picsum.photos/seed/local1/300",
-        icon = "https://picsum.photos/seed/user/300",
-        isLocal = true
-    ),
-    News(
-        id = "2",
-        title = "Festival de Gastronomia acontece neste fim de semana",
-        image = "https://picsum.photos/seed/local2/300",
-        icon = "https://picsum.photos/seed/user/300",
-        isLocal = true
-    ),
-    News(
-        id = "3",
-        title = "Prefeitura anuncia reforma de escola municipal",
-        image = "https://picsum.photos/seed/local3/300",
-        icon = "https://picsum.photos/seed/user/300",
-        isLocal = true
-    )
-)
+public val mockLocalNews = emptyList<News>()
 
-public val mockGlobalNews = listOf(
-    News(
-        id = "4",
-        title = "Nova descoberta científica promete revolucionar medicina",
-        image = "https://picsum.photos/seed/global1/300",
-        icon = "https://picsum.photos/seed/user/300",
-    ),
-    News(
-        id = "5",
-        title = "Avanços tecnológicos na exploração espacial",
-        image = "https://picsum.photos/seed/global2/300",
-        icon = "https://picsum.photos/seed/user/300",
-    ),
-    News(
-        id = "6",
-        title = "Acordo internacional sobre mudanças climáticas",
-        image = "https://picsum.photos/seed/global3/300",
-        icon = "https://picsum.photos/seed/user/300",
-    )
-)
+public val mockGlobalNews = emptyList<News>()
+//    listOf(
+//    News(
+//        id = "4",
+//        title = "Nova descoberta científica promete revolucionar medicina",
+//        image = "https://picsum.photos/seed/global1/300",
+//        iconUrl = "https://picsum.photos/seed/user/300",
+//    ),
+//    News(
+//        id = "5",
+//        title = "Avanços tecnológicos na exploração espacial",
+//        image = "https://picsum.photos/seed/global2/300",
+//        iconUrl = "https://picsum.photos/seed/user/300",
+//    ),
+//    News(
+//        id = "6",
+//        title = "Acordo internacional sobre mudanças climáticas",
+//        image = "https://picsum.photos/seed/global3/300",
+//        iconUrl = "https://picsum.photos/seed/user/300",
+//    )
+//)
 
 public val mockPets = listOf(
     Pet(
@@ -128,30 +109,30 @@ object MockData {
         profileImage = "https://randomuser.me/api/portraits/men/1.jpg",
         greeting = "Ola"
     )
-
-    val reports = listOf(
-        Report(
-            id = "1",
-            title = "Buraco na calçada",
-            image = "https://images.unsplash.com/photo-1584483766114-2cea6facdf57?ixlib=rb-4.0.3",
-            icon = "https://img.icons8.com/color/48/000000/light.png",
-            date = "2024-03-15"
-        ),
-        Report(
-            id = "2",
-            title = "Lâmpada queimada",
-            image = "https://images.unsplash.com/photo-1563461661026-49631dd5d68e?ixlib=rb-4.0.3",
-            icon = "https://img.icons8.com/color/48/000000/light.png",
-            date = "2024-03-14"
-        ),
-        Report(
-            id = "3",
-            title = "Lixo acumulado",
-            image = "https://images.unsplash.com/photo-1605600659908-0ef719419d41?ixlib=rb-4.0.3",
-            icon = "https://img.icons8.com/color/48/000000/trash.png",
-            date = "2024-03-13"
-        )
-    )
+    val reports = emptyList<Report>()
+//    val reports = listOf(
+//        Report(
+//            id = "1",
+//            title = "Buraco na calçada",
+//            image = "https://images.unsplash.com/photo-1584483766114-2cea6facdf57?ixlib=rb-4.0.3",
+//            icon = "https://img.icons8.com/color/48/000000/light.png",
+//            date = "2024-03-15"
+//        ),
+//        Report(
+//            id = "2",
+//            title = "Lâmpada queimada",
+//            image = "https://images.unsplash.com/photo-1563461661026-49631dd5d68e?ixlib=rb-4.0.3",
+//            icon = "https://img.icons8.com/color/48/000000/light.png",
+//            date = "2024-03-14"
+//        ),
+//        Report(
+//            id = "3",
+//            title = "Lixo acumulado",
+//            image = "https://images.unsplash.com/photo-1605600659908-0ef719419d41?ixlib=rb-4.0.3",
+//            icon = "https://img.icons8.com/color/48/000000/trash.png",
+//            date = "2024-03-13"
+//        )
+//    )
 
     val biddings = listOf(
         Bidding(

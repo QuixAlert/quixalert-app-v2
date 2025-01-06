@@ -5,5 +5,14 @@ data class Report(
     val title: String = "",
     val image: String = "",
     val icon: String = "",
-    val date: String = ""
+    val date: String = "",
+    val type: ReportType = ReportType.AMBIENTAL,
+    val description: String,
+    val address: String,
+    val motivation: String,
+    val details: String?
 ): BaseModel(id)
+
+
+
+

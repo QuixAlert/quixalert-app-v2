@@ -17,6 +17,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -24,6 +25,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,12 +39,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import org.quixalert.br.R
 import org.quixalert.br.presentation.pages.profile.IconTint
 
 @Composable
-fun DonationScreen(onBackClick: () -> Unit, onMenuClick: () -> Unit) {
-    var donationAmount by remember { mutableStateOf("") }
+fun DonationScreen(
+    onBackClick: () -> Unit,
+    onMenuClick: () -> Unit,
+    onFormClick: () -> Unit,
+    viewModel: DonationViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    var showSuccessDialog by remember { mutableStateOf(false) }
+
+    if (uiState.submissionSuccess && !showSuccessDialog) {
+        showSuccessDialog = true
+    }
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -99,8 +113,8 @@ fun DonationScreen(onBackClick: () -> Unit, onMenuClick: () -> Unit) {
 
             // Donation Input
             OutlinedTextField(
-                value = donationAmount,
-                onValueChange = { donationAmount = it },
+                value = uiState.donationAmount,
+                onValueChange = { viewModel.updateDonationAmount(it) },
                 label = { Text("Valor") },
                 prefix = { Text("R$ ") },
                 modifier = Modifier
@@ -124,12 +138,10 @@ fun DonationScreen(onBackClick: () -> Unit, onMenuClick: () -> Unit) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    //.aspectRatio(1f)
                     .background(
                         Color.LightGray,
                         RoundedCornerShape(8.dp)
                     ),
-
             ) {
                 Image(
                     painter = painterResource(R.drawable.news1),
@@ -139,7 +151,7 @@ fun DonationScreen(onBackClick: () -> Unit, onMenuClick: () -> Unit) {
             }
 
             Button(
-                onClick = { /* Handle form submission */ },
+                onClick = { viewModel.submitDonation() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 32.dp),
@@ -153,6 +165,23 @@ fun DonationScreen(onBackClick: () -> Unit, onMenuClick: () -> Unit) {
                     color = Color.White
                 )
             }
+        }
+
+        if (showSuccessDialog) {
+            AlertDialog(
+                onDismissRequest = { showSuccessDialog = false },
+                title = { Text("Doação realizada com sucesso!") },
+                text = { Text("Obrigado pela sua contribuição!") },
+                confirmButton = {
+                    Button(onClick = {
+                        viewModel.resetState()
+                        onFormClick()
+                        showSuccessDialog = false
+                    }) {
+                        Text("OK")
+                    }
+                }
+            )
         }
     }
 }

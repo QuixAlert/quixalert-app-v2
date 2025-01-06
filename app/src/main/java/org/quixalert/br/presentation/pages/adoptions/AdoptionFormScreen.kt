@@ -35,6 +35,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,18 +53,22 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import org.quixalert.br.R
-import org.quixalert.br.domain.model.Adoption
 import org.quixalert.br.domain.model.AdoptionStatus
-import org.quixalert.br.presentation.pages.animal.PetDetail
+import org.quixalert.br.domain.model.AdoptionT
+import org.quixalert.br.domain.model.Animal
+import org.quixalert.br.domain.model.User
+import org.quixalert.br.presentation.pages.animal.AnimalDetailsViewModel
 import org.quixalert.br.presentation.pages.home.IconTint
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdoptionFormScreen(
-    pet: PetDetail,
-    onBackClick: () -> Unit,
-    viewModel: AdoptionViewModel = hiltViewModel()
+    user: User,
+    onBackClick: (Animal?) -> Unit,
+    onFormClick: () -> Unit,
+    adoptionViewModel: AdoptionViewModel = hiltViewModel(),
+    animalDetailsViewModel: AnimalDetailsViewModel = hiltViewModel()
 ) {
     var address by remember { mutableStateOf("") }
     var livingDescription by remember { mutableStateOf("") }
@@ -76,9 +81,14 @@ fun AdoptionFormScreen(
     var showDatePicker by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
 
-    val uiState by viewModel.uiState.collectAsState()
+    val adoptionUiState by adoptionViewModel.uiState.collectAsState()
+    val animalUiState by animalDetailsViewModel.uiState.collectAsState()
 
-    if (uiState.submissionSuccess && !showSuccessDialog) {
+    LaunchedEffect(Unit) {
+        animalDetailsViewModel.loadPet()
+    }
+
+    if (adoptionUiState.submissionSuccess && !showSuccessDialog) {
         showSuccessDialog = true
     }
 
@@ -87,22 +97,25 @@ fun AdoptionFormScreen(
             .fillMaxSize()
             .background(Color.White)
     ) {
+        val animal = animalUiState.animal
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            TopBar(onBackClick = onBackClick)
+            TopBar(onBackClick = { onBackClick(animal) })
 
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(300.dp)
             ) {
-                AsyncImage(
-                    model = pet.image,
-                    contentDescription = pet.name,
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
-                )
+                if (animal != null) {
+                    AsyncImage(
+                        model = animal.image,
+                        contentDescription = animal.name,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
 
             Column(
@@ -116,11 +129,13 @@ fun AdoptionFormScreen(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Text(
-                    text = pet.name,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                if (animal != null) {
+                    Text(
+                        text = animal.name,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -300,31 +315,33 @@ fun AdoptionFormScreen(
                             return@Button
                         }
 
-                        val adoption = Adoption(
-                            id = "",
-                            petName = pet.name,
-                            petImage = pet.image,
-                            petIcon = "",
-                            status = AdoptionStatus.PENDING,
-                            address = address,
-                            livingDescription = livingDescription,
-                            otherAnimals = otherAnimals,
-                            monthlyIncome = monthlyIncome,
-                            householdDescription = householdDescription,
-                            adoptionReason = adoptionReason,
-                            visitDate = selectedDate
-                        )
-                        viewModel.submitAdoption(adoption)
+                        val adoption = animal?.let {
+                            AdoptionT(
+                                animalId = animal.id,
+                                status = AdoptionStatus.PENDING,
+                                address = address,
+                                livingDescription = livingDescription,
+                                otherAnimals = otherAnimals,
+                                monthlyIncome = monthlyIncome,
+                                householdDescription = householdDescription,
+                                adoptionReason = adoptionReason,
+                                visitDate = selectedDate,
+                                userId = user.id
+                            )
+                        }
+                        if (adoption != null) {
+                            adoptionViewModel.submitAdoption(adoption)
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp, bottom = 54.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (uiState.isSubmitting) Color.Gray else Color(0xFF269996)
+                        containerColor = if (adoptionUiState.isSubmitting) Color.Gray else Color(0xFF269996)
                     ),
-                    enabled = !uiState.isSubmitting
+                    enabled = !adoptionUiState.isSubmitting
                 ) {
-                    if (uiState.isSubmitting) {
+                    if (adoptionUiState.isSubmitting) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(24.dp),
                             color = Color.White,
@@ -345,13 +362,14 @@ fun AdoptionFormScreen(
         AlertDialog(
             onDismissRequest = {
                 showSuccessDialog = false
-                viewModel.resetSubmissionSuccess()
+                adoptionViewModel.resetSubmissionSuccess()
             },
             confirmButton = {
                 Button(
                     onClick = {
                         showSuccessDialog = false
-                        viewModel.resetSubmissionSuccess()
+                        onFormClick()
+                        adoptionViewModel.resetSubmissionSuccess()
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFF269996)
@@ -373,7 +391,7 @@ fun AdoptionFormScreen(
 
 @Composable
 private fun TopBar(
-    onBackClick: () -> Unit,
+    onBackClick: () -> Unit
 ) {
     Row(
         modifier = Modifier

@@ -8,5 +8,5 @@ data class Notification(
     val title: String = "",
     val message: String = "",
     val readCheck: Boolean = false,
-    val image: Int = 0
+    val imageUrl: String = ""
 ): BaseModel(id)

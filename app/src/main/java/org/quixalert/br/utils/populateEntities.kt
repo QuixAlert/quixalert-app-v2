@@ -5,6 +5,10 @@ import org.quixalert.br.domain.model.AnimalExtraInfo
 import org.quixalert.br.domain.model.AnimalGender
 import org.quixalert.br.domain.model.AnimalSize
 import org.quixalert.br.domain.model.AnimalType
+import org.quixalert.br.domain.model.News
+import org.quixalert.br.domain.model.NewsType
+import org.quixalert.br.domain.model.Notification
+import java.text.SimpleDateFormat
 
 fun populateAnimalData(): List<Animal> {
     val animals = listOf(
@@ -167,4 +171,109 @@ fun populateAnimalData(): List<Animal> {
     )
 
     return animals
+}
+
+fun populateNews(): List<News> {
+    val news = listOf(
+        News(
+            title = "Alagamentos e Chuvas Fortes em Quixadá",
+            imageUrl = "https://reporterceara.com.br/wp-content/uploads/2024/03/WhatsApp-Image-2024-03-17-at-16.37.04.jpeg",
+            iconUrl = "https://reporterceara.com.br/wp-content/uploads/2024/02/logo-300x204.png",
+            type = NewsType.LOCAL,
+        ),
+        News(
+            title = "AMMA Planeja Criar Unidades de Conservação",
+            imageUrl = "https://www.sema.ce.gov.br/wp-content/uploads/sites/36/2024/08/WhatsApp-Image-2024-08-28-at-13.37.22.jpeg",
+            iconUrl = "https://brasao.org/wp-content/uploads/2018/10/brasao-do-ceara.png",
+            type = NewsType.LOCAL,
+        ),
+        News(
+            title = "AMMA Recebe Prêmio de Empatia Animal",
+            imageUrl = "https://quixada.ce.gov.br/fotos/745/Capa745.jpg",
+            iconUrl = "https://brasao.org/wp-content/uploads/2018/10/brasao-do-ceara.png",
+            type = NewsType.LOCAL,
+        ),
+        News(
+            title = "Acidente de ônibus nos Andes peruanos deixa seis mortos e seis desaparecidos",
+            imageUrl = "https://s2-g1.glbimg.com/GGDz-2duFNRjZtuMQhY7GAarN1o=/0x0:3500x2333/1000x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2025/A/b/opmVQnSf6FELMnseI2hA/000-36rz7xm.jpg",
+            iconUrl = "https://psicologafabiola.com.br/wp-content/uploads/2023/10/Entrevista-para-G1-sobre-Divorcio-1.jpg",
+            type = NewsType.GLOBAL,
+        ),
+        News(
+            title = "Suíça inaugura o teleférico mais íngreme do mundo",
+            imageUrl = "https://newr7-r7-prod.web.arc-cdn.net/resizer/v2/https%3A%2F%2Fd22yf0mxeu0gma.cloudfront.net%2F01-03-2025%2Ft_234af9a756bc4e6aa98bd8c8cda05efb_name_imagem_R7_padr_o__1_.png?auth=965727644e6ec8b2f62b8843edb8b75db258cbf19fcfb6d13956f757476985e0&smart=true&width=348&height=195",
+            iconUrl = "https://img.r7.com/images/record-tv-06112023200331159",
+            type = NewsType.GLOBAL,
+        ),
+        News(
+            title = "Edmundo González se reúne com Javier Milei na Argentina",
+            imageUrl = "https://www.cnnbrasil.com.br/wp-content/uploads/sites/12/2025/01/IMG-20250104-WA0005-e1736004818686.jpg?w=1220&h=674&crop=1&quality=85",
+            iconUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/CNN_International_logo.svg/1200px-CNN_International_logo.svg.png",
+            type = NewsType.GLOBAL,
+        )
+    )
+    return news
+}
+
+fun populateNotifications(): List<Notification> {
+    val notifications = listOf(
+        Notification(
+            data = SimpleDateFormat("dd/MM/yyyy").parse("15/12/2024"),
+            title = "Dicas de sustentabilidade",
+            message = "Todas as vezes que usamos uma folha de papel indevidamente, matamos praticamente uma árvore. Use papel de forma consciente.",
+            readCheck = false,
+            imageUrl = "https://firebasestorage.googleapis.com/v0/b/quixalert.appspot.com/o/notifications_icons%2Fnotification_icon1.png?alt=media&token=e20f74a6-5988-4c96-b83b-e4e8810e194a"
+        ),
+        Notification(
+            data = SimpleDateFormat("dd/MM/yyyy").parse("12/12/2024"),
+            title = "Vacinação de animais",
+            message = "A partir do dia 30 de junho, teremos vacinação gratuita para gatos e cachorros. Você pode ir até qualquer posto de vacinação com o seu pet.",
+            readCheck = true,
+            imageUrl = "https://firebasestorage.googleapis.com/v0/b/quixalert.appspot.com/o/notifications_icons%2Fnotification_icon1.png?alt=media&token=e20f74a6-5988-4c96-b83b-e4e8810e194a"
+        ),
+        Notification(
+            data = SimpleDateFormat("dd/MM/yyyy").parse("12/12/2024"),
+            title = "Ibama está na cidade",
+            message = "O Ibama está na cidade para promover o quinto ciclo de palestras sobre preservação ambiental. Será no auditório Raquel de Queiroz às 10h.",
+            readCheck = true,
+            imageUrl = "https://firebasestorage.googleapis.com/v0/b/quixalert.appspot.com/o/notifications_icons%2Fnotification_icon2.png?alt=media&token=3118c4ca-1e53-4aa8-a643-f6ee33ee3a6a"
+        ),
+        Notification(
+            data = SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
+            title = "Castração de gatos gratuita",
+            message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
+            readCheck = true,
+            imageUrl = "https://firebasestorage.googleapis.com/v0/b/quixalert.appspot.com/o/notifications_icons%2Fnotification_icon4.png?alt=media&token=5de623e2-bed7-48c0-a836-c523509c739f"
+        ),
+        Notification(
+            data = SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
+            title = "Castração de gatos gratuita",
+            message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
+            readCheck = true,
+            imageUrl = "https://firebasestorage.googleapis.com/v0/b/quixalert.appspot.com/o/notifications_icons%2Fnotification_icon4.png?alt=media&token=5de623e2-bed7-48c0-a836-c523509c739f"
+        ),
+        Notification(
+            data = SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
+            title = "Castração de gatos gratuita",
+            message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
+            readCheck = true,
+            imageUrl = "https://firebasestorage.googleapis.com/v0/b/quixalert.appspot.com/o/notifications_icons%2Fnotification_icon4.png?alt=media&token=5de623e2-bed7-48c0-a836-c523509c739f"
+        ),
+        Notification(
+            data = SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
+            title = "Castração de gatos gratuita",
+            message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
+            readCheck = true,
+            imageUrl = "https://firebasestorage.googleapis.com/v0/b/quixalert.appspot.com/o/notifications_icons%2Fnotification_icon4.png?alt=media&token=5de623e2-bed7-48c0-a836-c523509c739f"
+        ),
+        Notification(
+            data = SimpleDateFormat("dd/MM/yyyy").parse("11/12/2024"),
+            title = "Castração de gatos gratuita",
+            message = "A AMMA estará fornecendo castrações para felinos de forma gratuita para cidadãos que possuem qualquer tipo de vulnerabilidade social.",
+            readCheck = true,
+            imageUrl = "https://firebasestorage.googleapis.com/v0/b/quixalert.appspot.com/o/notifications_icons%2Fnotification_icon4.png?alt=media&token=5de623e2-bed7-48c0-a836-c523509c739f"
+        )
+    )
+
+    return notifications
 }

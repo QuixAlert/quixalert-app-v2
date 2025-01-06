@@ -54,38 +54,6 @@ import coil.compose.AsyncImage
 import org.quixalert.br.domain.model.Animal
 import org.quixalert.br.presentation.pages.profile.IconTint
 
-data class PetDetail(
-    val id: String,
-    val name: String,
-    val image: String,
-    val currentResponsible: String,
-    val responsibleIcon: String,
-    val status: String,
-    val breed: String,
-    val size: String,
-    val gender: String,
-    val location: String,
-    val about: String,
-    val gallery: List<String>,
-    val videos: List<String>
-)
-
-// Mock data
-val mockPetDetail = PetDetail(
-    id = "1",
-    name = "Max",
-    image = "https://images.jota.info/wp-content/uploads/2023/04/pexels-rk-jajoria-1189673.jpg",
-    currentResponsible = "Responsável atual",
-    responsibleIcon = "/api/placeholder/32/32",
-    status = "Disponível",
-    breed = "Sem raça definida",
-    size = "Médio",
-    gender = "Macho",
-    location = "Rua tabelião Enéas, 649 -\nCentro, Quixadá - CE, 63900-169",
-    about = "Max é um cachorro muito dócil e brincalhão. Ele adora crianças e é muito protetor. Já está vacinado e vermifugado.",
-    gallery = List(6) { "https://images.jota.info/wp-content/uploads/2023/04/pexels-rk-jajoria-1189673.jpg" },
-    videos = List(2) { "/api/placeholder/200/200" }
-)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AnimalScreenBase(
@@ -222,8 +190,8 @@ fun AnimalScreenBase(
 
 @Composable
 fun AnimalDetailsScreen(
-    animalId: String,
     viewModel: AnimalDetailsViewModel = hiltViewModel(),
+    selectedAnimal: Animal?,
     onBackClick: () -> Unit,
     onMenuClick: () -> Unit,
     onFormClick: () -> Unit
@@ -231,8 +199,11 @@ fun AnimalDetailsScreen(
     val uiState by viewModel.uiState.collectAsState()
     var showErrorDialog by remember { mutableStateOf(false) }
 
-    LaunchedEffect(animalId) {
-        viewModel.loadPet(animalId)
+    LaunchedEffect("loadingPet") {
+        if (selectedAnimal != null) {
+            viewModel.setAnimalId(animalId = selectedAnimal.id)
+        }
+        viewModel.loadPet()
     }
 
     if (showErrorDialog) {
@@ -279,7 +250,6 @@ fun AnimalDetailsScreen(
                     Column(
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        TopBar(onBackClick = onBackClick, onMenuClick = onMenuClick)
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
@@ -441,7 +411,10 @@ fun AnimalDetailsScreen(
                         }
 
                         Button(
-                            onClick = { },
+                            onClick = {
+                                onFormClick()
+                                viewModel.setAnimalId(animal.id)
+                            },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 20.dp, bottom = 72.dp),

@@ -1,5 +1,6 @@
 package org.quixalert.br.presentation.pages.animal
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,27 +14,39 @@ import javax.inject.Inject
 data class AnimalUiState(
     val animal: Animal? = null,
     val isLoading: Boolean = false,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val animalId: String? = null
 )
 
 @HiltViewModel
 class AnimalDetailsViewModel @Inject constructor(
-    private val animalService: AnimalService
+    private val animalService: AnimalService,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(AnimalUiState())
+    private val _uiState = MutableStateFlow(
+        AnimalUiState(
+            animalId = savedStateHandle["animalId"]
+        )
+    )
     val uiState: StateFlow<AnimalUiState> get() = _uiState
 
-    fun loadPet(animalId: String) {
+    fun loadPet() {
         _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
         viewModelScope.launch {
             try {
-                val animal = animalService.getById(animalId).await()
+                val animalId = _uiState.value.animalId
+                val animal = animalId?.let { animalService.getById(it).await() }
                 val errorMessage = if (animal == null) "O animal não foi encontrado" else null
                 _uiState.value = AnimalUiState(animal = animal, isLoading = false, errorMessage = errorMessage)
             } catch (e: Exception) {
                 _uiState.value = AnimalUiState(isLoading = false, errorMessage = "Failed to load pet: ${e.message}")
             }
         }
+    }
+
+    fun setAnimalId(animalId: String) {
+        savedStateHandle["animalId"] = animalId
+        _uiState.value = _uiState.value.copy(animalId = animalId)
     }
 }

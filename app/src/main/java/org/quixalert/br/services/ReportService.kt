@@ -1,7 +1,6 @@
 package org.quixalert.br.services
 
 import kotlinx.coroutines.Deferred
-import org.quixalert.br.domain.model.Adoption
 import org.quixalert.br.domain.model.Report
 import org.quixalert.br.domain.repository.ReportRepository
 import javax.inject.Inject
