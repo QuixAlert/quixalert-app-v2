@@ -43,7 +43,6 @@ fun LastNews(newsList: List<News>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp)
     ) {
         Text(
             text = "Últimas notícias",
