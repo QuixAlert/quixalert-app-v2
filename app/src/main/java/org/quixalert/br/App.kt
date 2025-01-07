@@ -51,8 +51,6 @@ fun App() {
     var isFloatingMenuVisible by remember { mutableStateOf(false) }
     var selectedAnimal by remember { mutableStateOf<Animal?>(null) }
 
-    currentScreen = "news"
-
     AppTheme {
         val modifierTopBarBlur = if (isFloatingMenuVisible) {
             Modifier.background(Color.Black.copy(alpha = 0.5f))
