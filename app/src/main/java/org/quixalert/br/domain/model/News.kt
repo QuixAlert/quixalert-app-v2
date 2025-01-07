@@ -4,6 +4,7 @@ import java.time.Instant
 
 data class News(
     override var id: String = "",
+    val newsUrl: String = "",
     val title: String = "",
     val imageUrl: String = "",
     val iconUrl: String = "",

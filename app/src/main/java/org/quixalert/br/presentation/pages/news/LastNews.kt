@@ -1,6 +1,7 @@
 package org.quixalert.br.presentation.pages.news
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,6 +28,8 @@ import org.quixalert.br.domain.model.News
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LastNews(newsList: List<News>) {
+    val context = androidx.compose.ui.platform.LocalContext.current
+
     if (newsList.isEmpty()) {
         // Show placeholder or a message when there are no news
         Text(
@@ -66,6 +69,12 @@ fun LastNews(newsList: List<News>) {
                 modifier = Modifier
                     .fillMaxSize()
                     .clip(RoundedCornerShape(8.dp))
+                    .clickable {
+                        val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
+                            data = android.net.Uri.parse(newsItem.newsUrl)
+                        }
+                        context.startActivity(intent)
+                    }
             )
         }
 
