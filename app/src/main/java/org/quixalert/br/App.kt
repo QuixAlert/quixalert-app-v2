@@ -1,5 +1,6 @@
 package org.quixalert.br
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -42,6 +43,7 @@ import org.quixalert.br.presentation.pages.reportsSolicitationScreen.ReportsSoli
 import org.quixalert.br.presentation.ui.theme.AppTheme
 import org.quixalert.br.view.pages.login.LoginScreen
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun App() {
     var currentScreen by remember { mutableStateOf("login") }
@@ -49,6 +51,7 @@ fun App() {
     var isFloatingMenuVisible by remember { mutableStateOf(false) }
     var selectedAnimal by remember { mutableStateOf<Animal?>(null) }
 
+    currentScreen = "news"
 
     AppTheme {
         val modifierTopBarBlur = if (isFloatingMenuVisible) {
@@ -75,10 +78,13 @@ fun App() {
                 }
             },
 
-            content = { innerPadding ->
-                Box(modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)) {
+            content = {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = 32.dp)
+                )
+                {
                     when (currentScreen) {
                         "login" -> LoginScreen(
                             onRegisterClick = { currentScreen = "register" },

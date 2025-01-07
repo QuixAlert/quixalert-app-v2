@@ -74,7 +74,7 @@ fun NewsScreen(
             Column(
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
-                    .padding(bottom = 100.dp)
+                    .padding(bottom = 100.dp, start = 16.dp, end = 16.dp)
             ) {
                 LastNews(uiState.latestNews)
                 GlobalNews(uiState.globalNews)

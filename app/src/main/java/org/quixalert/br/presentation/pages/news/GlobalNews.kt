@@ -36,12 +36,6 @@ fun GlobalNews(newsList: List<News>, hasHeader: Boolean = true, hasPadding: Bool
 
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier
-            .apply {
-                if (hasPadding) {
-                    padding(horizontal = 16.dp)
-                }
-            }
     ) {
         items(newsList) { news ->
             NewsItem(news = news, isHorizontal = true)
