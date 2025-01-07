@@ -1,6 +1,7 @@
 package org.quixalert.br.presentation.pages.news
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,6 +34,8 @@ import org.quixalert.br.domain.model.News
 
 @Composable
 fun NewsItem(news: News, isHorizontal: Boolean = true) {
+    val context = androidx.compose.ui.platform.LocalContext.current
+
     val modifier = if (isHorizontal) Modifier.width(200.dp) else Modifier.fillMaxWidth()
 
     Box(
@@ -40,6 +43,12 @@ fun NewsItem(news: News, isHorizontal: Boolean = true) {
             .shadow(4.dp, RoundedCornerShape(12.dp))
             .clip(RoundedCornerShape(12.dp))
             .background(MaterialTheme.colorScheme.surface)
+            .clickable {
+                val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
+                    data = android.net.Uri.parse(news.newsUrl)
+                }
+                context.startActivity(intent)
+            }
     ) {
         Column {
             Box(
@@ -48,7 +57,7 @@ fun NewsItem(news: News, isHorizontal: Boolean = true) {
                     .height(150.dp)
             ) {
                 AsyncImage(
-                    model = news.imageUrl,  // Using the URL here
+                    model = news.imageUrl,  // Usando a URL aqui
                     contentDescription = news.title,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
@@ -77,7 +86,7 @@ fun NewsItem(news: News, isHorizontal: Boolean = true) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 AsyncImage(
-                    model = news.iconUrl,  // Using the URL here
+                    model = news.iconUrl,  // Usando a URL aqui
                     contentDescription = "Icon",
                     modifier = Modifier
                         .size(30.dp)
