@@ -1,5 +1,6 @@
 package org.quixalert.br.presentation.pages.profile
 
+import android.annotation.SuppressLint
 import android.webkit.WebView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,8 +31,11 @@ import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,17 +44,42 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.AsyncImage
+import org.quixalert.br.MockData.adoptions
+import org.quixalert.br.MockData.biddings
+import org.quixalert.br.MockData.reports
 import org.quixalert.br.domain.model.Adoption
 import org.quixalert.br.domain.model.AdoptionStatus
 import org.quixalert.br.domain.model.Bidding
 import org.quixalert.br.domain.model.Report
 import org.quixalert.br.domain.model.User
+import org.quixalert.br.mockUser
+import org.quixalert.br.presentation.ui.theme.AppTheme
 
 val IconTint = Color(0xFF269996)
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Preview
+@Composable
+fun ver() {
+    AppTheme {
+        Scaffold {
+            ProfileScreen(
+                user = mockUser,
+                reports = reports,
+                biddings = biddings,
+                adoptions = adoptions,
+                onBackClick = {  },
+                onEditProfileClick = {  },
+                onBiddingClick = {  },
+                onReportClick = {  }
+            )
+        }
+    }
+}
 
 @Composable
 fun ProfileScreen(
@@ -59,87 +89,150 @@ fun ProfileScreen(
     biddings: List<Bidding>,
     adoptions: List<Adoption>,
     onBackClick: () -> Unit,
-    onMenuClick: () -> Unit,
     onEditProfileClick: () -> Unit,
-    onBiddingClick: (Bidding) -> Unit, // Novo parâmetro
-    onReportClick: (Report) -> Unit // Novo parâmetro
+    onBiddingClick: (Bidding) -> Unit,
+    onReportClick: (Report) -> Unit
 ) {
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        item {
+    val isMenuOpen = remember { mutableStateOf(false) }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize()) {
             TopBar(
                 onBackClick = onBackClick,
-                onMenuClick = onMenuClick
+                onMenuClick = { isMenuOpen.value = !isMenuOpen.value }
             )
-        }
 
-        item {
-            ProfileHeader(
-                user = user,
-                onEditClick = onEditProfileClick
-            )
-        }
-
-        item {
-            Text(
-                text = "Minhas Denúncias",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-        }
-
-        item {
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(vertical = 8.dp)
+            LazyColumn(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(reports) { report ->
-                    ReportItem(report = report, onReportClick = onReportClick)
-                }
-            }
-        }
-
-        item {
-            Text(
-                text = "Minhas Licitações",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-        }
-
-        item {
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(vertical = 8.dp)
-            ) {
-                items(biddings) { bidding ->
-                    BiddingItem(
-                        bidding = bidding,
-                        onBiddingClick = onBiddingClick
+                item {
+                    ProfileHeader(
+                        user = user,
+                        onEditClick = onEditProfileClick
                     )
                 }
+
+                item {
+                    Text(
+                        text = "Minhas Denúncias",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                item {
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        contentPadding = PaddingValues(vertical = 8.dp)
+                    ) {
+                        items(reports) { report ->
+                            ReportItem(report = report, onReportClick = onReportClick)
+                        }
+                    }
+                }
+
+                item {
+                    Text(
+                        text = "Minhas Licitações",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                item {
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        contentPadding = PaddingValues(vertical = 8.dp)
+                    ) {
+                        items(biddings) { bidding ->
+                            BiddingItem(
+                                bidding = bidding,
+                                onBiddingClick = onBiddingClick
+                            )
+                        }
+                    }
+                }
+
+                item {
+                    Text(
+                        text = "Minhas Adoções",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                items(adoptions) { adoption ->
+                    AdoptionItem(adoption = adoption)
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
             }
         }
 
-        item {
-            Text(
-                text = "Minhas Adoções",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
+        if (isMenuOpen.value) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.5f))
+                    .clickable { isMenuOpen.value = false }
+            )
+
+            DrawerContent(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp))
+                    .fillMaxHeight()
+                    .width(250.dp)
+                    .align(Alignment.TopEnd)
             )
         }
+    }
+}
 
-        items(adoptions) { adoption ->
-            AdoptionItem(adoption = adoption)
-        }
+@Composable
+fun DrawerContent(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(16.dp)
+    ) {
+        Text(
+            text = "Menu",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
 
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
-        }
+        Text(
+            text = "Opção 1",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { /* ação */ }
+                .padding(8.dp)
+        )
+
+        Text(
+            text = "Opção 2",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { /* ação */ }
+                .padding(8.dp)
+        )
+
+        Text(
+            text = "Opção 2",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { /* ação */ }
+                .padding(8.dp)
+        )
     }
 }
 
@@ -151,7 +244,7 @@ private fun TopBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 16.dp),
+            .padding(top = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -172,6 +265,7 @@ private fun TopBar(
         }
     }
 }
+
 @Composable
 private fun ProfileHeader(
     user: User,
@@ -273,7 +367,7 @@ fun AdoptionItem(adoption: Adoption) {
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.Start
         ) {
-            // Image on top
+
             Box {
                 AsyncImage(
                     model = adoption.petImage,
@@ -284,7 +378,7 @@ fun AdoptionItem(adoption: Adoption) {
                     contentScale = ContentScale.Crop
                 )
 
-                // Status in the bottom right corner
+
                 Text(
                     text = if (adoption.status == AdoptionStatus.APPROVED) "Adotado" else "Disponível",
                     style = MaterialTheme.typography.bodySmall.copy(color = Color.White),
@@ -299,7 +393,6 @@ fun AdoptionItem(adoption: Adoption) {
                 )
             }
 
-            // Icon and name in a row below the image
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -327,7 +420,6 @@ fun AdoptionItem(adoption: Adoption) {
     }
 }
 
-// BiddingItem atualizado com onClick
 @Composable
 fun BiddingItem(
     bidding: Bidding,
@@ -377,7 +469,6 @@ fun BiddingItem(
     }
 }
 
-// Nova tela para visualizar o PDF
 @Composable
 fun BiddingPdfScreen(
     bidding: Bidding,
@@ -389,7 +480,7 @@ fun BiddingPdfScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        // Top Bar
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
