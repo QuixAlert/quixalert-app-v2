@@ -51,7 +51,8 @@ fun LastNews(newsList: List<News>) {
             text = "Últimas notícias",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(vertical = 12.dp)
+            modifier = Modifier.padding(vertical = 12.dp),
+            color = MaterialTheme.colorScheme.onBackground
         )
 
         HorizontalPager(

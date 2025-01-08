@@ -19,7 +19,8 @@ data class NewsUiState(
     val latestNews: List<News> = emptyList(),
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
-    val currentFilterType: NewsType = NewsType.LOCAL
+    val currentFilterType: NewsType = NewsType.LOCAL,
+    val searchQuery: String = "" // Add search query to state
 )
 
 @HiltViewModel
@@ -29,6 +30,7 @@ class NewsViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(NewsUiState())
     val uiState: StateFlow<NewsUiState> get() = _uiState
+    private var allNewsCache: List<News> = emptyList()
 
     init {
         loadNews()
@@ -39,20 +41,8 @@ class NewsViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-//                registerNews()
-                val allNews = newsService.getAll().await()
-                val latestNews = allNews
-                    .sortedByDescending { Instant.parse(it.date) }
-                    .take(3)
-                val globalNews = allNews.filter { it.type == NewsType.GLOBAL }
-                val localNews = allNews.filter { it.type == NewsType.LOCAL }
-
-                _uiState.value = _uiState.value.copy(
-                    globalNews = globalNews,
-                    localNews = localNews,
-                    latestNews = latestNews,
-                    isLoading = false
-                )
+                allNewsCache = newsService.getAll().await()
+                filterNews(_uiState.value.searchQuery)
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
@@ -64,5 +54,36 @@ class NewsViewModel @Inject constructor(
 
     fun registerNews(){
         populateNews().forEach { new -> newsService.add(new) }
+    }
+
+
+    fun onSearchQueryChanged(query: String) {
+        _uiState.value = _uiState.value.copy(searchQuery = query)
+        filterNews(query)
+    }
+
+    private fun filterNews(query: String) {
+        val filteredNews = if (query.isBlank()) {
+            allNewsCache
+
+        } else {
+            allNewsCache.filter { news ->
+                news.title.contains(query, ignoreCase = true) ||
+                        news.title.contains(query, ignoreCase = true)
+            }
+        }
+
+        val latestNews = filteredNews
+            .sortedByDescending { Instant.parse(it.date) }
+            .take(3)
+        val globalNews = filteredNews.filter { it.type == NewsType.GLOBAL }
+        val localNews = filteredNews.filter { it.type == NewsType.LOCAL }
+
+        _uiState.value = _uiState.value.copy(
+            globalNews = globalNews,
+            localNews = localNews,
+            latestNews = latestNews,
+            isLoading = false
+        )
     }
 }

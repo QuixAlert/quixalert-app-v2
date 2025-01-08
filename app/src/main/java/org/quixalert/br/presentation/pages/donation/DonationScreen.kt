@@ -20,10 +20,13 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -43,6 +46,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import org.quixalert.br.R
 import org.quixalert.br.presentation.pages.profile.IconTint
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DonationScreen(
     onBackClick: () -> Unit,
@@ -108,7 +112,8 @@ fun DonationScreen(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Start
+                textAlign = TextAlign.Start,
+                color = MaterialTheme.colorScheme.onBackground
             )
 
             // Donation Input
@@ -123,7 +128,12 @@ fun DonationScreen(
                         Color.LightGray.copy(alpha = 0.2f),
                         RoundedCornerShape(8.dp)
                     ),
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(8.dp),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    containerColor = Color(0xFFEEEEEE),
+                    unfocusedLabelColor = MaterialTheme.colorScheme.background,
+                    focusedLabelColor = MaterialTheme.colorScheme.onBackground
+                )
             )
 
             Text(

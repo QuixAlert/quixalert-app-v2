@@ -1,7 +1,10 @@
 package org.quixalert.br
 
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import org.quixalert.br.MockData.adoptions
 import org.quixalert.br.MockData.biddings
 import org.quixalert.br.MockData.reports
@@ -43,6 +48,7 @@ import org.quixalert.br.presentation.pages.reportsSolicitationScreen.ReportsSoli
 import org.quixalert.br.presentation.ui.theme.AppTheme
 import org.quixalert.br.view.pages.login.LoginScreen
 
+@RequiresApi(Build.VERSION_CODES.S)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun App() {
@@ -50,8 +56,20 @@ fun App() {
     var registrationData by remember { mutableStateOf<UserRegistrationData?>(null) }
     var isFloatingMenuVisible by remember { mutableStateOf(false) }
     var selectedAnimal by remember { mutableStateOf<Animal?>(null) }
+    val currentDarkTheme = isSystemInDarkTheme()
+    val isDarkTheme = remember { mutableStateOf(currentDarkTheme) }
+    val systemUiController = rememberSystemUiController()
+    if(isDarkTheme.value){
+        systemUiController.setSystemBarsColor(
+            color = Color.Blue
+        )
+    }else{
+        systemUiController.setSystemBarsColor(
+            color = Color.Blue
+        )
+    }
 
-    AppTheme {
+    QuixalertTheme(darkTheme = isDarkTheme.value) {
         val modifierTopBarBlur = if (isFloatingMenuVisible) {
             Modifier.background(Color.Black.copy(alpha = 0.5f))
         } else {
@@ -59,15 +77,14 @@ fun App() {
         }
 
         Scaffold(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(AppTheme.colorScheme.background),
+            modifier = Modifier.fillMaxSize(),
 
             topBar = {
                 if (currentScreen == "login") {
                     Column(
                         modifier = modifierTopBarBlur
                             .fillMaxWidth()
+                            .background(color = MaterialTheme.colorScheme.background)
                             .padding(top = 24.dp),
                         verticalArrangement = Arrangement.Center
                     ) {
@@ -80,6 +97,7 @@ fun App() {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
+                        .background(color = MaterialTheme.colorScheme.background)
                         .padding(top = 32.dp)
                 )
                 {
@@ -115,7 +133,9 @@ fun App() {
                             onMenuClick = { isFloatingMenuVisible = !isFloatingMenuVisible },
                             onEditProfileClick = { currentScreen = "edit_profile" },
                             onBiddingClick = { currentScreen = "bidding_pdf" },
-                            onReportClick = { currentScreen = "report_details" }
+                            onReportClick = { currentScreen = "report_details" },
+                            isDarkThemeEnabled = isDarkTheme.value,
+                            onThemeToggle = { isDarkTheme.value = it }
                         )
                         "news" -> NewsScreen()
                         "animals" -> AdoptionScreen(

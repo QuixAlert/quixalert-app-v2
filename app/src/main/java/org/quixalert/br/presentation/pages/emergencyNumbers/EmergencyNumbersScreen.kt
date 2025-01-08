@@ -27,6 +27,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -104,7 +105,8 @@ fun EmergencyNumbersScreen(onBackClick: () -> Unit = {}, onMenuClick: () -> Unit
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
             ),
-            modifier = Modifier.padding(start = 16.dp)
+            modifier = Modifier.padding(start = 16.dp),
+            color = MaterialTheme.colorScheme.onBackground
         )
         EmergencyNumbersList(animalEmergencyNumbersList, ambientalEmergencyNumbersList)
     }
@@ -123,7 +125,8 @@ fun EmergencyNumbersList(
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF50555C)
             ),
-            modifier = Modifier.padding(top = 16.dp, start = 16.dp)
+            modifier = Modifier.padding(top = 16.dp, start = 16.dp),
+            color = MaterialTheme.colorScheme.onBackground
         )
         LazyColumn(
             modifier = Modifier
@@ -144,7 +147,8 @@ fun EmergencyNumbersList(
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF50555C)
             ),
-            modifier = Modifier.padding(top = 16.dp, start = 16.dp)
+            modifier = Modifier.padding(top = 16.dp, start = 16.dp),
+            color = MaterialTheme.colorScheme.onBackground
         )
         LazyColumn(
             modifier = Modifier
