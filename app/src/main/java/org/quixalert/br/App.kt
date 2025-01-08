@@ -71,8 +71,6 @@ fun App() {
         )
     }
 
-    currentScreen = "donate"
-
     QuixalertTheme(darkTheme = isDarkTheme.value) {
         val modifierTopBarBlur = if (isFloatingMenuVisible) {
             Modifier.background(Color.Black.copy(alpha = 0.5f))
