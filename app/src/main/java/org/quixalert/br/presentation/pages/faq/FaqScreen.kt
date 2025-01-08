@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
@@ -39,7 +40,8 @@ fun FaqScreen() {
                 text = "Perguntas Frequentes",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
+                color = MaterialTheme.colorScheme.onBackground
             )
         }
         item {
@@ -56,7 +58,7 @@ fun FaqItem(question: String, answer: String) {
 
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            containerColor = Color(0xFF269996),
         ),
         modifier = Modifier
             .fillMaxWidth()
@@ -66,7 +68,7 @@ fun FaqItem(question: String, answer: String) {
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            Text(text = question, style = MaterialTheme.typography.bodyLarge)
+            Text(text = question, style = MaterialTheme.typography.bodyLarge, color = Color.White)
 
             androidx.compose.animation.AnimatedVisibility(
                 visible = expanded.value,
