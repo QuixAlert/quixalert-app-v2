@@ -31,6 +31,8 @@ import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -63,101 +65,148 @@ fun ProfileScreen(
     biddings: List<Bidding>,
     adoptions: List<Adoption>,
     onBackClick: () -> Unit,
-    onExitClick: () -> Unit,
     onEditProfileClick: () -> Unit,
+    isDarkThemeEnabled: Boolean,
+    onThemeToggle: (Boolean) -> Unit,
     onBiddingClick: (Bidding) -> Unit,
     onReportClick: (Report) -> Unit,
     onFaqCLick: () -> Unit,
+    onExitClick: () -> Unit,
 ) {
     val isMenuOpen = remember { mutableStateOf(false) }
+    val darkThemeState = remember { mutableStateOf(isDarkThemeEnabled) }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.fillMaxSize()) {
+    LazyColumn(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        item {
             TopBar(
                 onBackClick = onBackClick,
                 onMenuClick = { isMenuOpen.value = !isMenuOpen.value }
             )
+        }
 
-            LazyColumn(
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+        item {
+            ProfileHeader(
+                user = user,
+                onEditClick = onEditProfileClick
+            )
+        }
+
+        item {
+            Text(
+                text = "Preferências",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
+
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                item {
-                    ProfileHeader(
-                        user = user,
-                        onEditClick = onEditProfileClick
+                Text(
+                    text = "Modo Escuro",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+
+                Switch(
+                    checked = darkThemeState.value,
+                    onCheckedChange = {
+                        darkThemeState.value = it
+                        onThemeToggle(it)
+                    },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = IconTint,
+                        uncheckedThumbColor = IconTint
                     )
-                }
+                )
+            }
+        }
 
-                item {
-                    Text(
-                        text = "Minhas Denúncias",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
 
-                item {
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        contentPadding = PaddingValues(vertical = 8.dp)
-                    ) {
-                        items(reports) { report ->
-                            ReportItem(report = report, onReportClick = onReportClick)
-                        }
-                    }
-                }
+        item {
+            Text(
+                text = "Minhas Denúncias",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
 
-                item {
-                    Text(
-                        text = "Minhas Licitações",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                item {
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        contentPadding = PaddingValues(vertical = 8.dp)
-                    ) {
-                        items(biddings) { bidding ->
-                            BiddingItem(
-                                bidding = bidding,
-                                onBiddingClick = onBiddingClick
-                            )
-                        }
-                    }
-                }
-
-                item {
-                    Text(
-                        text = "Minhas Adoções",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                items(adoptions) { adoption ->
-                    AdoptionItem(adoption = adoption)
-                }
-
-                item {
-                    Spacer(modifier = Modifier.height(16.dp))
+        item {
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(vertical = 8.dp)
+            ) {
+                items(reports) { report ->
+                    ReportItem(report = report, onReportClick = onReportClick)
                 }
             }
         }
 
-        if (isMenuOpen.value) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.5f))
-                    .clickable { isMenuOpen.value = false }
+        item {
+            Text(
+                text = "Minhas Licitações",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
             )
+        }
 
+        item {
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(vertical = 8.dp)
+            ) {
+                items(biddings) { bidding ->
+                    BiddingItem(
+                        bidding = bidding,
+                        onBiddingClick = onBiddingClick
+                    )
+                }
+            }
+        }
+
+        item {
+            Text(
+                text = "Minhas Adoções",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
+
+        items(adoptions) { adoption ->
+            AdoptionItem(adoption = adoption)
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
+
+    if (isMenuOpen.value) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.5f))
+                .clickable { isMenuOpen.value = false }
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
             DrawerContent(
                 onExitClick = {
                     onExitClick()
@@ -174,6 +223,7 @@ fun ProfileScreen(
         }
     }
 }
+
 
 @Composable
 fun DrawerContent(
@@ -296,7 +346,8 @@ private fun ProfileHeader(
                 text = user.name,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 4.dp)
+                modifier = Modifier.padding(bottom = 4.dp),
+                color = MaterialTheme.colorScheme.onBackground
             )
         }
     }
@@ -343,7 +394,8 @@ fun ReportItem(report: Report, onReportClick: (Report) -> Unit) {
                     text = report.title,
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             }
         }
@@ -410,7 +462,8 @@ fun AdoptionItem(adoption: Adoption) {
                 Text(
                     text = adoption.petName,
                     style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             }
         }
@@ -459,7 +512,8 @@ fun BiddingItem(
                     text = bidding.title,
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             }
         }

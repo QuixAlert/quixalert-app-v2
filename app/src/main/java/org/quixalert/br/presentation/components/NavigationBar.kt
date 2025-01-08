@@ -14,6 +14,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -60,7 +61,7 @@ fun FloatingMenu(modifier: Modifier = Modifier, onReportClick: () -> Unit, onDoc
                 onClick = onReportClick,
                 containerColor = Color(0xFFB2DFDB)
             ) {
-                Icon(ImageVector.vectorResource(id = R.drawable.alert), "Floating action button.")
+                Icon(imageVector = ImageVector.vectorResource(id = R.drawable.alert), "Floating action button.", tint = MaterialTheme.colorScheme.background)
             }
             Text(
                 text = "Denúncias",
@@ -78,7 +79,7 @@ fun FloatingMenu(modifier: Modifier = Modifier, onReportClick: () -> Unit, onDoc
                 onClick = onDocumentClick,
                 containerColor = Color(0xFFB2DFDB)
             ) {
-                Icon(ImageVector.vectorResource(R.drawable.file), "Floating action button.")
+                Icon(ImageVector.vectorResource(R.drawable.file), "Floating action button.", tint = MaterialTheme.colorScheme.background)
             }
             Text(
                 text = "Documentos",
@@ -95,7 +96,7 @@ fun FloatingMenu(modifier: Modifier = Modifier, onReportClick: () -> Unit, onDoc
                 onClick = onEmergencyClick,
                 containerColor = Color(0xFFB2DFDB)
             ) {
-                Icon(ImageVector.vectorResource(id = R.drawable.phone), "Floating action button.")
+                Icon(ImageVector.vectorResource(id = R.drawable.phone), "Floating action button.", tint = MaterialTheme.colorScheme.background)
             }
             Text(
                 text = "Emergência",
@@ -144,7 +145,7 @@ fun NavigationBarM3(onPlusClick: () -> Unit, onOtherCLick: (String) -> Unit) {
         ),
     )
 
-    NavigationBar() {
+    NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
         barItems.forEachIndexed { index, barItem ->
             val selected = selectedItem == index
             NavigationBarItem(
@@ -163,6 +164,7 @@ fun NavigationBarM3(onPlusClick: () -> Unit, onOtherCLick: (String) -> Unit) {
                             barItem.selectedIcon
                         } else barItem.unselectedIcon,
                         contentDescription = barItem.title,
+                        tint = Color(0xFF000000)
                     )
                 },
                 alwaysShowLabel = selected,

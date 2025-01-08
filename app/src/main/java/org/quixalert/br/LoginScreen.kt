@@ -87,7 +87,7 @@ fun LoginScreen(
 
             drawPath(
                 path = wavePath,
-                color = Color.White,
+                color = Color.Black,
                 style = Fill
             )
         }

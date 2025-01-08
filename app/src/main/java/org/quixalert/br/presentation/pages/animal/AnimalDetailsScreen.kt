@@ -1,12 +1,19 @@
 package org.quixalert.br.presentation.pages.animal
 
+import android.util.Log
+import android.webkit.WebChromeClient
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,7 +28,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -31,6 +40,7 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,10 +59,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import org.quixalert.br.domain.model.Animal
 import org.quixalert.br.presentation.pages.profile.IconTint
+import java.util.regex.Pattern
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,10 +76,11 @@ fun AnimalScreenBase(
     onMenuClick: () -> Unit,
     content: @Composable ColumnScope.() -> Unit
 ) {
+    var selectedVideoUrl by remember { mutableStateOf<String?>(null) }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -103,7 +118,7 @@ fun AnimalScreenBase(
                     .weight(1f)
                     .offset(y = (-20).dp)
                     .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-                    .background(Color.White)
+                    .background(MaterialTheme.colorScheme.background)
                     .padding(horizontal = 20.dp)
                     .padding(top = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -117,7 +132,8 @@ fun AnimalScreenBase(
                         Text(
                             text = animal.name,
                             fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     }
 
@@ -133,7 +149,7 @@ fun AnimalScreenBase(
                                 Text(
                                     text = "Responsável atual",
                                     fontSize = 14.sp,
-                                    color = Color.Gray
+                                    color = MaterialTheme.colorScheme.onTertiary
                                 )
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
@@ -149,7 +165,8 @@ fun AnimalScreenBase(
                                     )
                                     Text(
                                         text = "Prefeitura de Quixadá",
-                                        fontSize = 16.sp
+                                        fontSize = 16.sp,
+                                        color = MaterialTheme.colorScheme.onBackground
                                     )
                                 }
                             }
@@ -161,7 +178,7 @@ fun AnimalScreenBase(
                                 Text(
                                     text = "Status",
                                     fontSize = 14.sp,
-                                    color = Color.Gray
+                                    color = MaterialTheme.colorScheme.onTertiary
                                 )
                                 Surface(
                                     color = Color(0xFF269996),
@@ -198,6 +215,7 @@ fun AnimalDetailsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var showErrorDialog by remember { mutableStateOf(false) }
+    var selectedVideo by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect("loadingPet") {
         if (selectedAnimal != null) {
@@ -258,36 +276,39 @@ fun AnimalDetailsScreen(
                                 Text(
                                     text = "Raça",
                                     fontSize = 14.sp,
-                                    color = Color.Gray
+                                    color = MaterialTheme.colorScheme.onTertiary
                                 )
                                 Text(
                                     text = animal.species,
                                     fontSize = 16.sp,
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onBackground
                                 )
                             }
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = "Porte",
                                     fontSize = 14.sp,
-                                    color = Color.Gray
+                                    color = MaterialTheme.colorScheme.onTertiary
                                 )
                                 Text(
                                     text = animal.size.toString(),
                                     fontSize = 16.sp,
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onBackground
                                 )
                             }
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = "Sexo",
                                     fontSize = 14.sp,
-                                    color = Color.Gray
+                                    color = MaterialTheme.colorScheme.onTertiary
                                 )
                                 Text(
                                     text = animal.gender.name,
                                     fontSize = 16.sp,
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onBackground
                                 )
                             }
                         }
@@ -296,12 +317,13 @@ fun AnimalDetailsScreen(
                             Text(
                                 text = "Local",
                                 fontSize = 14.sp,
-                                color = Color.Gray
+                                color = MaterialTheme.colorScheme.onTertiary
                             )
                             Text(
                                 text = animal.extraInfo.location,
                                 fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                         }
 
@@ -309,11 +331,13 @@ fun AnimalDetailsScreen(
                             Text(
                                 text = "Sobre o Pet",
                                 fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                             Text(
                                 text = animal.description.ifEmpty { "Nenhuma descrição cadastrada" },
-                                fontSize = 14.sp
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                         }
 
@@ -321,7 +345,8 @@ fun AnimalDetailsScreen(
                             Text(
                                 text = "Galeria",
                                 fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onBackground
                             )
 
                             var selectedTab by remember { mutableStateOf(0) }
@@ -335,7 +360,8 @@ fun AnimalDetailsScreen(
                                     label = { Text("Fotos") },
                                     colors = FilterChipDefaults.filterChipColors(
                                         selectedContainerColor = Color(0xFF269996),
-                                        selectedLabelColor = Color.White
+                                        containerColor = Color(0xFF6B6B6B),
+                                        labelColor = Color.White
                                     )
                                 )
                                 FilterChip(
@@ -344,7 +370,8 @@ fun AnimalDetailsScreen(
                                     label = { Text("Vídeos") },
                                     colors = FilterChipDefaults.filterChipColors(
                                         selectedContainerColor = Color(0xFF269996),
-                                        selectedLabelColor = Color.White
+                                        containerColor = Color(0xFF6B6B6B),
+                                        labelColor = Color.White
                                     )
                                 )
                             }
@@ -383,29 +410,24 @@ fun AnimalDetailsScreen(
                                     columns = GridCells.Fixed(2),
                                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                                     verticalArrangement = Arrangement.spacedBy(8.dp),
-                                    modifier = Modifier.fillMaxWidth().height(250.dp)
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(250.dp)
                                 ) {
                                     items(animal.extraInfo.videos) { videoUrl ->
-                                        Surface(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .shadow(
-                                                    elevation = 4.dp,
-                                                    shape = RoundedCornerShape(8.dp)
-                                                ),
-                                            shape = RoundedCornerShape(8.dp),
-                                            border = BorderStroke(1.dp, Color.White)
-                                        ) {
-                                            AsyncImage(
-                                                model = videoUrl,
-                                                contentDescription = null,
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .height(100.dp),
-                                                contentScale = ContentScale.Crop
-                                            )
-                                        }
+                                        VideoThumbnail(
+                                            videoUrl = videoUrl,
+                                            onClick = { selectedVideo = videoUrl }
+                                        )
                                     }
+                                }
+
+// Video player dialog
+                                selectedVideo?.let { videoUrl ->
+                                    VideoPlayer(
+                                        videoUrl = videoUrl,
+                                        onDismiss = { selectedVideo = null }
+                                    )
                                 }
                             }
                         }
@@ -462,4 +484,150 @@ private fun TopBar(
             )
         }
     }
+}
+@Composable
+fun VideoThumbnail(
+    videoUrl: String,
+    onClick: () -> Unit
+) {
+    // Extract video ID from YouTube URL
+    val videoId = extractYouTubeVideoId(videoUrl)
+
+    // Thumbnail URL format for YouTube videos
+    val thumbnailUrl = "https://img.youtube.com/vi/$videoId/0.jpg"
+
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .shadow(
+                elevation = 4.dp,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .clickable { onClick() },
+        shape = RoundedCornerShape(8.dp),
+        border = BorderStroke(1.dp, Color.White)
+    ) {
+        Box {
+            AsyncImage(
+                model = thumbnailUrl,
+                contentDescription = "Video thumbnail",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp),
+                contentScale = ContentScale.Crop
+            )
+            // Play button overlay
+            Icon(
+                imageVector = Icons.Default.PlayArrow,
+                contentDescription = "Play",
+                modifier = Modifier
+                    .size(40.dp)
+                    .align(Alignment.Center),
+                tint = Color.White
+            )
+        }
+    }
+}
+@Composable
+fun VideoPlayer(
+    videoUrl: String,
+    onDismiss: () -> Unit
+) {
+    val videoId = extractYouTubeVideoId(videoUrl)
+
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(
+            dismissOnBackPress = true,
+            dismissOnClickOutside = true
+        )
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(16f / 9f)
+                .clip(RoundedCornerShape(16.dp))
+                .background(Color.Black)
+        ) {
+            AndroidView(
+                factory = { context ->
+                    WebView(context).apply {
+                        settings.apply {
+                            javaScriptEnabled = true
+                            mediaPlaybackRequiresUserGesture = false
+                            domStorageEnabled = true
+                        }
+                        webChromeClient = WebChromeClient()
+                        loadDataWithBaseURL(
+                            "https://www.youtube.com",
+                            """
+                            <html>
+                                <head>
+                                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                    <style>
+                                        body { margin: 0; }
+                                        .video-container {
+                                            position: relative;
+                                            padding-bottom: 56.25%;
+                                            height: 0;
+                                            overflow: hidden;
+                                        }
+                                        .video-container iframe {
+                                            position: absolute;
+                                            top: 0;
+                                            left: 0;
+                                            width: 100%;
+                                            height: 100%;
+                                        }
+                                    </style>
+                                </head>
+                                <body>
+                                    <div class="video-container">
+                                        <iframe 
+                                            src="https://www.youtube.com/embed/$videoId?autoplay=1&playsinline=1"
+                                            frameborder="0"
+                                            allowfullscreen>
+                                        </iframe>
+                                    </div>
+                                </body>
+                            </html>
+                            """.trimIndent(),
+                            "text/html",
+                            "UTF-8",
+                            null
+                        )
+                    }
+                },
+                modifier = Modifier.fillMaxSize()
+            )
+
+            IconButton(
+                onClick = onDismiss,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "Fechar",
+                    tint = Color.White
+                )
+            }
+        }
+    }
+}
+
+private fun extractYouTubeVideoId(url: String): String {
+    val pattern = "(?<=watch\\?v=|/videos/|embed\\/|youtu.be\\/|\\/v\\/|\\/e\\/|watch\\?v%3D|watch\\?feature=player_embedded&v=|%2Fvideos%2F|embed%\u201C|youtu.be%2F|%2Fv%2F)[^#\\&\\?\\n]*"
+    val compiledPattern = Pattern.compile(pattern)
+    val matcher = compiledPattern.matcher(url)
+    val videoId = if (matcher.find()) {
+        matcher.group()
+    } else {
+        ""
+    }
+    Log.d("VideoPlayer", "Video ID: $videoId from URL: $url")
+
+    return videoId
+
 }

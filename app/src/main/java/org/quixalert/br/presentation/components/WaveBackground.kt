@@ -8,6 +8,7 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +33,7 @@ fun WaveBackground() {
         )
     )
 
+    val color = MaterialTheme.colorScheme.background
     Canvas(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -52,7 +54,7 @@ fun WaveBackground() {
 
         drawPath(
             path = wavePath,
-            color = Color.White,
+            color = color,
             style = Fill
         )
     }

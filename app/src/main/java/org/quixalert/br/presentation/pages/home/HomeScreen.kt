@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
@@ -79,8 +80,14 @@ fun HomeScreen(
             HorizontalDividerSection()
         }
 
+
         item {
-            SearchBar()
+            SearchBar(
+                searchQuery = newsUiState.searchQuery,
+                onSearchQueryChange = { query ->
+                    newsViewModel.onSearchQueryChanged(query)
+                }
+            )
         }
 
         item { SectionTitle("Notícias Locais") }
@@ -156,12 +163,14 @@ fun TopBar(user: User, onNotificationClick: () -> Unit) {
             Column {
                 Text(
                     text = user.greeting,
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
                     text = user.name,
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             }
         }
@@ -178,10 +187,15 @@ fun TopBar(user: User, onNotificationClick: () -> Unit) {
     }
 }
 
+// HomeScreen.kt - SearchBar Component
 @Composable
-fun SearchBar() {
+fun SearchBar(
+    searchQuery: String,
+    onSearchQueryChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(48.dp)
             .shadow(4.dp, RoundedCornerShape(24.dp))
@@ -193,23 +207,42 @@ fun SearchBar() {
                 shape = RoundedCornerShape(24.dp)
             )
     ) {
-        Row(
+        BasicTextField(
+
+            value = searchQuery,
+            onValueChange = onSearchQueryChange,
+            textStyle = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.onSurface
+            ),
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = "Pesquisar...",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = "Search",
-                tint = IconTint
-            )
-        }
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            decorationBox = { innerTextField ->
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        if (searchQuery.isEmpty()) {
+                            Text(
+                                text = "Pesquisar notícias...",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        innerTextField()
+                    }
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Search",
+                        tint = IconTint
+                    )
+                }
+            }
+        )
     }
 }

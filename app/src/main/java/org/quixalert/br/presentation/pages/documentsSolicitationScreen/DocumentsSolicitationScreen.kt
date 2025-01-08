@@ -16,6 +16,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -69,7 +70,8 @@ fun DocumentsSolicitationScreen(
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
             ),
-            modifier = Modifier.padding(top = 8.dp)
+            modifier = Modifier.padding(top = 8.dp),
+            color = MaterialTheme.colorScheme.onBackground
         )
 
         DocumentFormFields(viewModel)
@@ -148,7 +150,8 @@ fun DocumentFormFields(viewModel: DocumentsSolicitationViewModel) {
     Text(
         text = "Descrição",
         fontSize = 16.sp,
-        fontWeight = FontWeight.Medium
+        fontWeight = FontWeight.Medium,
+        color = MaterialTheme.colorScheme.onBackground
     )
     OutlinedTextField(
         value = uiState.description,
@@ -161,7 +164,8 @@ fun DocumentFormFields(viewModel: DocumentsSolicitationViewModel) {
     Text(
         text = "Endereço",
         fontSize = 16.sp,
-        fontWeight = FontWeight.Medium
+        fontWeight = FontWeight.Medium,
+        color = MaterialTheme.colorScheme.onBackground
     )
     TextField(
         value = uiState.address,
@@ -174,7 +178,8 @@ fun DocumentFormFields(viewModel: DocumentsSolicitationViewModel) {
     Text(
         text = "Motivo da solicitação",
         fontSize = 16.sp,
-        fontWeight = FontWeight.Medium
+        fontWeight = FontWeight.Medium,
+        color = MaterialTheme.colorScheme.onBackground
     )
     TextField(
         value = uiState.motivation,
@@ -187,7 +192,8 @@ fun DocumentFormFields(viewModel: DocumentsSolicitationViewModel) {
     Text(
         text = "Detalhes Extras (opcional)",
         fontSize = 16.sp,
-        fontWeight = FontWeight.Medium
+        fontWeight = FontWeight.Medium,
+        color = MaterialTheme.colorScheme.onBackground
     )
     TextField(
         value = uiState.details,

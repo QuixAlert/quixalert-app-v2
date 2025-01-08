@@ -28,6 +28,7 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -95,7 +96,6 @@ fun AdoptionFormScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
     ) {
         val animal = animalUiState.animal
         Column(
@@ -124,7 +124,7 @@ fun AdoptionFormScreen(
                     .weight(1f)
                     .offset(y = (-20).dp)
                     .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-                    .background(Color.White)
+                    .background(MaterialTheme.colorScheme.background)
                     .padding(20.dp)
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -133,7 +133,8 @@ fun AdoptionFormScreen(
                     Text(
                         text = animal.name,
                         fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 }
 
@@ -145,7 +146,7 @@ fun AdoptionFormScreen(
                         Text(
                             text = "Responsável atual",
                             fontSize = 14.sp,
-                            color = Color.Gray
+                            color = MaterialTheme.colorScheme.onTertiary
                         )
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -159,14 +160,14 @@ fun AdoptionFormScreen(
                                     .clip(CircleShape),
                                 contentScale = ContentScale.Crop
                             )
-                            Text(text = "Prefeitura de Quixadá", fontSize = 16.sp)
+                            Text(text = "Prefeitura de Quixadá", fontSize = 16.sp, color = MaterialTheme.colorScheme.onBackground)
                         }
                     }
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = "Status",
                             fontSize = 14.sp,
-                            color = Color.Gray
+                            color = MaterialTheme.colorScheme.onTertiary
                         )
                         Surface(
                             color = Color(0xFF269996),
@@ -185,13 +186,14 @@ fun AdoptionFormScreen(
                     text = "Formulário de Adoção",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(top = 16.dp)
+                    modifier = Modifier.padding(top = 16.dp),
+                    color = MaterialTheme.colorScheme.onBackground
                 )
 
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color(0xFFF5F5F5), RoundedCornerShape(12.dp))
+                        .background(MaterialTheme.colorScheme.onSurfaceVariant, RoundedCornerShape(12.dp))
                         .padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
@@ -203,7 +205,9 @@ fun AdoptionFormScreen(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
                         colors = TextFieldDefaults.outlinedTextFieldColors(
-                            containerColor = Color(0xFFEEEEEE)
+                            containerColor = Color(0xFFEEEEEE),
+                            unfocusedLabelColor = MaterialTheme.colorScheme.background,
+                            focusedLabelColor = MaterialTheme.colorScheme.onBackground
                         )
                     )
 
@@ -215,7 +219,9 @@ fun AdoptionFormScreen(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
                         colors = TextFieldDefaults.outlinedTextFieldColors(
-                            containerColor = Color(0xFFEEEEEE)
+                            containerColor = Color(0xFFEEEEEE),
+                            unfocusedLabelColor = MaterialTheme.colorScheme.background,
+                            focusedLabelColor = MaterialTheme.colorScheme.onBackground
                         )
                     )
 
@@ -227,7 +233,9 @@ fun AdoptionFormScreen(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
                         colors = TextFieldDefaults.outlinedTextFieldColors(
-                            containerColor = Color(0xFFEEEEEE)
+                            containerColor = Color(0xFFEEEEEE),
+                            unfocusedLabelColor = MaterialTheme.colorScheme.background,
+                            focusedLabelColor = MaterialTheme.colorScheme.onBackground
                         )
                     )
 
@@ -239,7 +247,9 @@ fun AdoptionFormScreen(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
                         colors = TextFieldDefaults.outlinedTextFieldColors(
-                            containerColor = Color(0xFFEEEEEE)
+                            containerColor = Color(0xFFEEEEEE),
+                            unfocusedLabelColor = MaterialTheme.colorScheme.background,
+                            focusedLabelColor = MaterialTheme.colorScheme.onBackground
                         )
                     )
 
@@ -250,7 +260,9 @@ fun AdoptionFormScreen(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
                         colors = TextFieldDefaults.outlinedTextFieldColors(
-                            containerColor = Color(0xFFEEEEEE)
+                            containerColor = Color(0xFFEEEEEE),
+                            unfocusedLabelColor = MaterialTheme.colorScheme.background,
+                            focusedLabelColor = MaterialTheme.colorScheme.onBackground
                         )
                     )
 
@@ -262,7 +274,9 @@ fun AdoptionFormScreen(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
                         colors = TextFieldDefaults.outlinedTextFieldColors(
-                            containerColor = Color(0xFFEEEEEE)
+                            containerColor = Color(0xFFEEEEEE),
+                            unfocusedLabelColor = MaterialTheme.colorScheme.background,
+                            focusedLabelColor = MaterialTheme.colorScheme.onBackground
                         )
                     )
 
@@ -275,7 +289,9 @@ fun AdoptionFormScreen(
                             .clickable { showDatePicker = true },
                         shape = RoundedCornerShape(8.dp),
                         colors = TextFieldDefaults.outlinedTextFieldColors(
-                            containerColor = Color(0xFFEEEEEE)
+                            containerColor = Color(0xFFEEEEEE),
+                            unfocusedLabelColor = MaterialTheme.colorScheme.background,
+                            focusedLabelColor = MaterialTheme.colorScheme.onBackground
                         ),
                         readOnly = true,
                         enabled = true

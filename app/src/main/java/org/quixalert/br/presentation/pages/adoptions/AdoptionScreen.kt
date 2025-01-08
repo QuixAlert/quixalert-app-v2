@@ -76,13 +76,13 @@ fun AdoptionScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
     ) {
         Text(
             text = "Animais disponíveis para adoção",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+            color = MaterialTheme.colorScheme.onBackground
         )
 
         DonationSection(onDonateClick)
@@ -226,8 +226,9 @@ fun AdoptionItem(
                 Text(
                     text = animal.name,
                     style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold
-                )
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                    )
             }
         }
     }
@@ -294,7 +295,8 @@ fun FilterSection(
                 colors = FilterChipDefaults.filterChipColors(
                     selectedContainerColor = Color(0xFF269996),
                     selectedLabelColor = Color.White,
-                    containerColor = Color.LightGray
+                    labelColor = Color.White,
+                    containerColor = Color(0xFF6B6B6B)
                 )
             )
         }
