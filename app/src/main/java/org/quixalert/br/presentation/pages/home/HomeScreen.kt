@@ -179,8 +179,7 @@ fun TopBar(user: User, onNotificationClick: () -> Unit) {
                 imageVector = Icons.Default.Notifications,
                 contentDescription = "Notifications",
                 modifier = Modifier
-                    .size(24.dp)
-                    .shadow(2.dp, CircleShape),
+                    .size(24.dp),
                 tint = IconTint
             )
         }

@@ -38,8 +38,12 @@ fun NotificationItem(notification: Notification) {
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(min = 100.dp),
+            //.height(100.dp),
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF269996)
+        ),
     ) {
         Row(
             modifier = Modifier
@@ -68,18 +72,20 @@ fun NotificationItem(notification: Notification) {
                     fontWeight = FontWeight.Bold,
                     fontSize = 13.sp,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    color = Color.White
                 )
                 Text(
                     text = notification.message,
                     fontWeight = FontWeight.Light,
                     fontSize = 13.sp,
-                    maxLines = 10,
-                    overflow = TextOverflow.Ellipsis
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    color = Color.White
                 )
                 Text(
                     text = dateFormatter.format(notification.data),
-                    color = Color.Gray,
+                    color = Color.White,
                     textAlign = TextAlign.End,
                     fontSize = 12.sp,
                     modifier = Modifier

@@ -51,7 +51,7 @@ fun StyledTextField(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(42.dp)
+                .height(50.dp)
                 .shadow(
                     elevation = 4.dp,
                     shape = RoundedCornerShape(15.dp),

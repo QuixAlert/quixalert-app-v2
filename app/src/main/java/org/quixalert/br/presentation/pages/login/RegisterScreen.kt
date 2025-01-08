@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.quixalert.br.domain.model.UserRegistrationData
@@ -30,6 +31,7 @@ import org.quixalert.br.presentation.ui.theme.poppinsFamily
 import org.quixalert.br.presentation.ui.theme.primaryBlue
 import org.quixalert.br.presentation.ui.theme.primaryGreen
 
+@Preview
 @Composable
 fun RegisterScreen(
     onNextStep: (UserRegistrationData) -> Unit = {}
