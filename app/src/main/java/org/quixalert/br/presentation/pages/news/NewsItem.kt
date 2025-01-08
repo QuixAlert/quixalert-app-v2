@@ -42,7 +42,7 @@ fun NewsItem(news: News, isHorizontal: Boolean = true) {
         modifier = modifier
             .shadow(4.dp, RoundedCornerShape(12.dp))
             .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colorScheme.surface)
+            .background(MaterialTheme.colorScheme.primary)
             .clickable {
                 val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
                     data = android.net.Uri.parse(news.newsUrl)
@@ -54,7 +54,7 @@ fun NewsItem(news: News, isHorizontal: Boolean = true) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(150.dp)
+                    .height(300.dp)
             ) {
                 AsyncImage(
                     model = news.imageUrl,  // Usando a URL aqui
@@ -81,7 +81,7 @@ fun NewsItem(news: News, isHorizontal: Boolean = true) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.surface)
+                    .background(MaterialTheme.colorScheme.primary)
                     .padding(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -97,6 +97,7 @@ fun NewsItem(news: News, isHorizontal: Boolean = true) {
                 Text(
                     text = news.title,
                     style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onBackground,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis

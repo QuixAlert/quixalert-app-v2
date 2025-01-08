@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -30,7 +31,8 @@ fun GlobalNews(newsList: List<News>, hasHeader: Boolean = true, hasPadding: Bool
             text = "Notícias globais",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp)
+            modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp),
+            color = MaterialTheme.colorScheme.onBackground
         )
     }
 

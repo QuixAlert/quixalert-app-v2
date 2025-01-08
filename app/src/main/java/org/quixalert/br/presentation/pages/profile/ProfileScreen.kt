@@ -29,8 +29,12 @@ import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -61,9 +65,14 @@ fun ProfileScreen(
     onBackClick: () -> Unit,
     onMenuClick: () -> Unit,
     onEditProfileClick: () -> Unit,
+    isDarkThemeEnabled: Boolean,
+    onThemeToggle: (Boolean) -> Unit,
     onBiddingClick: (Bidding) -> Unit, // Novo parâmetro
     onReportClick: (Report) -> Unit // Novo parâmetro
 ) {
+
+    val darkThemeState = remember { mutableStateOf(isDarkThemeEnabled) }
+
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -86,9 +95,48 @@ fun ProfileScreen(
 
         item {
             Text(
+                text = "Preferências",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
+
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "Modo Escuro",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+
+                Switch(
+                    checked = darkThemeState.value,
+                    onCheckedChange = {
+                        darkThemeState.value = it
+                        onThemeToggle(it) // Notifica o estado atualizado
+                    },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = IconTint,
+                        uncheckedThumbColor = IconTint
+                    )
+                )
+            }
+        }
+
+
+        item {
+            Text(
                 text = "Minhas Denúncias",
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
             )
         }
 
@@ -107,7 +155,8 @@ fun ProfileScreen(
             Text(
                 text = "Minhas Licitações",
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
             )
         }
 
@@ -129,7 +178,8 @@ fun ProfileScreen(
             Text(
                 text = "Minhas Adoções",
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
             )
         }
 
@@ -205,7 +255,8 @@ private fun ProfileHeader(
                 text = user.name,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 4.dp)
+                modifier = Modifier.padding(bottom = 4.dp),
+                color = MaterialTheme.colorScheme.onBackground
             )
         }
     }
@@ -252,7 +303,8 @@ fun ReportItem(report: Report, onReportClick: (Report) -> Unit) {
                     text = report.title,
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             }
         }
@@ -320,7 +372,8 @@ fun AdoptionItem(adoption: Adoption) {
                 Text(
                     text = adoption.petName,
                     style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             }
         }
@@ -370,7 +423,8 @@ fun BiddingItem(
                     text = bidding.title,
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             }
         }
