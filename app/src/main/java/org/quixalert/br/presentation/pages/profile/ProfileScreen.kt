@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,6 +24,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Share
@@ -51,9 +53,9 @@ import org.quixalert.br.domain.model.AdoptionStatus
 import org.quixalert.br.domain.model.Bidding
 import org.quixalert.br.domain.model.Report
 import org.quixalert.br.domain.model.User
+import org.quixalert.br.presentation.icons.QuestionIcon
 
 val IconTint = Color(0xFF269996)
-
 
 @Composable
 fun ProfileScreen(
@@ -63,14 +65,15 @@ fun ProfileScreen(
     biddings: List<Bidding>,
     adoptions: List<Adoption>,
     onBackClick: () -> Unit,
-    onMenuClick: () -> Unit,
     onEditProfileClick: () -> Unit,
     isDarkThemeEnabled: Boolean,
     onThemeToggle: (Boolean) -> Unit,
-    onBiddingClick: (Bidding) -> Unit, // Novo parâmetro
-    onReportClick: (Report) -> Unit // Novo parâmetro
+    onBiddingClick: (Bidding) -> Unit,
+    onReportClick: (Report) -> Unit,
+    onFaqCLick: () -> Unit,
+    onExitClick: () -> Unit,
 ) {
-
+    val isMenuOpen = remember { mutableStateOf(false) }
     val darkThemeState = remember { mutableStateOf(isDarkThemeEnabled) }
 
     LazyColumn(
@@ -82,7 +85,7 @@ fun ProfileScreen(
         item {
             TopBar(
                 onBackClick = onBackClick,
-                onMenuClick = onMenuClick
+                onMenuClick = { isMenuOpen.value = !isMenuOpen.value }
             )
         }
 
@@ -120,7 +123,7 @@ fun ProfileScreen(
                     checked = darkThemeState.value,
                     onCheckedChange = {
                         darkThemeState.value = it
-                        onThemeToggle(it) // Notifica o estado atualizado
+                        onThemeToggle(it)
                     },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = IconTint,
@@ -191,6 +194,93 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
+
+    if (isMenuOpen.value) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.5f))
+                .clickable { isMenuOpen.value = false }
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            DrawerContent(
+                onExitClick = {
+                    onExitClick()
+                },
+                onFaqCLick = {
+                    onFaqCLick()
+                },
+                modifier = Modifier
+                    .clip(RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp))
+                    .fillMaxHeight()
+                    .width(220.dp)
+                    .align(Alignment.TopEnd)
+            )
+        }
+    }
+}
+
+
+@Composable
+fun DrawerContent(
+    onExitClick: () -> Unit,
+    onFaqCLick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(16.dp)
+    ) {
+        Text(
+            text = "Menu",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    onFaqCLick()
+                }
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector =  QuestionIcon,
+                contentDescription = "Opção 1",
+                modifier = Modifier.size(24.dp),
+                tint = IconTint
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(text = "FAQ", style = MaterialTheme.typography.bodyMedium)
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    onExitClick()
+                }
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.ExitToApp,
+                contentDescription = "Sair",
+                modifier = Modifier.size(24.dp),
+                tint = IconTint
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(text = "Sair", style = MaterialTheme.typography.bodyMedium)
+        }
+    }
 }
 
 @Composable
@@ -201,7 +291,7 @@ private fun TopBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 16.dp),
+            .padding(top = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -222,6 +312,7 @@ private fun TopBar(
         }
     }
 }
+
 @Composable
 private fun ProfileHeader(
     user: User,
@@ -325,7 +416,7 @@ fun AdoptionItem(adoption: Adoption) {
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.Start
         ) {
-            // Image on top
+
             Box {
                 AsyncImage(
                     model = adoption.petImage,
@@ -336,7 +427,7 @@ fun AdoptionItem(adoption: Adoption) {
                     contentScale = ContentScale.Crop
                 )
 
-                // Status in the bottom right corner
+
                 Text(
                     text = if (adoption.status == AdoptionStatus.APPROVED) "Adotado" else "Disponível",
                     style = MaterialTheme.typography.bodySmall.copy(color = Color.White),
@@ -351,7 +442,6 @@ fun AdoptionItem(adoption: Adoption) {
                 )
             }
 
-            // Icon and name in a row below the image
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -380,7 +470,6 @@ fun AdoptionItem(adoption: Adoption) {
     }
 }
 
-// BiddingItem atualizado com onClick
 @Composable
 fun BiddingItem(
     bidding: Bidding,
@@ -431,7 +520,6 @@ fun BiddingItem(
     }
 }
 
-// Nova tela para visualizar o PDF
 @Composable
 fun BiddingPdfScreen(
     bidding: Bidding,
@@ -443,7 +531,7 @@ fun BiddingPdfScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        // Top Bar
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
