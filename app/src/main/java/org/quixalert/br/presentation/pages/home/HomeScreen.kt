@@ -212,7 +212,7 @@ fun SearchBar(
             value = searchQuery,
             onValueChange = onSearchQueryChange,
             textStyle = MaterialTheme.typography.bodyMedium.copy(
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onBackground
             ),
             modifier = Modifier
                 .fillMaxSize()
@@ -231,7 +231,7 @@ fun SearchBar(
                             Text(
                                 text = "Pesquisar notícias...",
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                         }
                         innerTextField()

@@ -5,7 +5,6 @@ import android.app.Activity
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -59,7 +58,7 @@ fun App() {
     var isFloatingMenuVisible by remember { mutableStateOf(false) }
     var selectedAnimal by remember { mutableStateOf<Animal?>(null) }
     val context = LocalContext.current
-    val currentDarkTheme = isSystemInDarkTheme()
+    val currentDarkTheme = false;
     val isDarkTheme = remember { mutableStateOf(currentDarkTheme) }
     val systemUiController = rememberSystemUiController()
     if(isDarkTheme.value){
@@ -71,6 +70,8 @@ fun App() {
             color = Color.Blue
         )
     }
+
+    currentScreen = "donate"
 
     QuixalertTheme(darkTheme = isDarkTheme.value) {
         val modifierTopBarBlur = if (isFloatingMenuVisible) {
@@ -134,7 +135,7 @@ fun App() {
                             adoptions = adoptions,
                             onBackClick = { currentScreen = "home" },
                             onEditProfileClick = { currentScreen = "edit_profile" },
-                            onBiddingClick = { currentScreen = "bidding_pdf" },
+                            onBiddingClick = { },
                             onReportClick = { currentScreen = "report_details" },
                             isDarkThemeEnabled = isDarkTheme.value,
                             onThemeToggle = { isDarkTheme.value = it },
@@ -198,7 +199,7 @@ fun App() {
             },
 
             bottomBar = {
-                if (currentScreen == "home" || currentScreen == "profile" || currentScreen == "notification" || currentScreen == "news" || currentScreen == "animals" || currentScreen == "faq" ) {
+                if (currentScreen == "home" || currentScreen == "profile" || currentScreen == "notification" || currentScreen == "news" || currentScreen == "animals" || currentScreen == "faq" || currentScreen == "donate"  ) {
                     Column {
                         if (isFloatingMenuVisible) {
                             FloatingMenu(
