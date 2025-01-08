@@ -1,6 +1,5 @@
 package org.quixalert.br.presentation.pages.profile
 
-import android.annotation.SuppressLint
 import android.webkit.WebView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -32,7 +31,6 @@ import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -45,44 +43,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.AsyncImage
-import org.quixalert.br.MockData.adoptions
-import org.quixalert.br.MockData.biddings
-import org.quixalert.br.MockData.reports
 import org.quixalert.br.domain.model.Adoption
 import org.quixalert.br.domain.model.AdoptionStatus
 import org.quixalert.br.domain.model.Bidding
 import org.quixalert.br.domain.model.Report
 import org.quixalert.br.domain.model.User
-import org.quixalert.br.mockUser
 import org.quixalert.br.presentation.icons.QuestionIcon
-import org.quixalert.br.presentation.ui.theme.AppTheme
 
 val IconTint = Color(0xFF269996)
-
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Preview
-@Composable
-fun ver() {
-    AppTheme {
-        Scaffold {
-            ProfileScreen(
-                user = mockUser,
-                reports = reports,
-                biddings = biddings,
-                adoptions = adoptions,
-                onBackClick = {  },
-                onEditProfileClick = {  },
-                onBiddingClick = {  },
-                onReportClick = {  },
-                onExitClick = { },
-            )
-        }
-    }
-}
 
 @Composable
 fun ProfileScreen(
@@ -95,7 +66,8 @@ fun ProfileScreen(
     onExitClick: () -> Unit,
     onEditProfileClick: () -> Unit,
     onBiddingClick: (Bidding) -> Unit,
-    onReportClick: (Report) -> Unit
+    onReportClick: (Report) -> Unit,
+    onFaqCLick: () -> Unit,
 ) {
     val isMenuOpen = remember { mutableStateOf(false) }
 
@@ -190,6 +162,9 @@ fun ProfileScreen(
                 onExitClick = {
                     onExitClick()
                 },
+                onFaqCLick = {
+                    onFaqCLick()
+                },
                 modifier = Modifier
                     .clip(RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp))
                     .fillMaxHeight()
@@ -203,6 +178,7 @@ fun ProfileScreen(
 @Composable
 fun DrawerContent(
     onExitClick: () -> Unit,
+    onFaqCLick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -220,7 +196,9 @@ fun DrawerContent(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { /* ação */ }
+                .clickable {
+                    onFaqCLick()
+                }
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {

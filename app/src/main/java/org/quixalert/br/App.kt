@@ -1,6 +1,7 @@
 package org.quixalert.br
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import org.quixalert.br.MockData.adoptions
 import org.quixalert.br.MockData.biddings
@@ -31,6 +33,7 @@ import org.quixalert.br.presentation.pages.animal.AnimalDetailsScreen
 import org.quixalert.br.presentation.pages.documentsSolicitationScreen.DocumentsSolicitationScreen
 import org.quixalert.br.presentation.pages.donation.DonationScreen
 import org.quixalert.br.presentation.pages.emergencyNumbers.EmergencyNumbersScreen
+import org.quixalert.br.presentation.pages.faq.FaqScreen
 import org.quixalert.br.presentation.pages.home.HomeScreen
 import org.quixalert.br.presentation.pages.login.RegisterScreen
 import org.quixalert.br.presentation.pages.login.RegisterStepTwoScreen
@@ -50,8 +53,7 @@ fun App() {
     var registrationData by remember { mutableStateOf<UserRegistrationData?>(null) }
     var isFloatingMenuVisible by remember { mutableStateOf(false) }
     var selectedAnimal by remember { mutableStateOf<Animal?>(null) }
-
-    currentScreen = "news"
+    val context = LocalContext.current
 
     AppTheme {
         val modifierTopBarBlur = if (isFloatingMenuVisible) {
@@ -114,10 +116,16 @@ fun App() {
                             biddings = biddings,
                             adoptions = adoptions,
                             onBackClick = { currentScreen = "home" },
-                            onMenuClick = { isFloatingMenuVisible = !isFloatingMenuVisible },
                             onEditProfileClick = { currentScreen = "edit_profile" },
                             onBiddingClick = { currentScreen = "bidding_pdf" },
-                            onReportClick = { currentScreen = "report_details" }
+                            onReportClick = { currentScreen = "report_details" },
+                            onExitClick = {
+                                currentScreen = "login"
+                                (context as? Activity)?.finish()
+                            },
+                            onFaqCLick = {
+                                currentScreen = "faq"
+                            }
                         )
                         "news" -> NewsScreen()
                         "animals" -> AdoptionScreen(
@@ -157,6 +165,7 @@ fun App() {
                             onFormClick = { currentScreen = "animals" }
                         )
                         "report_details" -> ReportScreen()
+                        "faq" -> FaqScreen()
                     }
 
                     if (isFloatingMenuVisible) {
@@ -170,7 +179,7 @@ fun App() {
             },
 
             bottomBar = {
-                if (currentScreen == "home" || currentScreen == "profile" || currentScreen == "notification" || currentScreen == "news" || currentScreen == "animals") {
+                if (currentScreen == "home" || currentScreen == "profile" || currentScreen == "notification" || currentScreen == "news" || currentScreen == "animals" || currentScreen == "faq" ) {
                     Column {
                         if (isFloatingMenuVisible) {
                             FloatingMenu(
