@@ -25,6 +25,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Share
@@ -57,6 +58,7 @@ import org.quixalert.br.domain.model.Bidding
 import org.quixalert.br.domain.model.Report
 import org.quixalert.br.domain.model.User
 import org.quixalert.br.mockUser
+import org.quixalert.br.presentation.icons.QuestionIcon
 import org.quixalert.br.presentation.ui.theme.AppTheme
 
 val IconTint = Color(0xFF269996)
@@ -75,7 +77,8 @@ fun ver() {
                 onBackClick = {  },
                 onEditProfileClick = {  },
                 onBiddingClick = {  },
-                onReportClick = {  }
+                onReportClick = {  },
+                onExitClick = { },
             )
         }
     }
@@ -89,6 +92,7 @@ fun ProfileScreen(
     biddings: List<Bidding>,
     adoptions: List<Adoption>,
     onBackClick: () -> Unit,
+    onExitClick: () -> Unit,
     onEditProfileClick: () -> Unit,
     onBiddingClick: (Bidding) -> Unit,
     onReportClick: (Report) -> Unit
@@ -183,10 +187,13 @@ fun ProfileScreen(
             )
 
             DrawerContent(
+                onExitClick = {
+                    onExitClick()
+                },
                 modifier = Modifier
                     .clip(RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp))
                     .fillMaxHeight()
-                    .width(250.dp)
+                    .width(220.dp)
                     .align(Alignment.TopEnd)
             )
         }
@@ -194,7 +201,10 @@ fun ProfileScreen(
 }
 
 @Composable
-fun DrawerContent(modifier: Modifier = Modifier) {
+fun DrawerContent(
+    onExitClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Column(
         modifier = modifier
             .background(MaterialTheme.colorScheme.surface)
@@ -207,32 +217,41 @@ fun DrawerContent(modifier: Modifier = Modifier) {
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        Text(
-            text = "Opção 1",
-            style = MaterialTheme.typography.bodyMedium,
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { /* ação */ }
-                .padding(8.dp)
-        )
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector =  QuestionIcon,
+                contentDescription = "Opção 1",
+                modifier = Modifier.size(24.dp),
+                tint = IconTint
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(text = "FAQ", style = MaterialTheme.typography.bodyMedium)
+        }
 
-        Text(
-            text = "Opção 2",
-            style = MaterialTheme.typography.bodyMedium,
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { /* ação */ }
-                .padding(8.dp)
-        )
-
-        Text(
-            text = "Opção 2",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { /* ação */ }
-                .padding(8.dp)
-        )
+                .clickable {
+                    onExitClick()
+                }
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.ExitToApp,
+                contentDescription = "Sair",
+                modifier = Modifier.size(24.dp),
+                tint = IconTint
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(text = "Sair", style = MaterialTheme.typography.bodyMedium)
+        }
     }
 }
 
