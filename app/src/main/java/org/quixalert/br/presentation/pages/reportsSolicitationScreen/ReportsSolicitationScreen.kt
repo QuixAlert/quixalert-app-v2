@@ -136,9 +136,12 @@ fun ReportsSolicitationForm(viewModel: ReportsSolicitationViewModel) {
         ) {
             listOf("Ambiental", "Maus Tratos", "Outros").forEach { label ->
                 Button(
-                    onClick = { viewModel.updateReportType(ReportType.valueOf(label.uppercase())) },
+                    onClick = {
+                        val enumValue = label.uppercase().replace(" ", "_")
+                        viewModel.updateReportType(ReportType.valueOf(enumValue))
+                              },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (uiState.selectedType.name == label.uppercase()) Color(0xFF269996) else Color(0xFFB7B7B8)
+                        containerColor = if (uiState.selectedType.name == label.uppercase().replace(" ", "_")) Color(0xFF269996) else Color(0xFFB7B7B8)
                     ),
                     contentPadding = PaddingValues(0.dp),
                     modifier = Modifier
