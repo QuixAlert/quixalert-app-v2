@@ -478,12 +478,15 @@ fun BiddingItem(
     Box(
         modifier = Modifier
             .width(200.dp)
+            .height(200.dp)
             .shadow(4.dp, RoundedCornerShape(12.dp))
             .clip(RoundedCornerShape(12.dp))
             .background(MaterialTheme.colorScheme.surface)
             .clickable { onBiddingClick(bidding) }
     ) {
-        Column {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
             AsyncImage(
                 model = bidding.image,
                 contentDescription = bidding.title,
