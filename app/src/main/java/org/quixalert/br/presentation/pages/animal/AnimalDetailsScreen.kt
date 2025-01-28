@@ -73,7 +73,6 @@ import java.util.regex.Pattern
 fun AnimalScreenBase(
     animal: Animal,
     onBackClick: () -> Unit,
-    onMenuClick: () -> Unit,
     content: @Composable ColumnScope.() -> Unit
 ) {
     var selectedVideoUrl by remember { mutableStateOf<String?>(null) }
@@ -86,8 +85,7 @@ fun AnimalScreenBase(
             modifier = Modifier.fillMaxSize()
         ) {
             TopBar(
-                onBackClick = onBackClick,
-                onMenuClick = onMenuClick
+                onBackClick = onBackClick
             )
             // Header Image with Back Button
             Box(
@@ -210,7 +208,6 @@ fun AnimalDetailsScreen(
     viewModel: AnimalDetailsViewModel = hiltViewModel(),
     selectedAnimal: Animal?,
     onBackClick: () -> Unit,
-    onMenuClick: () -> Unit,
     onFormClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -264,7 +261,7 @@ fun AnimalDetailsScreen(
         uiState.animal != null -> {
             val animal = uiState.animal
             if (animal != null) {
-                AnimalScreenBase(animal = animal, onBackClick = onBackClick, onMenuClick = onMenuClick ) {
+                AnimalScreenBase(animal = animal, onBackClick = onBackClick) {
                     Column(
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
@@ -458,8 +455,7 @@ fun AnimalDetailsScreen(
 
 @Composable
 private fun TopBar(
-    onBackClick: () -> Unit,
-    onMenuClick: () -> Unit
+    onBackClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -475,16 +471,9 @@ private fun TopBar(
                 tint = IconTint
             )
         }
-
-        IconButton(onClick = onMenuClick) {
-            Icon(
-                imageVector = Icons.Default.Menu,
-                contentDescription = "Menu",
-                tint = IconTint
-            )
-        }
     }
 }
+
 @Composable
 fun VideoThumbnail(
     videoUrl: String,
@@ -528,6 +517,7 @@ fun VideoThumbnail(
         }
     }
 }
+
 @Composable
 fun VideoPlayer(
     videoUrl: String,
@@ -629,5 +619,4 @@ private fun extractYouTubeVideoId(url: String): String {
     Log.d("VideoPlayer", "Video ID: $videoId from URL: $url")
 
     return videoId
-
 }

@@ -152,7 +152,6 @@ fun App() {
                         )
                         "donate" -> DonationScreen(
                             onBackClick = { currentScreen = "animals" },
-                            onMenuClick = { isFloatingMenuVisible = !isFloatingMenuVisible },
                             onFormClick = { currentScreen = "animals" }
                         )
                         "reports_solicitation" -> ReportsSolicitationScreen(
@@ -169,7 +168,6 @@ fun App() {
                         "pet_details" -> AnimalDetailsScreen(
                             selectedAnimal = selectedAnimal,
                             onBackClick = { currentScreen = "animals" },
-                            onMenuClick = { isFloatingMenuVisible = !isFloatingMenuVisible },
                             onFormClick = { currentScreen = "form_adote" }
                         )
                         "form_adote" -> AdoptionFormScreen(
@@ -194,25 +192,8 @@ fun App() {
             },
 
             bottomBar = {
-                if (currentScreen == "home" || currentScreen == "profile" || currentScreen == "notification" || currentScreen == "news" || currentScreen == "animals" || currentScreen == "faq" || currentScreen == "donate"  ) {
+                if (currentScreen == "home" || currentScreen == "profile" || currentScreen == "notification" || currentScreen == "news" || currentScreen == "animals" || currentScreen == "faq") {
                     Column {
-                        if (isFloatingMenuVisible) {
-                            FloatingMenu(
-                                modifier = Modifier.padding(bottom = 18.dp),
-                                onReportClick = {
-                                    currentScreen = "reports_solicitation"
-                                    isFloatingMenuVisible = false
-                                },
-                                onDocumentClick = {
-                                    currentScreen = "documents"
-                                    isFloatingMenuVisible = false
-                                },
-                                onEmergencyClick = {
-                                    currentScreen = "emergency"
-                                    isFloatingMenuVisible = false
-                                }
-                            )
-                        }
                         NavigationBarM3(
                             onPlusClick = { isFloatingMenuVisible = !isFloatingMenuVisible },
                             onOtherCLick = { route ->
