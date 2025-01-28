@@ -58,7 +58,6 @@ import org.quixalert.br.presentation.pages.profile.IconTint
 @Composable
 fun ReportsSolicitationScreen(
     onBackClick: () -> Unit = {},
-    onMenuClick: () -> Unit = {},
     onFormClick: () -> Unit = {}
 ) {
     val viewModel: ReportsSolicitationViewModel = hiltViewModel()
@@ -71,7 +70,7 @@ fun ReportsSolicitationScreen(
     }
 
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-        TopBar(onBackClick = onBackClick, onMenuClick = onMenuClick)
+        TopBar(onBackClick = onBackClick)
         Text(
             text = "Fomulário de denúncia",
             style = TextStyle(
@@ -280,8 +279,7 @@ fun ImageSelection(
 
 @Composable
 fun TopBar(
-    onBackClick: () -> Unit,
-    onMenuClick: () -> Unit
+    onBackClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -294,14 +292,6 @@ fun TopBar(
             Icon(
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = "Voltar",
-                tint = IconTint
-            )
-        }
-
-        IconButton(onClick = onMenuClick) {
-            Icon(
-                imageVector = Icons.Default.Menu,
-                contentDescription = "Menu",
                 tint = IconTint
             )
         }

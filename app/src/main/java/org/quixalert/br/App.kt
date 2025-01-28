@@ -157,17 +157,14 @@ fun App() {
                         )
                         "reports_solicitation" -> ReportsSolicitationScreen(
                             onBackClick = { currentScreen = "home" },
-                            onMenuClick = { isFloatingMenuVisible = !isFloatingMenuVisible },
                             onFormClick = { currentScreen = "animals" }
                         )
                         "documents" -> DocumentsSolicitationScreen(
                             onBackClick = { currentScreen = "home" },
-                            onMenuClick = { isFloatingMenuVisible = !isFloatingMenuVisible },
                             onFormClick = { currentScreen = "home" }
                         )
                         "emergency" -> EmergencyNumbersScreen(
                             onBackClick = { currentScreen = "home" },
-                            onMenuClick = { isFloatingMenuVisible = !isFloatingMenuVisible }
                         )
                         "pet_details" -> AnimalDetailsScreen(
                             selectedAnimal = selectedAnimal,
