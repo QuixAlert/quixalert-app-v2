@@ -93,12 +93,9 @@ val ambientalEmergencyNumbersList = listOf(
 )
 
 @Composable
-fun EmergencyNumbersScreen(onBackClick: () -> Unit = {}, onMenuClick: () -> Unit = {}) {
+fun EmergencyNumbersScreen(onBackClick: () -> Unit = {}) {
     Column() {
-        TopBar(
-            onBackClick = onBackClick,
-            onMenuClick = onMenuClick
-        )
+        TopBar(onBackClick = onBackClick)
         Text(
             text = "Números em caso de emergência",
             style = TextStyle(
@@ -250,8 +247,7 @@ fun EmergencyNumberItem(emergencyNumber: EmergencyNumber) {
 
 @Composable
 private fun TopBar(
-    onBackClick: () -> Unit,
-    onMenuClick: () -> Unit
+    onBackClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -264,14 +260,6 @@ private fun TopBar(
             Icon(
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = "Voltar",
-                tint = IconTint
-            )
-        }
-
-        IconButton(onClick = onMenuClick) {
-            Icon(
-                imageVector = Icons.Default.Menu,
-                contentDescription = "Menu",
                 tint = IconTint
             )
         }

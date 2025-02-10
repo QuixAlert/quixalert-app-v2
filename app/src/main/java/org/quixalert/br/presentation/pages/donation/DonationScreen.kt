@@ -50,7 +50,6 @@ import org.quixalert.br.presentation.pages.profile.IconTint
 @Composable
 fun DonationScreen(
     onBackClick: () -> Unit,
-    onMenuClick: () -> Unit,
     onFormClick: () -> Unit,
     viewModel: DonationViewModel = hiltViewModel()
 ) {
@@ -78,8 +77,7 @@ fun DonationScreen(
                     .padding(16.dp),
             ) {
                 TopBar(
-                    onBackClick = onBackClick,
-                    onMenuClick = onMenuClick
+                    onBackClick = onBackClick
                 )
                 Text(
                     text = "Não pode adotar agora?\nFaça uma doação!",
@@ -198,8 +196,7 @@ fun DonationScreen(
 
 @Composable
 fun TopBar(
-    onBackClick: () -> Unit,
-    onMenuClick: () -> Unit
+    onBackClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -212,14 +209,6 @@ fun TopBar(
             Icon(
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = "Voltar",
-                tint = IconTint
-            )
-        }
-
-        IconButton(onClick = onMenuClick) {
-            Icon(
-                imageVector = Icons.Default.Menu,
-                contentDescription = "Menu",
                 tint = IconTint
             )
         }

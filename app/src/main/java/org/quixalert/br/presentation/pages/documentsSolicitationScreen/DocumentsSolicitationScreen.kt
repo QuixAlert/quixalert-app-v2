@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -44,7 +43,6 @@ import org.quixalert.br.presentation.pages.profile.IconTint
 @Composable
 fun DocumentsSolicitationScreen(
     onBackClick: () -> Unit = {},
-    onMenuClick: () -> Unit = {},
     onFormClick: () -> Unit = {},
     viewModel: DocumentsSolicitationViewModel = hiltViewModel()
 ) {
@@ -62,7 +60,7 @@ fun DocumentsSolicitationScreen(
             .padding(horizontal = 16.dp)
             .padding(bottom = 32.dp)
     ) {
-        TopBar(onBackClick = onBackClick, onMenuClick = onMenuClick)
+        TopBar(onBackClick = onBackClick)
 
         Text(
             text = "Fomulário de solicitação de documentos",
@@ -206,8 +204,7 @@ fun DocumentFormFields(viewModel: DocumentsSolicitationViewModel) {
 
 @Composable
 fun TopBar(
-    onBackClick: () -> Unit,
-    onMenuClick: () -> Unit
+    onBackClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -220,14 +217,6 @@ fun TopBar(
             Icon(
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = "Voltar",
-                tint = IconTint
-            )
-        }
-
-        IconButton(onClick = onMenuClick) {
-            Icon(
-                imageVector = Icons.Default.Menu,
-                contentDescription = "Menu",
                 tint = IconTint
             )
         }
