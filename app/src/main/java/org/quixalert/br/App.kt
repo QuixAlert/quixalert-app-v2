@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material3.MaterialTheme
@@ -18,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -48,6 +50,8 @@ import org.quixalert.br.presentation.pages.profile.ProfileScreen
 import org.quixalert.br.presentation.pages.reports.ReportScreen
 import org.quixalert.br.presentation.pages.reportsSolicitationScreen.ReportsSolicitationScreen
 import org.quixalert.br.view.pages.login.LoginScreen
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 
 @RequiresApi(Build.VERSION_CODES.S)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -101,8 +105,7 @@ fun App() {
                         .fillMaxSize()
                         .background(color = MaterialTheme.colorScheme.background)
                         .padding(top = 32.dp)
-                )
-                {
+                ) {
                     when (currentScreen) {
                         "login" -> LoginScreen(
                             onRegisterClick = { currentScreen = "register" },
@@ -186,6 +189,12 @@ fun App() {
                             modifier = Modifier
                                 .fillMaxSize()
                                 .background(Color.Black.copy(alpha = 0.5f))
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null
+                                ) {
+                                    isFloatingMenuVisible = false
+                                }
                         )
                     }
                 }
