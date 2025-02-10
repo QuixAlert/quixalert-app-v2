@@ -152,7 +152,7 @@ fun DonationScreen(
                     ),
             ) {
                 Image(
-                    painter = painterResource(R.drawable.news1),
+                    painter = painterResource(R.drawable.maps),
                     contentDescription = "Map",
                     contentScale = ContentScale.FillHeight
                 )
