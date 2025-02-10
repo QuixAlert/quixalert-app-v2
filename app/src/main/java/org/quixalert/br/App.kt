@@ -52,6 +52,8 @@ import org.quixalert.br.presentation.pages.reportsSolicitationScreen.ReportsSoli
 import org.quixalert.br.view.pages.login.LoginScreen
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import org.quixalert.br.domain.model.Adoption
+import org.quixalert.br.presentation.pages.adoptions.AdoptionSolicitationScreen
 
 @RequiresApi(Build.VERSION_CODES.S)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -61,6 +63,7 @@ fun App() {
     var registrationData by remember { mutableStateOf<UserRegistrationData?>(null) }
     var isFloatingMenuVisible by remember { mutableStateOf(false) }
     var selectedAnimal by remember { mutableStateOf<Animal?>(null) }
+    var selectedAdoption by remember { mutableStateOf<Adoption?>(null) }
     val context = LocalContext.current
     val currentDarkTheme = false;
     val isDarkTheme = remember { mutableStateOf(currentDarkTheme) }
@@ -147,6 +150,10 @@ fun App() {
                             onFaqCLick = {
                                 currentScreen = "faq"
                             },
+                            onAdoptionClick = { adoption ->
+                                currentScreen = "solicitation"
+                                selectedAdoption = adoption
+                            }
                         )
                         "news" -> NewsScreen()
                         "animals" -> AdoptionScreen(
@@ -182,6 +189,7 @@ fun App() {
                         )
                         "report_details" -> ReportScreen()
                         "faq" -> FaqScreen()
+                        "solicitation" -> selectedAdoption?.let { it1 -> AdoptionSolicitationScreen(adoption = it1) }
                     }
 
                     if (isFloatingMenuVisible) {

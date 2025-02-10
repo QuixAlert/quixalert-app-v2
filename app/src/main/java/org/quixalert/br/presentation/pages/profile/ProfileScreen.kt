@@ -70,6 +70,7 @@ fun ProfileScreen(
     onThemeToggle: (Boolean) -> Unit,
     onBiddingClick: (Bidding) -> Unit,
     onReportClick: (Report) -> Unit,
+    onAdoptionClick: (Adoption) -> Unit,
     onFaqCLick: () -> Unit,
     onExitClick: () -> Unit,
 ) {
@@ -187,7 +188,7 @@ fun ProfileScreen(
         }
 
         items(adoptions) { adoption ->
-            AdoptionItem(adoption = adoption)
+            AdoptionItem(adoption = adoption, onAdoptionClick = onAdoptionClick)
         }
 
         item {
@@ -403,7 +404,7 @@ fun ReportItem(report: Report, onReportClick: (Report) -> Unit) {
 }
 
 @Composable
-fun AdoptionItem(adoption: Adoption) {
+fun AdoptionItem(adoption: Adoption, onAdoptionClick: (adoption: Adoption) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -411,6 +412,7 @@ fun AdoptionItem(adoption: Adoption) {
             .shadow(4.dp, RoundedCornerShape(12.dp))
             .clip(RoundedCornerShape(12.dp))
             .background(MaterialTheme.colorScheme.surface)
+            .clickable { onAdoptionClick(adoption) }
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
