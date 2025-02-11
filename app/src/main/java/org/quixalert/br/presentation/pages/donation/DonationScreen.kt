@@ -2,6 +2,7 @@ package org.quixalert.br.presentation.pages.donation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -120,18 +121,33 @@ fun DonationScreen(
                 textAlign = TextAlign.Start
             )
 
-            Box(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        Color.LightGray,
+                        Color.Transparent,
                         RoundedCornerShape(8.dp)
                     ),
             ) {
                 Image(
                     painter = painterResource(R.drawable.maps),
-                    contentDescription = "Map",
-                    contentScale = ContentScale.FillHeight
+                    contentDescription = "Mapa da AMMA",
+                    contentScale = ContentScale.FillHeight,
+                    modifier = Modifier.clickable {
+                        val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
+                            data = android.net.Uri.parse(
+                                "https://maps.app.goo.gl/tHfPqRQpx4J629698"
+                            )
+                        }
+                        context.startActivity(intent)
+                    }
+                )
+
+                Text(
+                    text ="Rua Tabelião Enéas, 649 - Centro, Quixadá - CE, 63900-169",
+                    fontSize = 16.sp,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Start
                 )
             }
 
