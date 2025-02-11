@@ -2,6 +2,7 @@ package org.quixalert.br.presentation.pages.donation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -24,9 +24,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -53,6 +51,8 @@ fun DonationScreen(
     onFormClick: () -> Unit,
     viewModel: DonationViewModel = hiltViewModel()
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
+
     val uiState by viewModel.uiState.collectAsState()
 
     var showSuccessDialog by remember { mutableStateOf(false) }
@@ -114,52 +114,52 @@ fun DonationScreen(
                 color = MaterialTheme.colorScheme.onBackground
             )
 
-            // Donation Input
-            OutlinedTextField(
-                value = uiState.donationAmount,
-                onValueChange = { viewModel.updateDonationAmount(it) },
-                label = { Text("Valor") },
-                prefix = { Text("R$ ") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        Color.LightGray.copy(alpha = 0.2f),
-                        RoundedCornerShape(8.dp)
-                    ),
-                shape = RoundedCornerShape(8.dp),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    containerColor = Color(0xFFEEEEEE),
-                    unfocusedLabelColor = MaterialTheme.colorScheme.background,
-                    focusedLabelColor = MaterialTheme.colorScheme.onBackground
-                )
-            )
-
             Text(
                 text = "Se preferir você pode entregar presencialmente no endereço",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Start
             )
 
-            // Map Placeholder - Square shape with width equal to screen width
-            Box(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(
-                        Color.LightGray,
+                        Color.Transparent,
                         RoundedCornerShape(8.dp)
                     ),
             ) {
                 Image(
                     painter = painterResource(R.drawable.maps),
-                    contentDescription = "Map",
-                    contentScale = ContentScale.FillHeight
+                    contentDescription = "Mapa da AMMA",
+                    contentScale = ContentScale.FillHeight,
+                    modifier = Modifier.clickable {
+                        val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
+                            data = android.net.Uri.parse(
+                                "https://maps.app.goo.gl/tHfPqRQpx4J629698"
+                            )
+                        }
+                        context.startActivity(intent)
+                    }
+                )
+
+                Text(
+                    text ="Rua Tabelião Enéas, 649 - Centro, Quixadá - CE, 63900-169",
+                    fontSize = 16.sp,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Start
                 )
             }
 
             Button(
-                onClick = { viewModel.submitDonation() },
+                onClick = {
+                    val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
+                        data = android.net.Uri.parse(
+                            "https://nubank.com.br/cobrar/1352tr/67ab32ad-9546-4dbb-b900-2dc700258a47"
+                        )
+                    }
+                    context.startActivity(intent)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 32.dp),
@@ -169,7 +169,7 @@ fun DonationScreen(
             ) {
                 Text(
                     text = "Realizar Doação!",
-                    fontSize = 16.sp, // Tamanho da fonte visível
+                    fontSize = 16.sp,
                     color = Color.White
                 )
             }
