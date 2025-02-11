@@ -24,9 +24,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import org.quixalert.br.domain.model.UserRegistrationData
 import org.quixalert.br.presentation.components.StyledTextField
 import org.quixalert.br.presentation.components.WaveBackground
+import org.quixalert.br.presentation.pages.register.RegisterViewModel
 import org.quixalert.br.presentation.ui.theme.poppinsFamily
 import org.quixalert.br.presentation.ui.theme.primaryBlue
 import org.quixalert.br.presentation.ui.theme.primaryGreen
@@ -34,6 +36,7 @@ import org.quixalert.br.presentation.ui.theme.primaryGreen
 @Preview
 @Composable
 fun RegisterScreen(
+    viewModel: RegisterViewModel = hiltViewModel(),
     onNextStep: (UserRegistrationData) -> Unit = {}
 ) {
     var name by remember { mutableStateOf("") }
@@ -120,15 +123,19 @@ fun RegisterScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = { 
-                    onNextStep(
-                        UserRegistrationData(
+                onClick = {
+                    if (validateInputs(name, email, phone, birthDate)){
+                        val userRegistrationData = UserRegistrationData(
                             name = name,
                             email = email,
                             phone = phone,
                             birthDate = birthDate
                         )
-                    )
+                        onNextStep(userRegistrationData)
+                    }else {
+
+                    }
+
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -144,4 +151,9 @@ fun RegisterScreen(
             }
         }
     }
-} 
+}
+
+
+private fun validateInputs(name: String, email: String, phone: String, birthDate: String): Boolean {
+    return name.isNotBlank() && email.isNotBlank() && phone.isNotBlank() && birthDate.isNotBlank()
+}

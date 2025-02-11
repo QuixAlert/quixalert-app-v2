@@ -38,17 +38,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import org.quixalert.br.R
 import org.quixalert.br.domain.model.UserRegistrationData
 import org.quixalert.br.presentation.components.StyledTextField
 import org.quixalert.br.presentation.components.WaveBackground
+import org.quixalert.br.presentation.pages.register.RegisterViewModel
 import org.quixalert.br.presentation.ui.theme.primaryBlue
 import org.quixalert.br.presentation.ui.theme.primaryGreen
 
 @Composable
 fun RegisterStepTwoScreen(
     initialData: UserRegistrationData,
+    viewModel: RegisterViewModel = hiltViewModel(),
+
     onRegisterComplete: (UserRegistrationData) -> Unit = {}
 ) {
     var username by remember { mutableStateOf("") }
@@ -180,13 +184,20 @@ fun RegisterStepTwoScreen(
             Button(
                 onClick = {
                     if (password == confirmPassword) {
-                        onRegisterComplete(
-                            initialData.copy(
-                                username = username,
-                                password = password,
-                                profileImage = selectedImageUri
-                            )
+                        // Coletando os dados do usuário para passar ao ViewModel
+                        val completeData = initialData.copy(
+                            username = username,
+                            password = password,
+                            profileImage = selectedImageUri
                         )
+
+                        // Chama a função no ViewModel para registrar o usuário
+                        viewModel.completeRegistration(email = initialData.email, password = password, userData = completeData)
+
+                        // Notifica que o registro foi completado
+                        onRegisterComplete(completeData)
+                    } else {
+                        // Exibe um erro se as senhas não coincidirem
                     }
                 },
                 modifier = Modifier

@@ -68,11 +68,15 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.firestore.ktx)
 
+
     // Lyricist
     implementation(libs.lyricist)
 
     implementation("io.coil-kt:coil-compose:2.5.0")
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.32.0")
+    implementation("com.google.firebase:firebase-auth-ktx:22.1.2")
+    implementation("com.google.firebase:firebase-firestore-ktx:24.10.1")
+
 
     //Carousel
     implementation("com.google.accompanist:accompanist-pager:0.32.0")

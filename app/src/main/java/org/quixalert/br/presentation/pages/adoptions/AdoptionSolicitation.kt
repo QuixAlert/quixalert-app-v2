@@ -37,7 +37,7 @@ import java.util.UUID
 
 // Dados mockados para teste
 object MockData {
-    val currentUser = User(
+    var currentUser = User(
         id = "1",
         name = "João Silva",
         photoUrl = "https://example.com/joao.jpg"

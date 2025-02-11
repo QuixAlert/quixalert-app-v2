@@ -3,6 +3,7 @@ package org.quixalert.br
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -52,14 +53,18 @@ import org.quixalert.br.presentation.pages.reportsSolicitationScreen.ReportsSoli
 import org.quixalert.br.view.pages.login.LoginScreen
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import com.google.firebase.auth.FirebaseAuth
 import org.quixalert.br.domain.model.Adoption
+import org.quixalert.br.domain.model.User
 import org.quixalert.br.presentation.pages.adoptions.AdoptionSolicitationScreen
+
 
 @RequiresApi(Build.VERSION_CODES.S)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun App() {
     var currentScreen by remember { mutableStateOf("login") }
+    var currentUser by remember { mutableStateOf<User?>(null) }
     var registrationData by remember { mutableStateOf<UserRegistrationData?>(null) }
     var isFloatingMenuVisible by remember { mutableStateOf(false) }
     var selectedAnimal by remember { mutableStateOf<Animal?>(null) }
@@ -76,6 +81,21 @@ fun App() {
         systemUiController.setSystemBarsColor(
             color = Color.Blue
         )
+    }
+    // Verificar usuário logado
+    val auth = FirebaseAuth.getInstance()
+    val user = auth.currentUser
+    if (user != null) {
+        // Se o usuário estiver logado, obtenha suas informações
+        currentUser = User(
+            id = user.uid,
+            name = user.displayName ?: "Usuário Anônimo",
+            greeting = "Bem-vindo de volta!",
+            profileImage = user.photoUrl?.toString() ?: "https://randomuser.me/api/portraits/men/1.jpg"
+        )
+        currentScreen = "home" // Direciona para a tela inicial
+        Log.d("UserInfo", "UID do usuário logado: ${user.uid}")
+        Log.d("UserInfo", "Nome do usuário: ${user.displayName ?: "Usuário Anônimo"}")
     }
 
     QuixalertTheme(darkTheme = isDarkTheme.value) {
@@ -115,7 +135,7 @@ fun App() {
                             onLoginClick = { currentScreen = "signin" }
                         )
                         "signin" -> SignInScreen(
-                            onSignInClick = { currentScreen = "home" }
+                            onLoginSuccess  = { currentScreen = "home" }
                         )
                         "register" -> RegisterScreen(
                             onNextStep = { data ->
@@ -127,10 +147,20 @@ fun App() {
                             initialData = registrationData ?: UserRegistrationData(),
                             onRegisterComplete = { currentScreen = "login" }
                         )
-                        "home" -> HomeScreen(
-                            user = mockUser,
-                            onNotificationClick = { currentScreen = "notification" }
-                        )
+                        "home" -> {
+                            if (currentUser != null) {
+                                HomeScreen(
+                                    user = currentUser!!, // Agora com a verificação de nulidade antes de acessar
+                                    onNotificationClick = { currentScreen = "notification" }
+                                )
+                            } else {
+                                // Exibir uma tela alternativa (como uma tela de login)
+                                LoginScreen(
+                                    onRegisterClick = { currentScreen = "register" },
+                                    onLoginClick = { currentScreen = "signin" }
+                                )
+                            }
+                        }
                         "notification" -> NotificationScreen()
                         "profile" -> ProfileScreen(
                             user = mockUser,
