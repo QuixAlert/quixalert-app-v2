@@ -1,6 +1,7 @@
 package org.quixalert.br.services
 
 import android.net.Uri
+import android.util.Log
 import androidx.core.net.toUri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -77,4 +78,24 @@ class FirebaseAuthService @Inject constructor(
     fun logoutUser() {
         firebaseAuth.signOut()
     }
+    fun updateUserProfile(photoUrl: String, onComplete: (Boolean) -> Unit) {
+        val user = FirebaseAuth.getInstance().currentUser
+        user?.let {
+            val profileUpdates = UserProfileChangeRequest.Builder()
+                .setPhotoUri(Uri.parse(photoUrl))
+                .build()
+
+            user.updateProfile(profileUpdates)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d("FirebaseAuth", "Perfil atualizado com sucesso!")
+                        onComplete(true)
+                    } else {
+                        Log.e("FirebaseAuth", "Erro ao atualizar perfil", task.exception)
+                        onComplete(false)
+                    }
+                }
+        }
+    }
 }
+

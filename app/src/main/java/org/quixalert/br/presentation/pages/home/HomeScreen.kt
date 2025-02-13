@@ -1,5 +1,6 @@
 package org.quixalert.br.presentation.pages.home
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -151,14 +152,19 @@ fun TopBar(user: User, onNotificationClick: () -> Unit) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
+            val imageUrl = if (user.profileImage.isNotBlank()) user.profileImage
+            else "https://randomuser.me/api/portraits/men/1.jpg"
             AsyncImage(
-                model = user.profileImage,
+                model = imageUrl,
                 contentDescription = "Profile Picture",
                 modifier = Modifier
                     .size(48.dp)
                     .clip(CircleShape)
                     .shadow(4.dp, CircleShape)
+
             )
+            Log.d("FirebaseAuth", "Foto do usuário: ${user.profileImage}")
+
             Spacer(modifier = Modifier.width(12.dp))
             Column {
                 Text(
