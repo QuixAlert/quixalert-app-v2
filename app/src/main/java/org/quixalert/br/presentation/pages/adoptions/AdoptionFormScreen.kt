@@ -204,10 +204,14 @@ fun AdoptionFormScreen(
                         placeholder = { Text("Endereço completo") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            containerColor = Color(0xFFEEEEEE),
-                            unfocusedLabelColor = MaterialTheme.colorScheme.background,
-                            focusedLabelColor = MaterialTheme.colorScheme.onBackground
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = MaterialTheme.colorScheme.surface,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                            focusedLabelColor = MaterialTheme.colorScheme.onTertiary,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.onTertiary,
+                            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                            unfocusedIndicatorColor = MaterialTheme.colorScheme.onTertiary,
+                            cursorColor = MaterialTheme.colorScheme.primary
                         )
                     )
 
@@ -218,10 +222,14 @@ fun AdoptionFormScreen(
                         placeholder = { Text("Ex: moro em apartamento...") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            containerColor = Color(0xFFEEEEEE),
-                            unfocusedLabelColor = MaterialTheme.colorScheme.background,
-                            focusedLabelColor = MaterialTheme.colorScheme.onBackground
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = MaterialTheme.colorScheme.surface,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                            focusedLabelColor = MaterialTheme.colorScheme.onTertiary,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.onTertiary,
+                            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                            unfocusedIndicatorColor = MaterialTheme.colorScheme.onTertiary,
+                            cursorColor = MaterialTheme.colorScheme.primary
                         )
                     )
 
@@ -232,10 +240,14 @@ fun AdoptionFormScreen(
                         placeholder = { Text("Ex: Sim, tenho dois cachorros...") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            containerColor = Color(0xFFEEEEEE),
-                            unfocusedLabelColor = MaterialTheme.colorScheme.background,
-                            focusedLabelColor = MaterialTheme.colorScheme.onBackground
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = MaterialTheme.colorScheme.surface,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                            focusedLabelColor = MaterialTheme.colorScheme.onTertiary,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.onTertiary,
+                            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                            unfocusedIndicatorColor = MaterialTheme.colorScheme.onTertiary,
+                            cursorColor = MaterialTheme.colorScheme.primary
                         )
                     )
 
@@ -246,10 +258,14 @@ fun AdoptionFormScreen(
                         placeholder = { Text("R$ 0,00") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            containerColor = Color(0xFFEEEEEE),
-                            unfocusedLabelColor = MaterialTheme.colorScheme.background,
-                            focusedLabelColor = MaterialTheme.colorScheme.onBackground
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = MaterialTheme.colorScheme.surface,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                            focusedLabelColor = MaterialTheme.colorScheme.onTertiary,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.onTertiary,
+                            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                            unfocusedIndicatorColor = MaterialTheme.colorScheme.onTertiary,
+                            cursorColor = MaterialTheme.colorScheme.primary
                         )
                     )
 
@@ -259,10 +275,14 @@ fun AdoptionFormScreen(
                         label = { Text("Descreva quem mora com você") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            containerColor = Color(0xFFEEEEEE),
-                            unfocusedLabelColor = MaterialTheme.colorScheme.background,
-                            focusedLabelColor = MaterialTheme.colorScheme.onBackground
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = MaterialTheme.colorScheme.surface,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                            focusedLabelColor = MaterialTheme.colorScheme.onTertiary,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.onTertiary,
+                            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                            unfocusedIndicatorColor = MaterialTheme.colorScheme.onTertiary,
+                            cursorColor = MaterialTheme.colorScheme.primary
                         )
                     )
 
@@ -273,10 +293,14 @@ fun AdoptionFormScreen(
                         placeholder = { Text("Ex: quero adotar porque...") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            containerColor = Color(0xFFEEEEEE),
-                            unfocusedLabelColor = MaterialTheme.colorScheme.background,
-                            focusedLabelColor = MaterialTheme.colorScheme.onBackground
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = MaterialTheme.colorScheme.surface,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                            focusedLabelColor = MaterialTheme.colorScheme.onTertiary,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.onTertiary,
+                            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                            unfocusedIndicatorColor = MaterialTheme.colorScheme.onTertiary,
+                            cursorColor = MaterialTheme.colorScheme.primary
                         )
                     )
 
@@ -288,10 +312,14 @@ fun AdoptionFormScreen(
                             .fillMaxWidth()
                             .clickable { showDatePicker = true },
                         shape = RoundedCornerShape(8.dp),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            containerColor = Color(0xFFEEEEEE),
-                            unfocusedLabelColor = MaterialTheme.colorScheme.background,
-                            focusedLabelColor = MaterialTheme.colorScheme.onBackground
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = MaterialTheme.colorScheme.surface,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                            focusedLabelColor = MaterialTheme.colorScheme.onTertiary,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.onTertiary,
+                            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                            unfocusedIndicatorColor = MaterialTheme.colorScheme.onTertiary,
+                            cursorColor = MaterialTheme.colorScheme.primary
                         ),
                         readOnly = true,
                         enabled = true
