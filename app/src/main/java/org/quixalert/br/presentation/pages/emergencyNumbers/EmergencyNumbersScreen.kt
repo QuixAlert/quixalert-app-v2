@@ -197,14 +197,16 @@ fun EmergencyNumberItem(emergencyNumber: EmergencyNumber) {
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
                         fontSize = 13.sp
-                    )
+                    ),
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = emergencyNumber.openingHours,
                     style = TextStyle(
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Light
-                    )
+                    ),
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
 
