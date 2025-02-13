@@ -5,12 +5,13 @@ import android.app.Activity
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material3.MaterialTheme
@@ -19,7 +20,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -28,6 +28,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import org.quixalert.br.MockData.adoptions
 import org.quixalert.br.MockData.biddings
 import org.quixalert.br.MockData.reports
+import org.quixalert.br.domain.model.Adoption
 import org.quixalert.br.domain.model.Animal
 import org.quixalert.br.domain.model.UserRegistrationData
 import org.quixalert.br.presentation.components.FloatingMenu
@@ -35,6 +36,7 @@ import org.quixalert.br.presentation.components.HeaderSection
 import org.quixalert.br.presentation.components.NavigationBarM3
 import org.quixalert.br.presentation.pages.adoptions.AdoptionFormScreen
 import org.quixalert.br.presentation.pages.adoptions.AdoptionScreen
+import org.quixalert.br.presentation.pages.adoptions.AdoptionSolicitationScreen
 import org.quixalert.br.presentation.pages.animal.AnimalDetailsScreen
 import org.quixalert.br.presentation.pages.documentsSolicitationScreen.DocumentsSolicitationScreen
 import org.quixalert.br.presentation.pages.donation.DonationScreen
@@ -50,10 +52,6 @@ import org.quixalert.br.presentation.pages.profile.ProfileScreen
 import org.quixalert.br.presentation.pages.reports.ReportScreen
 import org.quixalert.br.presentation.pages.reportsSolicitationScreen.ReportsSolicitationScreen
 import org.quixalert.br.view.pages.login.LoginScreen
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import org.quixalert.br.domain.model.Adoption
-import org.quixalert.br.presentation.pages.adoptions.AdoptionSolicitationScreen
 
 @RequiresApi(Build.VERSION_CODES.S)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -189,7 +187,7 @@ fun App() {
                         )
                         "report_details" -> ReportScreen()
                         "faq" -> FaqScreen()
-                        "solicitation" -> selectedAdoption?.let { it1 -> AdoptionSolicitationScreen(adoption = it1) }
+                        "solicitation" -> selectedAdoption?.let { it1 -> AdoptionSolicitationScreen(adoption = it1, onBackClick = { currentScreen = "profile" }) }
                     }
 
                     if (isFloatingMenuVisible) {
