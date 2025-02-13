@@ -349,7 +349,7 @@ fun AdoptionRequestScreen(
                         },
                         modifier = Modifier.weight(1f),
                         colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color.Green
+                            backgroundColor = Color(0xFF269996)
                         ),
                         shape = RoundedCornerShape(8.dp)
                     ) {
