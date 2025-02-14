@@ -28,7 +28,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import org.quixalert.br.MockData.adoptions
 import org.quixalert.br.MockData.biddings
 import org.quixalert.br.MockData.reports
-import org.quixalert.br.domain.model.Adoption
+import org.quixalert.br.domain.model.AdoptionT
 import org.quixalert.br.domain.model.Animal
 import org.quixalert.br.domain.model.UserRegistrationData
 import org.quixalert.br.presentation.components.FloatingMenu
@@ -37,6 +37,7 @@ import org.quixalert.br.presentation.components.NavigationBarM3
 import org.quixalert.br.presentation.pages.adoptions.AdoptionFormScreen
 import org.quixalert.br.presentation.pages.adoptions.AdoptionScreen
 import org.quixalert.br.presentation.pages.adoptions.AdoptionSolicitationScreen
+import org.quixalert.br.presentation.pages.adoptions.ChatScreen
 import org.quixalert.br.presentation.pages.animal.AnimalDetailsScreen
 import org.quixalert.br.presentation.pages.documentsSolicitationScreen.DocumentsSolicitationScreen
 import org.quixalert.br.presentation.pages.donation.DonationScreen
@@ -61,7 +62,7 @@ fun App() {
     var registrationData by remember { mutableStateOf<UserRegistrationData?>(null) }
     var isFloatingMenuVisible by remember { mutableStateOf(false) }
     var selectedAnimal by remember { mutableStateOf<Animal?>(null) }
-    var selectedAdoption by remember { mutableStateOf<Adoption?>(null) }
+    var selectedAdoption by remember { mutableStateOf<AdoptionT?>(null) }
     val context = LocalContext.current
     val currentDarkTheme = false;
     val isDarkTheme = remember { mutableStateOf(currentDarkTheme) }
@@ -70,7 +71,7 @@ fun App() {
         systemUiController.setSystemBarsColor(
             color = Color.Blue
         )
-    }else{
+    } else{
         systemUiController.setSystemBarsColor(
             color = Color.Blue
         )
@@ -187,7 +188,19 @@ fun App() {
                         )
                         "report_details" -> ReportScreen()
                         "faq" -> FaqScreen()
-                        "solicitation" -> selectedAdoption?.let { it1 -> AdoptionSolicitationScreen(adoption = it1, onBackClick = { currentScreen = "profile" }) }
+                        "solicitation" -> selectedAdoption?.let {
+                            AdoptionSolicitationScreen(
+                                adoption = it,
+                                onBackClick = { currentScreen = "profile" },
+                                onOpenChatClick = { currentScreen = "chat" }
+                            )
+                        }
+                        "chat" -> selectedAdoption?.let {
+                            ChatScreen(
+                                adoption = it,
+                                onBackClick = { currentScreen = "solicitation" }
+                            )
+                        }
                     }
 
                     if (isFloatingMenuVisible) {
@@ -207,7 +220,7 @@ fun App() {
             },
 
             bottomBar = {
-                if (currentScreen == "home" || currentScreen == "profile" || currentScreen == "notification" || currentScreen == "news" || currentScreen == "animals" || currentScreen == "faq") {
+                if (currentScreen == "home" || currentScreen == "profile" || currentScreen == "notification" || currentScreen == "news" || currentScreen == "animals" || currentScreen == "faq" || currentScreen == "solicitation") {
                     Column {
                         if (isFloatingMenuVisible) {
                             FloatingMenu(
