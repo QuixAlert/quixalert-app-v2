@@ -6,8 +6,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import org.quixalert.br.services.FirebaseAuthService
 import org.quixalert.br.domain.model.UserRegistrationData
+import org.quixalert.br.services.FirebaseAuthService
 import javax.inject.Inject
 
 data class LoginUiState(

@@ -1,24 +1,20 @@
 package org.quixalert.br.presentation.pages.login
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,25 +22,38 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import org.quixalert.br.R
 import org.quixalert.br.presentation.components.StyledTextField
 import org.quixalert.br.presentation.ui.theme.primaryBlue
 import org.quixalert.br.presentation.ui.theme.primaryGreen
 
 @Composable
 fun SignInScreen(
-    loginViewModel: LoginViewModel = viewModel(), // Obter a instância do ViewModel
+    loginViewModel: LoginViewModel = viewModel(), // Obtém a instância do ViewModel
     onLoginSuccess: (String) -> Unit // Ação a ser realizada após o login bem-sucedido
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    val loginState = loginViewModel.loginUiState.value // Observa o estado do login
+    // Collect the UI state as Compose state.
+    val loginState by loginViewModel.loginUiState.collectAsState()
+
+    LaunchedEffect(loginState.isSuccess) {
+        if (loginState.isSuccess) {
+            onLoginSuccess(loginState.userRegistrationData?.id ?: "")
+        }
+    }
+
+    // Use LaunchedEffect para disparar efeitos colaterais apenas uma vez
+    LaunchedEffect(loginState.isSuccess) {
+        if (loginState.isSuccess) {
+            onLoginSuccess(loginState.userRegistrationData?.id ?: "")
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -78,7 +87,7 @@ fun SignInScreen(
 
             Spacer(modifier = Modifier.height(107.dp))
 
-            // Username/Email field
+            // Email field
             StyledTextField(
                 value = email,
                 onValueChange = { email = it },
@@ -108,10 +117,10 @@ fun SignInScreen(
                     loginViewModel.loginUser(email, password)
                 },
                 modifier = Modifier
-                    .width(172.dp)
+                    .fillMaxWidth(0.5f)
                     .height(53.dp),
                 colors = ButtonDefaults.buttonColors(primaryBlue),
-                shape = RoundedCornerShape(40.dp),
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(40.dp),
                 elevation = ButtonDefaults.buttonElevation(
                     defaultElevation = 4.dp
                 )
@@ -124,20 +133,28 @@ fun SignInScreen(
                 )
             }
 
-            // Observa o estado do login
+            // Loading indicator (replace with your preferred implementation)
             if (loginState.isLoading) {
-                // Exibe um indicador de loading (por exemplo, um ProgressBar)
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Carregando...",
+                    fontSize = 14.sp,
+                    color = Color.Gray,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
 
-            if (loginState.isSuccess) {
-                // Login bem-sucedido
-                onLoginSuccess(loginState.userRegistrationData?.id ?: "")
-            }
-
+            // Error message display
             if (!loginState.isSuccess && loginState.errorMessage != null) {
-                // Exibe a mensagem de erro
-                TextButton(onClick = { /* ação para tratar erro */ }) {
-                    Text(text = loginState.errorMessage ?: "Erro desconhecido", color = Color.Red)
+                Spacer(modifier = Modifier.height(16.dp))
+                TextButton(
+                    onClick = { /* ação para tratar erro, ex: limpar a mensagem ou tentar novamente */ }
+                ) {
+                    Text(
+                        text = loginState.errorMessage ?: "Erro desconhecido",
+                        color = Color.Red
+                    )
                 }
             }
         }
