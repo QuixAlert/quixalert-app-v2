@@ -5,6 +5,7 @@ import org.quixalert.br.domain.model.AnimalExtraInfo
 import org.quixalert.br.domain.model.AnimalGender
 import org.quixalert.br.domain.model.AnimalSize
 import org.quixalert.br.domain.model.AnimalType
+import org.quixalert.br.domain.model.Message
 import org.quixalert.br.domain.model.News
 import org.quixalert.br.domain.model.NewsType
 import org.quixalert.br.domain.model.Notification
@@ -276,4 +277,46 @@ fun populateNotifications(): List<Notification> {
     )
 
     return notifications
+}
+
+fun populateMessagesByAdoptionId(adoptionId: String): List<Message> {
+    val messages = listOf(
+        Message(
+            description = "Olá, gostaria de adotar o Rex!",
+            timestamp = System.currentTimeMillis() - 3_600_000,
+            userId = "1",
+            adoptionId = adoptionId,
+            isFromAttendant = false
+        ),
+        Message(
+            description = "Olá! Aqui é a atendente. Vamos iniciar o processo de adoção.",
+            timestamp = System.currentTimeMillis() - 3_500_000,
+            userId = "attendant",
+            adoptionId = adoptionId,
+            isFromAttendant = true
+        ),
+        Message(
+            description = "Por favor, envie seus documentos para continuarmos.",
+            timestamp = System.currentTimeMillis() - 3_400_000,
+            userId = "attendant",
+            adoptionId = adoptionId,
+            isFromAttendant = true
+        ),
+        Message(
+            description = "Enviei todos os documentos por email.",
+            timestamp = System.currentTimeMillis() - 3_300_000,
+            userId = "1",
+            adoptionId = adoptionId,
+            isFromAttendant = false
+        ),
+        Message(
+            description = "Perfeito! Analisarei e retorno em breve.",
+            timestamp = System.currentTimeMillis() - 3_200_000,
+            userId = "attendant",
+            adoptionId = adoptionId,
+            isFromAttendant = true
+        )
+    )
+
+    return messages
 }
