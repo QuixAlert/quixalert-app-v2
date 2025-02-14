@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,6 +36,9 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -47,9 +51,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import org.quixalert.br.domain.model.Adoption
 import org.quixalert.br.domain.model.AdoptionStatus
+import org.quixalert.br.domain.model.AdoptionT
+import org.quixalert.br.domain.model.AnimalType
 import org.quixalert.br.domain.model.Bidding
 import org.quixalert.br.domain.model.Report
 import org.quixalert.br.domain.model.User
@@ -70,161 +77,198 @@ fun ProfileScreen(
     onThemeToggle: (Boolean) -> Unit,
     onBiddingClick: (Bidding) -> Unit,
     onReportClick: (Report) -> Unit,
-    onAdoptionClick: (Adoption) -> Unit,
+    onAdoptionClick: (AdoptionT) -> Unit,
     onFaqCLick: () -> Unit,
     onExitClick: () -> Unit,
+    profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
+    val uiState by profileViewModel.uiState.collectAsState()
     val isMenuOpen = remember { mutableStateOf(false) }
     val darkThemeState = remember { mutableStateOf(isDarkThemeEnabled) }
 
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(start = 16.dp, end = 16.dp, bottom = 64.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        item {
-            TopBar(
-                onBackClick = onBackClick,
-                onMenuClick = { isMenuOpen.value = !isMenuOpen.value }
-            )
-        }
-
-        item {
-            ProfileHeader(
-                user = user,
-                onEditClick = onEditProfileClick
-            )
-        }
-
-        item {
-            Text(
-                text = "Preferências",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-        }
-
-        item {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "Modo Escuro",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-
-                Switch(
-                    checked = darkThemeState.value,
-                    onCheckedChange = {
-                        darkThemeState.value = it
-                        onThemeToggle(it)
-                    },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = IconTint,
-                        uncheckedThumbColor = IconTint
-                    )
-                )
-            }
-        }
-
-
-        item {
-            Text(
-                text = "Minhas Denúncias",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-        }
-
-        item {
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(vertical = 8.dp)
-            ) {
-                items(reports) { report ->
-                    ReportItem(report = report, onReportClick = onReportClick)
-                }
-            }
-        }
-
-        item {
-            Text(
-                text = "Minhas Licitações",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-        }
-
-        item {
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(vertical = 8.dp)
-            ) {
-                items(biddings) { bidding ->
-                    BiddingItem(
-                        bidding = bidding,
-                        onBiddingClick = onBiddingClick
-                    )
-                }
-            }
-        }
-
-        item {
-            Text(
-                text = "Minhas Adoções",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-        }
-
-        items(adoptions) { adoption ->
-            AdoptionItem(adoption = adoption, onAdoptionClick = onAdoptionClick)
-        }
-
-        item {
-            Spacer(modifier = Modifier.height(18.dp))
-        }
+    LaunchedEffect(Unit) {
+        profileViewModel.loadAdoptions()
     }
 
-    if (isMenuOpen.value) {
-        Box(
-            modifier = Modifier
+    Box(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            modifier = modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.5f))
-                .clickable { isMenuOpen.value = false }
-        )
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
+                .padding(start = 16.dp, end = 16.dp, bottom = 64.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            DrawerContent(
-                onExitClick = {
-                    onExitClick()
-                },
-                onFaqCLick = {
-                    onFaqCLick()
-                },
+            item {
+                TopBar(
+                    onBackClick = onBackClick,
+                    onMenuClick = { isMenuOpen.value = !isMenuOpen.value }
+                )
+            }
+
+            item {
+                ProfileHeader(
+                    user = user,
+                    onEditClick = onEditProfileClick
+                )
+            }
+
+            item {
+                Text(
+                    text = "Preferências",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Modo Escuro",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+
+                    Switch(
+                        checked = darkThemeState.value,
+                        onCheckedChange = {
+                            darkThemeState.value = it
+                            onThemeToggle(it)
+                        },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = IconTint,
+                            uncheckedThumbColor = IconTint
+                        )
+                    )
+                }
+            }
+
+            item {
+                Text(
+                    text = "Minhas Denúncias",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+
+            item {
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(vertical = 8.dp)
+                ) {
+                    items(reports) { report ->
+                        ReportItem(report = report, onReportClick = onReportClick)
+                    }
+                }
+            }
+
+            item {
+                Text(
+                    text = "Minhas Licitações",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+
+            item {
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(vertical = 8.dp)
+                ) {
+                    items(biddings) { bidding ->
+                        BiddingItem(
+                            bidding = bidding,
+                            onBiddingClick = onBiddingClick
+                        )
+                    }
+                }
+            }
+
+            item {
+                Text(
+                    text = "Minhas Adoções",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+
+            // Display loading indicator or error message below "Minhas Adoções"
+            item {
+                when {
+                    uiState.isLoading -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                    !uiState.errorMessage.isNullOrEmpty() -> {
+                        Text(
+                            text = uiState.errorMessage!!,
+                            color = Color.Red,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                }
+            }
+
+            // Display adoptions list when not loading and no error
+            if (!uiState.isLoading && uiState.errorMessage.isNullOrEmpty()) {
+                if (uiState.adoptionsByUser.isEmpty()) {
+                    item {
+                        Text(
+                            text = "você não fez nenhuma solicitacao de adocao",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                } else {
+                    items(uiState.adoptionsByUser) { adoption ->
+                        AdoptionItem(adoption = adoption, onAdoptionClick = onAdoptionClick)
+                    }
+                }
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(18.dp))
+            }
+        }
+
+        if (isMenuOpen.value) {
+            Box(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp))
-                    .fillMaxHeight()
-                    .width(220.dp)
-                    .align(Alignment.TopEnd)
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.5f))
+                    .clickable { isMenuOpen.value = false }
             )
+
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                DrawerContent(
+                    onExitClick = { onExitClick() },
+                    onFaqCLick = { onFaqCLick() },
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp))
+                        .fillMaxHeight()
+                        .width(220.dp)
+                        .align(Alignment.TopEnd)
+                )
+            }
         }
     }
 }
-
 
 @Composable
 fun DrawerContent(
@@ -247,15 +291,13 @@ fun DrawerContent(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable {
-                    onFaqCLick()
-                }
+                .clickable { onFaqCLick() }
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector =  QuestionIcon,
-                contentDescription = "Opção 1",
+                imageVector = QuestionIcon,
+                contentDescription = "FAQ",
                 modifier = Modifier.size(24.dp),
                 tint = IconTint
             )
@@ -266,9 +308,7 @@ fun DrawerContent(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable {
-                    onExitClick()
-                }
+                .clickable { onExitClick() }
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -404,7 +444,7 @@ fun ReportItem(report: Report, onReportClick: (Report) -> Unit) {
 }
 
 @Composable
-fun AdoptionItem(adoption: Adoption, onAdoptionClick: (adoption: Adoption) -> Unit) {
+fun AdoptionItem(adoption: AdoptionT, onAdoptionClick: (adoption: AdoptionT) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -418,20 +458,18 @@ fun AdoptionItem(adoption: Adoption, onAdoptionClick: (adoption: Adoption) -> Un
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.Start
         ) {
-
             Box {
                 AsyncImage(
-                    model = adoption.petImage,
-                    contentDescription = adoption.petName,
+                    model = adoption.animal?.image,
+                    contentDescription = adoption.animal?.name,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(160.dp),
                     contentScale = ContentScale.Crop
                 )
 
-
                 Text(
-                    text = if (adoption.status == AdoptionStatus.APPROVED) "Adotado" else "Disponível",
+                    text = if (adoption.status == AdoptionStatus.APPROVED) "Adotado" else "Em análise",
                     style = MaterialTheme.typography.bodySmall.copy(color = Color.White),
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
@@ -451,7 +489,10 @@ fun AdoptionItem(adoption: Adoption, onAdoptionClick: (adoption: Adoption) -> Un
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 AsyncImage(
-                    model = adoption.petIcon,
+                    model = if (adoption.animal?.type == AnimalType.DOG)
+                        "https://img.icons8.com/color/48/000000/dog.png"
+                    else
+                        "https://img.icons8.com/color/48/000000/cat.png",
                     contentDescription = null,
                     modifier = Modifier
                         .size(32.dp)
@@ -461,12 +502,14 @@ fun AdoptionItem(adoption: Adoption, onAdoptionClick: (adoption: Adoption) -> Un
 
                 Spacer(modifier = Modifier.width(8.dp))
 
-                Text(
-                    text = adoption.petName,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
+                adoption.animal?.name?.let {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                }
             }
         }
     }
