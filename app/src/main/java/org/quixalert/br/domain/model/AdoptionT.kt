@@ -13,5 +13,6 @@ data class AdoptionT(
     val householdDescription: String = "",
     val adoptionReason: String = "",
     val visitDate: LocalDate? = null,
-    val userId: String = ""
+    val userId: String = "",
+    val animal: Animal? = null
 ) : BaseModel(id)
