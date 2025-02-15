@@ -200,8 +200,8 @@ fun AdoptionFormScreen(
                     OutlinedTextField(
                         value = address,
                         onValueChange = { address = it },
-                        label = { Text("Endereço") },
-                        placeholder = { Text("Endereço completo") },
+                        label = { Text("Endereço", color = Color.Black) },
+                        placeholder = { Text("Endereço completo", color = Color.Black) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
                         colors = TextFieldDefaults.colors(
@@ -218,8 +218,8 @@ fun AdoptionFormScreen(
                     OutlinedTextField(
                         value = livingDescription,
                         onValueChange = { livingDescription = it },
-                        label = { Text("Descreva onde você mora") },
-                        placeholder = { Text("Ex: moro em apartamento...") },
+                        label = { Text("Descreva onde você mora", color = Color.Black) },
+                        placeholder = { Text("Ex: moro em apartamento...", color = Color.Black) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
                         colors = TextFieldDefaults.colors(
@@ -236,8 +236,8 @@ fun AdoptionFormScreen(
                     OutlinedTextField(
                         value = otherAnimals,
                         onValueChange = { otherAnimals = it },
-                        label = { Text("Já há outros animais onde você mora?") },
-                        placeholder = { Text("Ex: Sim, tenho dois cachorros...") },
+                        label = { Text("Já há outros animais onde você mora?", color = Color.Black) },
+                        placeholder = { Text("Ex: Sim, tenho dois cachorros...", color = Color.Black) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
                         colors = TextFieldDefaults.colors(
@@ -254,8 +254,8 @@ fun AdoptionFormScreen(
                     OutlinedTextField(
                         value = monthlyIncome,
                         onValueChange = { monthlyIncome = it },
-                        label = { Text("Quanto você ganha mensalmente?") },
-                        placeholder = { Text("R$ 0,00") },
+                        label = { Text("Quanto você ganha mensalmente?", color = Color.Black) },
+                        placeholder = { Text("R$ 0,00", color = Color.Black) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
                         colors = TextFieldDefaults.colors(
@@ -272,7 +272,7 @@ fun AdoptionFormScreen(
                     OutlinedTextField(
                         value = householdDescription,
                         onValueChange = { householdDescription = it },
-                        label = { Text("Descreva quem mora com você") },
+                        label = { Text("Descreva quem mora com você", color = Color.Black) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
                         colors = TextFieldDefaults.colors(
@@ -289,8 +289,8 @@ fun AdoptionFormScreen(
                     OutlinedTextField(
                         value = adoptionReason,
                         onValueChange = { adoptionReason = it },
-                        label = { Text("Por que você quer adotar?") },
-                        placeholder = { Text("Ex: quero adotar porque...") },
+                        label = { Text("Por que você quer adotar?", color = Color.Black) },
+                        placeholder = { Text("Ex: quero adotar porque...", color = Color.Black) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
                         colors = TextFieldDefaults.colors(
@@ -307,7 +307,7 @@ fun AdoptionFormScreen(
                     OutlinedTextField(
                         value = selectedDate?.toString() ?: "",
                         onValueChange = { },
-                        label = { Text("Agendar visita presencial") },
+                        label = { Text("Agendar visita presencial", color = Color.Black) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { showDatePicker = true },
@@ -344,7 +344,7 @@ fun AdoptionFormScreen(
                             },
                             dismissButton = {
                                 TextButton(onClick = { showDatePicker = false }) {
-                                    Text("Cancel")
+                                    Text("Cancelar")
                                 }
                             }
                         ) {

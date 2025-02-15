@@ -1,6 +1,7 @@
 package org.quixalert.br
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -31,15 +32,17 @@ import com.google.firebase.auth.FirebaseAuth
 import org.quixalert.br.MockData.adoptions
 import org.quixalert.br.MockData.biddings
 import org.quixalert.br.MockData.reports
-import org.quixalert.br.domain.model.Adoption
+import org.quixalert.br.domain.model.AdoptionT
 import org.quixalert.br.domain.model.Animal
 import org.quixalert.br.domain.model.User
 import org.quixalert.br.domain.model.UserRegistrationData
+import org.quixalert.br.presentation.components.FloatingMenu
 import org.quixalert.br.presentation.components.HeaderSection
 import org.quixalert.br.presentation.components.NavigationBarM3
 import org.quixalert.br.presentation.pages.adoptions.AdoptionFormScreen
 import org.quixalert.br.presentation.pages.adoptions.AdoptionScreen
 import org.quixalert.br.presentation.pages.adoptions.AdoptionSolicitationScreen
+import org.quixalert.br.presentation.pages.adoptions.ChatScreen
 import org.quixalert.br.presentation.pages.animal.AnimalDetailsScreen
 import org.quixalert.br.presentation.pages.documentsSolicitationScreen.DocumentsSolicitationScreen
 import org.quixalert.br.presentation.pages.donation.DonationScreen
@@ -67,9 +70,9 @@ fun App() {
     var registrationData by remember { mutableStateOf<UserRegistrationData?>(null) }
     var isFloatingMenuVisible by remember { mutableStateOf(false) }
     var selectedAnimal by remember { mutableStateOf<Animal?>(null) }
-    var selectedAdoption by remember { mutableStateOf<Adoption?>(null) }
+    var selectedAdoption by remember { mutableStateOf<AdoptionT?>(null) }
     val context = LocalContext.current
-    val currentDarkTheme = false
+    val currentDarkTheme = false;
     val isDarkTheme = remember { mutableStateOf(currentDarkTheme) }
     val systemUiController = rememberSystemUiController()
 
@@ -126,7 +129,6 @@ fun App() {
                         .padding(top = 32.dp)
                 ) {
                     when (currentScreen) {
-                        // Use the view-based login screen for the initial entry
                         "login" -> LoginScreen(
                             onRegisterClick = { currentScreen = "register" },
                             onLoginClick = { currentScreen = "signin" }
@@ -186,7 +188,7 @@ fun App() {
                         }
                         "notification" -> NotificationScreen()
                         "profile" -> ProfileScreen(
-                            user = currentUser!!,
+                            user = mockUser,
                             reports = reports,
                             biddings = biddings,
                             adoptions = adoptions,
@@ -201,6 +203,7 @@ fun App() {
                                 loginViewModel.resetLoginState()
                                 currentUser = null
                                 currentScreen = "login"
+                                (context as? Activity)?.finish()
                             },
                             onFaqCLick = {
                                 currentScreen = "faq"
@@ -245,8 +248,19 @@ fun App() {
                         )
                         "report_details" -> ReportScreen()
                         "faq" -> FaqScreen()
-                        "solicitation" -> selectedAdoption?.let { AdoptionSolicitationScreen(adoption = it) }
-                    }
+                        "solicitation" -> selectedAdoption?.let {
+                            AdoptionSolicitationScreen(
+                                adoption = it,
+                                onBackClick = { currentScreen = "profile" },
+                                onOpenChatClick = { currentScreen = "chat" }
+                            )
+                        }
+                        "chat" -> selectedAdoption?.let {
+                            ChatScreen(
+                                adoption = it,
+                                onBackClick = { currentScreen = "solicitation" }
+                            )
+                        }                    }
 
                     if (isFloatingMenuVisible) {
                         Box(
@@ -265,9 +279,7 @@ fun App() {
             },
 
             bottomBar = {
-                if (currentScreen == "home" || currentScreen == "profile" || currentScreen == "notification" ||
-                    currentScreen == "news" || currentScreen == "animals" || currentScreen == "faq"
-                ) {
+                if (currentScreen == "home" || currentScreen == "profile" || currentScreen == "notification" || currentScreen == "news" || currentScreen == "animals" || currentScreen == "faq" || currentScreen == "solicitation") {
                     Column {
                         if (isFloatingMenuVisible) {
                             FloatingMenu(

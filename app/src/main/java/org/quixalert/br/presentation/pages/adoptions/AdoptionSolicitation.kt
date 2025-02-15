@@ -1,426 +1,292 @@
 package org.quixalert.br.presentation.pages.adoptions
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.slideInVertically
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.MailOutline
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import kotlinx.coroutines.launch
-import org.quixalert.br.domain.model.Adoption
-import org.quixalert.br.utils.formatMessageTime
-import java.util.UUID
+import org.quixalert.br.domain.model.AdoptionStatus
+import org.quixalert.br.domain.model.AdoptionT
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
-// Dados mockados para teste
-object MockData {
-    var currentUser = User(
-        id = "1",
-        name = "João Silva",
-        photoUrl = "https://example.com/joao.jpg"
-    )
-
-    val otherUser = User(
-        id = "2",
-        name = "Maria Oliveira",
-        photoUrl = "https://example.com/maria.jpg"
-    )
-
-    val mockMessages = listOf(
-        Message(
-            id = "1",
-            description = "Olá, gostaria de adotar o Rex!",
-            timestamp = System.currentTimeMillis() - (3600 * 1000), // 1 hora atrás
-            userId = "1"
-        ),
-        Message(
-            id = "2",
-            description = "Oi! Claro, vamos iniciar o processo de adoção.",
-            timestamp = System.currentTimeMillis() - (3600 * 1000), // 1 hora atrás
-            userId = "2"
-        ),
-        Message(
-            id = "3",
-            description = "Preciso dos seus documentos para avançarmos.",
-            timestamp = System.currentTimeMillis() - (3600 * 1000), // 1 hora atrás
-            userId = "2"
-        ),
-        Message(
-            id = "4",
-            description = "Acabei de enviar todos os documentos solicitados por email.",
-            timestamp = System.currentTimeMillis() - (3600 * 1000), // 1 hora atrás
-            userId = "1"
-        ),
-        Message(
-            id = "5",
-            description = "Perfeito! Vou analisar e retorno em breve.",
-            timestamp = System.currentTimeMillis() - (3600 * 1000), // 1 hora atrás
-            userId = "2"
-        ),
-        Message(
-            id = "6",
-            description = "Perfeito! Vou analisar e retorno em breve.",
-            timestamp = System.currentTimeMillis() - (3600 * 1000), // 1 hora atrás
-            userId = "2"
-        ),
-        Message(
-            id = "7",
-            description = "Perfeito! Vou analisar e retorno em breve.",
-            timestamp = System.currentTimeMillis() - (3600 * 1000), // 1 hora atrás
-            userId = "2"
-        )
-    )
-}
-
-// Exemplo de uso
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdoptionSolicitationScreen(adoption: Adoption, onBackClick: () -> Unit) {
-    AdoptionRequestScreen(
-        adoption = adoption,
-        currentUser = MockData.currentUser,
-        otherUser = MockData.otherUser,
-        initialMessages = MockData.mockMessages,
-        onBackClick = { onBackClick() },
-        onSendClick = { },
-        onEditClick = { }
-    )
-}
-
-data class User(
-    val id: String,
-    val name: String,
-    val photoUrl: String
-)
-
-data class Message(
-    val id: String,
-    val description: String,
-    val timestamp: Long, // Timestamp do Firebase
-    val userId: String
-)
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun AdoptionRequestScreen(
-    adoption: Adoption,
-    currentUser: User,
-    otherUser: User,
-    initialMessages: List<Message>,
+fun AdoptionSolicitationScreen(
+    adoption: AdoptionT,
     onBackClick: () -> Unit,
-    onSendClick: (String) -> Unit,
-    onEditClick: () -> Unit
+    onOpenChatClick: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        var messageText by remember { mutableStateOf("") }
-        var messages by remember { mutableStateOf(initialMessages) }
-        val listState = rememberLazyListState()
-        val coroutineScope = rememberCoroutineScope()
+    var showInfoDialog by remember { mutableStateOf(false) }
+    val clipboardManager = LocalClipboardManager.current
 
-        // Função para adicionar nova mensagem
-        fun addNewMessage(text: String) {
-            val newMessage = Message(
-                id = UUID.randomUUID().toString(),
-                description = text,
-                timestamp = System.currentTimeMillis(),
-                userId = currentUser.id
-            )
-            messages = messages + newMessage
-
-            // Rola para a última mensagem
-            coroutineScope.launch {
-                listState.animateScrollToItem(messages.size - 1)
-            }
-
-            // Chama o callback original
-            onSendClick(text)
-        }
-        // Animal image with back button
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp)
-        ) {
-            AsyncImage(
-                model = adoption.petImage,
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
-
-            // Back button with semi-transparent background
-            IconButton(
-                onClick = onBackClick,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .background(
-                        color = Color.White.copy(alpha = 0.5f),
-                        shape = CircleShape
-                    )
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Voltar"
-                )
-            }
-        }
-
-        // Content with rounded top corners
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .offset(y = (-20).dp)
-                .background(
-                    color = Color.White,
-                    shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
-                )
-                .padding(16.dp)
-        ) {
-            Text(
-                text = "Solicitação de adoção",
-                style = MaterialTheme.typography.h6.copy(
-                    fontWeight = FontWeight.Bold
-                )
-            )
-
-            // Date information row
-            Row(
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            // Top image header
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .height(300.dp)
             ) {
-                InfoColumn(
-                    title = "Data da Solicitação",
-                    value = "20/02/2024"
+                AsyncImage(
+                    model = adoption.animal?.image,
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
                 )
-                InfoColumn(
-                    title = "Dias em aberto",
-                    value = "20 dias"
-                )
-                InfoColumn(
-                    title = "Prazo de Finalização",
-                    value = "20/03/2024"
-                )
-            }
-
-            // User info row
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column {
-                    Text(
-                        text = "Solicitante",
-                        style = MaterialTheme.typography.caption,
-                        modifier = Modifier.padding(bottom = 4.dp)
-                    )
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        AsyncImage(
-                            model = otherUser.photoUrl,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clip(CircleShape)
-                        )
-                        Text(text = otherUser.name)
-                    }
-                }
-
-                Column(horizontalAlignment = Alignment.End) {
-                    Text(
-                        text = "Status",
-                        style = MaterialTheme.typography.caption,
-                        modifier = Modifier.padding(bottom = 4.dp)
-                    )
-                    Text(
-                        text = "Em atendimento",
-                        modifier = Modifier
-                            .background(
-                                color = Color(0xFFFFB74D),
-                                shape = RoundedCornerShape(16.dp)
-                            )
-                            .padding(horizontal = 12.dp, vertical = 6.dp),
-                        color = Color.White
-                    )
+                IconButton(
+                    onClick = onBackClick,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .background(Color.White.copy(alpha = 0.5f), CircleShape)
+                ) {
+                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Voltar")
                 }
             }
-
-            LazyColumn(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                state = listState
-            ) {
-                items(
-                    items = messages,
-                    key = { it.id }
-                ) { message ->
-                    val isCurrentUser = message.userId == currentUser.id
-                    AnimatedVisibility(
-                        visible = true,
-                        enter = fadeIn() + slideInVertically(
-                            initialOffsetY = { it * 2 }
-                        ),
-                        modifier = Modifier.animateItemPlacement()
-                    ) {
-                        ChatMessage(
-                            message = message,
-                            isCurrentUser = isCurrentUser
-                        )
-                    }
-                }
-            }
-
-            // Input para nova mensagem
+            // Main content section
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .fillMaxSize()
+                    .offset(y = (-20).dp)
+                    .background(Color.White, RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+                    .padding(16.dp)
             ) {
-                TextField(
-                    value = messageText,
-                    onValueChange = { messageText = it },
+                // Header Row with title and info button
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "Solicitação de Adoção",
+                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                        modifier = Modifier.weight(1f)
+                    )
+                    IconButton(onClick = { showInfoDialog = true }) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = "Info",
+                            tint = Color.Gray
+                        )
+                    }
+                }
+
+                // Information row for dates and deadlines
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 8.dp),
-                    placeholder = { Text("Digite sua mensagem...") },
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = Color.LightGray.copy(alpha = 0.1f)
-                    )
-                )
-
-                // Action buttons
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        .padding(vertical = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Button(
-                        onClick = {
-                            if (messageText.isNotBlank()) {
-                                addNewMessage(messageText)
-                                messageText = ""
-                            }
-                        },
-                        modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color.Green
-                        ),
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text("Enviar")
-                    }
+                    InfoColumn(
+                        title = "Data da Solicitação",
+                        value = adoption.visitDate?.toString() ?: "N/A"
+                    )
+                    val daysOpen = adoption.visitDate?.let { date ->
+                        val diff = ChronoUnit.DAYS.between(date, LocalDate.now())
+                        "$diff dias"
+                    } ?: "N/A"
+                    InfoColumn(title = "Dias em aberto", value = daysOpen)
+                    val deadline = adoption.visitDate?.plusDays(30)?.toString() ?: "N/A"
+                    InfoColumn(title = "Prazo de Finalização", value = deadline)
+                }
 
-                    Button(
-                        onClick = onEditClick,
-                        modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color(0xFFFFB74D)
-                        ),
-                        shape = RoundedCornerShape(8.dp)
+                // Solicitante and status row
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        Text(
+                            text = "Solicitante",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = Color.Black
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(14.dp)
+                        ) {
+                            AsyncImage(
+                                model = MOCK_USER_IMAGE_URL,
+                                contentDescription = "Imagem do solicitante",
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .clip(CircleShape)
+                            )
+                            Text(text = "Fulaninho de tal", color = Color.Black)
+                        }
+                    }
+                    Column(horizontalAlignment = Alignment.End) {
+                        Text(
+                            text = "Status",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = Color.Black
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text(
+                            text = when (adoption.status) {
+                                AdoptionStatus.PENDING -> "Em atendimento"
+                                AdoptionStatus.APPROVED -> "Aprovado"
+                                else -> "Desconhecido"
+                            },
+                            modifier = Modifier
+                                .background(Color(0xFFFFB74D), RoundedCornerShape(16.dp))
+                                .padding(horizontal = 12.dp, vertical = 6.dp),
+                            color = Color.White,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
+
+                // "Detalhes da Adoção" section with scrolling enabled only for this area.
+                Column(modifier = Modifier.padding(top = 16.dp)) {
+                    Text(
+                        text = "Detalhes da Adoção",
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    // Wrap the details in a Box with a fixed height and vertical scroll
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(220.dp)
+                            .verticalScroll(rememberScrollState())
                     ) {
-                        Text("Editar")
+                        Column {
+                            DetailItem(label = "Endereço", value = adoption.address)
+                            DetailItem(label = "Descrição do local onde mora", value = adoption.livingDescription)
+                            DetailItem(label = "Outros animais na residência", value = adoption.otherAnimals)
+                            DetailItem(label = "Renda Mensal", value = adoption.monthlyIncome)
+                            DetailItem(label = "Descrição da residência", value = adoption.householdDescription)
+                            DetailItem(label = "Motivo da Adoção", value = adoption.adoptionReason)
+                        }
                     }
                 }
             }
         }
-    }
-}
-
-    @Composable
-private fun ChatMessage(
-    message: Message,
-    isCurrentUser: Boolean
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        horizontalAlignment = if (isCurrentUser) Alignment.End else Alignment.Start
-    ) {
-        Column(
+        // Floating Action Button to open chat
+        FloatingActionButton(
+            onClick = onOpenChatClick,
+            containerColor = Color(0xFF269996),
             modifier = Modifier
-                .background(
-                    color = if (isCurrentUser) Color(0xFFE3F2FD) else Color(0xFFF5F5F5),
-                    shape = RoundedCornerShape(8.dp)
-                )
-                .padding(8.dp)
+                .padding(start = 16.dp, top = 16.dp, end = 12.dp, bottom = 95.dp)
+                .align(Alignment.BottomEnd)
         ) {
-            Text(
-                text = message.description,
-                style = MaterialTheme.typography.body2
-            )
-            Text(
-                text = message.timestamp.formatMessageTime(),
-                style = MaterialTheme.typography.caption,
-                modifier = Modifier.align(Alignment.End)
+            Icon(
+                imageVector = Icons.Default.MailOutline,
+                contentDescription = "Abrir Chat",
+                tint = Color.White
             )
         }
+    }
+
+    // Info Dialog showing the adoption request ID (with option to copy)
+    if (showInfoDialog) {
+        AlertDialog(
+            onDismissRequest = { showInfoDialog = false },
+            title = {
+                Text(
+                    "ID da Solicitação",
+                    style = MaterialTheme.typography.titleLarge.copy(color = Color.Black),
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                )
+            },
+            text = {
+                Text(
+                    adoption.id,
+                    style = MaterialTheme.typography.bodySmall.copy(color = Color.Black),
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        clipboardManager.setText(AnnotatedString(adoption.id))
+                        showInfoDialog = false
+                    }
+                ) {
+                    Text(
+                        "Copiar",
+                        style = MaterialTheme.typography.bodyMedium.copy(color = Color.Black),
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showInfoDialog = false }) {
+                    Text(
+                        "Fechar",
+                        style = MaterialTheme.typography.bodyMedium.copy(color = Color.Black),
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    )
+                }
+            },
+            shape = RoundedCornerShape(12.dp)
+        )
     }
 }
 
 @Composable
-private fun InfoColumn(
-    title: String,
-    value: String
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.caption
-        )
+private fun InfoColumn(title: String, value: String) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(text = title, style = MaterialTheme.typography.labelSmall)
         Text(
             text = value,
-            style = MaterialTheme.typography.body1.copy(
-                fontWeight = FontWeight.Bold
-            )
+            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
+        )
+    }
+}
+
+@Composable
+private fun DetailItem(label: String, value: String) {
+    Column(modifier = Modifier.padding(vertical = 4.dp)) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            color = Color.Gray
+        )
+        Text(
+            text = value.ifEmpty { "N/A" },
+            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+            color = Color.Black
         )
     }
 }
