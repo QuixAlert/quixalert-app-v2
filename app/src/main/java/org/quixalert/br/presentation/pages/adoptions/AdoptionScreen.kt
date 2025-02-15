@@ -227,8 +227,8 @@ fun AdoptionItem(
                     text = animal.name,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
-                    )
+                    color = MaterialTheme.colorScheme.onSurface
+                )
             }
         }
     }
@@ -295,8 +295,8 @@ fun FilterSection(
                 colors = FilterChipDefaults.filterChipColors(
                     selectedContainerColor = Color(0xFF269996),
                     selectedLabelColor = Color.White,
-                    labelColor = Color.White,
-                    containerColor = Color(0xFF6B6B6B)
+                    containerColor = Color(0xFF6B6B6B),
+                    labelColor = Color.White
                 )
             )
         }

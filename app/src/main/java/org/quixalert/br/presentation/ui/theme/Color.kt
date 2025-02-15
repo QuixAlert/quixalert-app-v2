@@ -24,16 +24,21 @@ val charcoalGray = Color(0x727272)
 
 // Paletas de cores personalizadas
 val LightColors = lightColorScheme(
+    
     primary = Color(0xFFE1E2E8),
     onPrimary = Color.White,
     secondary = Color(0xFFC9C9CB),
     onSecondary = Color.Black,
     background = Color.White,
-    surface = Color(0xFFEEEEEE),
+
+    surface = Color(0xFFF5F5F5),
+    onSurface = Color(0xFF1A1A1A),
+    surfaceVariant = Color(0xFFF0F0F0),
+    onSurfaceVariant = Color(0xFF666666),
+    tertiary = Color(0xFF666666),
+    onTertiary = Color(0xFF424242),
+    
     onBackground = Color.Black,
-    onSurface = Color.Gray.copy(alpha = 0.2f),
-    onTertiary = Color.Gray,
-    onSurfaceVariant = Color(0xFFF5F5F5),
     onTertiaryContainer = Color(0xFFEEEEEE)
 )
 
