@@ -1,7 +1,6 @@
 package org.quixalert.br
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -203,7 +202,6 @@ fun App() {
                                 loginViewModel.resetLoginState()
                                 currentUser = null
                                 currentScreen = "login"
-                                (context as? Activity)?.finish()
                             },
                             onFaqCLick = {
                                 currentScreen = "faq"
