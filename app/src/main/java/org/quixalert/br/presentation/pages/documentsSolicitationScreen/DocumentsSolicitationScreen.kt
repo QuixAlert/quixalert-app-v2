@@ -38,13 +38,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import org.quixalert.br.domain.model.DocumentType
+import org.quixalert.br.domain.model.User
 import org.quixalert.br.presentation.pages.profile.IconTint
 
 @Composable
 fun DocumentsSolicitationScreen(
     onBackClick: () -> Unit = {},
     onFormClick: () -> Unit = {},
-    viewModel: DocumentsSolicitationViewModel = hiltViewModel()
+    viewModel: DocumentsSolicitationViewModel = hiltViewModel(),
+    user: User
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -63,7 +65,7 @@ fun DocumentsSolicitationScreen(
         TopBar(onBackClick = onBackClick)
 
         Text(
-            text = "Fomulário de solicitação de documentos",
+            text = "Formulário de solicitação de documentos",
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
@@ -75,7 +77,7 @@ fun DocumentsSolicitationScreen(
         DocumentFormFields(viewModel)
 
         Button(
-            onClick = { viewModel.submitDocument() },
+            onClick = { viewModel.submitDocument(userId = user.id) },
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF269996)),
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {

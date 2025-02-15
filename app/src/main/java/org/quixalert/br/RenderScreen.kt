@@ -9,7 +9,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import org.quixalert.br.MockData.biddings
-import org.quixalert.br.MockData.reports
 import org.quixalert.br.domain.model.AdoptionT
 import org.quixalert.br.domain.model.Animal
 import org.quixalert.br.domain.model.User
@@ -135,9 +134,7 @@ fun RenderScreen(
         "profile" -> {
             currentUser?.let { user ->
                 ProfileScreen(
-                    reports = reports,
                     biddings = biddings,
-                    adoptions = profileViewModel.uiState.value.adoptionsByUser,
                     onBackClick = { onScreenChange("home") },
                     onEditProfileClick = { onScreenChange("edit_profile") },
                     onBiddingClick = { },
@@ -200,15 +197,21 @@ fun RenderScreen(
             onFormClick = { onScreenChange("animals") }
         )
 
-        "reports_solicitation" -> ReportsSolicitationScreen(
-            onBackClick = { onScreenChange("home") },
-            onFormClick = { onScreenChange("animals") }
-        )
+        "reports_solicitation" -> currentUser?.let {
+            ReportsSolicitationScreen(
+                onBackClick = { onScreenChange("home") },
+                onFormClick = { onScreenChange("animals") },
+                user = it
+            )
+        }
 
-        "documents" -> DocumentsSolicitationScreen(
-            onBackClick = { onScreenChange("home") },
-            onFormClick = { onScreenChange("home") }
-        )
+        "documents" -> currentUser?.let {
+            DocumentsSolicitationScreen(
+                onBackClick = { onScreenChange("home") },
+                onFormClick = { onScreenChange("home") },
+                user = it
+            )
+        }
 
         "emergency" -> EmergencyNumbersScreen(
             onBackClick = { onScreenChange("home") }
@@ -234,18 +237,24 @@ fun RenderScreen(
         "faq" -> FaqScreen()
 
         "solicitation" -> selectedAdoption?.let {
-            AdoptionSolicitationScreen(
-                adoption = it,
-                onBackClick = { onScreenChange("profile") },
-                onOpenChatClick = { onScreenChange("chat") }
-            )
+            if (currentUser != null) {
+                AdoptionSolicitationScreen(
+                    adoption = it,
+                    onBackClick = { onScreenChange("profile") },
+                    onOpenChatClick = { onScreenChange("chat") },
+                    user = currentUser
+                )
+            }
         }
 
         "chat" -> selectedAdoption?.let {
-            ChatScreen(
-                adoption = it,
-                onBackClick = { onScreenChange("solicitation") }
-            )
+            if(currentUser != null){
+                ChatScreen(
+                    adoption = it,
+                    onBackClick = { onScreenChange("solicitation") },
+                    user = currentUser
+                )
+            }
         }
     }
 }

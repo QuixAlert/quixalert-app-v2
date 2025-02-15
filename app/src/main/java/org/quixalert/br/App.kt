@@ -52,7 +52,7 @@ fun App() {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    var currentScreen by remember { mutableStateOf("login") }
+    var currentScreen by remember { mutableStateOf("profile") }
     var currentUser by remember { mutableStateOf<User?>(null) }
     var registrationData by remember { mutableStateOf<UserRegistrationData?>(null) }
     var isFloatingMenuVisible by remember { mutableStateOf(false) }
