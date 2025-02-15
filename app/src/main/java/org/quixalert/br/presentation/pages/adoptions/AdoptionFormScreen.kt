@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -60,7 +61,11 @@ import org.quixalert.br.domain.model.Animal
 import org.quixalert.br.domain.model.User
 import org.quixalert.br.presentation.pages.animal.AnimalDetailsViewModel
 import org.quixalert.br.presentation.pages.home.IconTint
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import androidx.compose.material3.SelectableDates
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -78,9 +83,11 @@ fun AdoptionFormScreen(
     var householdDescription by remember { mutableStateOf("") }
     var adoptionReason by remember { mutableStateOf("") }
     var showSuccessDialog by remember { mutableStateOf(false) }
-    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
     var showDatePicker by remember { mutableStateOf(false) }
-    val datePickerState = rememberDatePickerState()
+    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = System.currentTimeMillis()
+    )
 
     val adoptionUiState by adoptionViewModel.uiState.collectAsState()
     val animalUiState by animalDetailsViewModel.uiState.collectAsState()
@@ -305,9 +312,10 @@ fun AdoptionFormScreen(
                     )
 
                     OutlinedTextField(
-                        value = selectedDate?.toString() ?: "",
+                        value = selectedDate?.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) ?: "",
                         onValueChange = { },
                         label = { Text("Agendar visita presencial", color = Color.Black) },
+                        placeholder = { Text("Selecione uma data para a visita", color = Color.Gray) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { showDatePicker = true },
@@ -322,7 +330,14 @@ fun AdoptionFormScreen(
                             cursorColor = MaterialTheme.colorScheme.primary
                         ),
                         readOnly = true,
-                        enabled = true
+                        enabled = true,
+                        trailingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.DateRange,
+                                contentDescription = "Selecionar data",
+                                modifier = Modifier.clickable { showDatePicker = true }
+                            )
+                        }
                     )
 
                     if (showDatePicker) {
@@ -332,8 +347,8 @@ fun AdoptionFormScreen(
                                 TextButton(onClick = {
                                     val epochMillis = datePickerState.selectedDateMillis
                                     if (epochMillis != null) {
-                                        val selectedEpoch = java.time.Instant.ofEpochMilli(epochMillis)
-                                            .atZone(java.time.ZoneId.systemDefault())
+                                        val selectedEpoch = Instant.ofEpochMilli(epochMillis)
+                                            .atZone(ZoneId.systemDefault())
                                             .toLocalDate()
                                         selectedDate = selectedEpoch
                                     }
