@@ -38,24 +38,31 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import org.quixalert.br.R
 import org.quixalert.br.domain.model.UserRegistrationData
 import org.quixalert.br.presentation.components.StyledTextField
 import org.quixalert.br.presentation.components.WaveBackground
+import org.quixalert.br.presentation.pages.register.RegisterViewModel
 import org.quixalert.br.presentation.ui.theme.primaryBlue
 import org.quixalert.br.presentation.ui.theme.primaryGreen
+import androidx.compose.ui.platform.LocalContext
+
+
 
 @Composable
 fun RegisterStepTwoScreen(
     initialData: UserRegistrationData,
+    viewModel: RegisterViewModel = hiltViewModel(),
+
     onRegisterComplete: (UserRegistrationData) -> Unit = {}
 ) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
-    
+    val context = LocalContext.current
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -96,10 +103,10 @@ fun RegisterStepTwoScreen(
 
             Spacer(modifier = Modifier.height(37.dp))
 
-            // Profile Image Selection
+
             Box(
                 modifier = Modifier
-                    .size(86.dp)  // Exact size from Figma
+                    .size(86.dp)
                     .shadow(
                         elevation = 4.dp,
                         shape = CircleShape,
@@ -180,18 +187,22 @@ fun RegisterStepTwoScreen(
             Button(
                 onClick = {
                     if (password == confirmPassword) {
-                        onRegisterComplete(
-                            initialData.copy(
-                                username = username,
-                                password = password,
-                                profileImage = selectedImageUri
-                            )
+                        val completeData = initialData.copy(
+                            username = username,
+                            password = password,
+                            profileImage = selectedImageUri.toString()
                         )
+
+                        viewModel.completeRegistration(email = initialData.email, password = password, userData = completeData, context = context  , imageUri = selectedImageUri)
+
+                        onRegisterComplete(completeData)
+                    } else {
+
                     }
                 },
                 modifier = Modifier
-                    .width(172.dp)  // Exact width from Figma
-                    .height(53.dp),  // Exact height from Figma
+                    .width(172.dp)
+                    .height(53.dp),
                 colors = ButtonDefaults.buttonColors(primaryBlue),
                 shape = RoundedCornerShape(40.dp)
             ) {

@@ -1,24 +1,20 @@
 package org.quixalert.br.presentation.pages.login
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,28 +22,44 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.quixalert.br.R
+import androidx.lifecycle.viewmodel.compose.viewModel
 import org.quixalert.br.presentation.components.StyledTextField
-import org.quixalert.br.presentation.components.WaveBackground
 import org.quixalert.br.presentation.ui.theme.primaryBlue
 import org.quixalert.br.presentation.ui.theme.primaryGreen
 
 @Composable
-fun SignInScreen(onSignInClick: () -> Unit ) {
+fun SignInScreen(
+    loginViewModel: LoginViewModel = viewModel(), // Obtém a instância do ViewModel
+    onLoginSuccess: (String) -> Unit // Ação a ser realizada após o login bem-sucedido
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    // Collect the UI state as Compose state.
+    val loginState by loginViewModel.loginUiState.collectAsState()
+
+    LaunchedEffect(loginState.isSuccess) {
+        if (loginState.isSuccess) {
+            onLoginSuccess(loginState.userRegistrationData?.id ?: "")
+        }
+    }
+
+    // Use LaunchedEffect para disparar efeitos colaterais apenas uma vez
+    LaunchedEffect(loginState.isSuccess) {
+        if (loginState.isSuccess) {
+            onLoginSuccess(loginState.userRegistrationData?.id ?: "")
+        }
+    }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(primaryGreen)
     ) {
-        WaveBackground()
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -55,7 +67,7 @@ fun SignInScreen(onSignInClick: () -> Unit ) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(83.dp))
-            
+
             Text(
                 text = "Olá!",
                 fontSize = 64.sp,
@@ -63,7 +75,7 @@ fun SignInScreen(onSignInClick: () -> Unit ) {
                 letterSpacing = (-0.333333).sp,
                 color = primaryBlue
             )
-            
+
             Text(
                 text = "Bem-vindo de volta!",
                 fontSize = 16.sp,
@@ -75,7 +87,7 @@ fun SignInScreen(onSignInClick: () -> Unit ) {
 
             Spacer(modifier = Modifier.height(107.dp))
 
-            // Username/Email field
+            // Email field
             StyledTextField(
                 value = email,
                 onValueChange = { email = it },
@@ -86,38 +98,29 @@ fun SignInScreen(onSignInClick: () -> Unit ) {
 
             Spacer(modifier = Modifier.height(35.dp))
 
-            Column(modifier = Modifier.fillMaxWidth()) {
-                StyledTextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    label = "Senha:",
-                    placeholder = "••••••••",
-                    isPassword = true,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                
-                Text(
-                    text = "Esqueci minha senha",
-                    color = primaryBlue,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Normal,
-                    letterSpacing = (-0.333333).sp,
-                    modifier = Modifier
-                        .align(Alignment.End)
-                        .padding(top = 4.dp, end = 8.dp)
-                        .clickable { /* Handle forgot password */ }
-                )
-            }
+            // Password field
+            StyledTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = "Senha:",
+                placeholder = "••••••••",
+                isPassword = true,
+                modifier = Modifier.fillMaxWidth()
+            )
 
             Spacer(modifier = Modifier.height(48.dp))
 
+            // Login Button
             Button(
-                onClick = { onSignInClick() },
+                onClick = {
+                    // Chama o método de login com as credenciais do usuário
+                    loginViewModel.loginUser(email, password)
+                },
                 modifier = Modifier
-                    .width(172.dp)
+                    .fillMaxWidth(0.5f)
                     .height(53.dp),
                 colors = ButtonDefaults.buttonColors(primaryBlue),
-                shape = RoundedCornerShape(40.dp),
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(40.dp),
                 elevation = ButtonDefaults.buttonElevation(
                     defaultElevation = 4.dp
                 )
@@ -130,41 +133,30 @@ fun SignInScreen(onSignInClick: () -> Unit ) {
                 )
             }
 
-            Spacer(modifier = Modifier.height(27.dp))
-
-            Text(
-                text = "Ou conecte-se usando",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Normal,
-                letterSpacing = (-0.333333).sp,
-                color = primaryBlue
-            )
-
-            Spacer(modifier = Modifier.height(27.dp))
-
-            // Social login icons
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 56.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.facebook_logo),
-                    contentDescription = "Facebook Login",
-                    modifier = Modifier.size(35.dp)
+            // Loading indicator (replace with your preferred implementation)
+            if (loginState.isLoading) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Carregando...",
+                    fontSize = 14.sp,
+                    color = Color.Gray,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
                 )
-                Image(
-                    painter = painterResource(id = R.drawable.google_logo),
-                    contentDescription = "Google Login",
-                    modifier = Modifier.size(35.dp)
-                )
-                Image(
-                    painter = painterResource(id = R.drawable.microsoft_logo),
-                    contentDescription = "Microsoft Login",
-                    modifier = Modifier.size(35.dp)
-                )
+            }
+
+            // Error message display
+            if (!loginState.isSuccess && loginState.errorMessage != null) {
+                Spacer(modifier = Modifier.height(16.dp))
+                TextButton(
+                    onClick = { /* ação para tratar erro, ex: limpar a mensagem ou tentar novamente */ }
+                ) {
+                    Text(
+                        text = loginState.errorMessage ?: "Erro desconhecido",
+                        color = Color.Red
+                    )
+                }
             }
         }
     }
-} 
+}

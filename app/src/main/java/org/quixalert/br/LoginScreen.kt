@@ -24,9 +24,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,8 +46,10 @@ fun LoginScreen(
     val screenHeight = configuration.screenHeightDp.dp
     val screenWidth = configuration.screenWidthDp.dp
 
-    var waveHeight by remember { mutableStateOf(0.45f) }
-    
+    // Define a base wave height.
+    val waveHeight = 0.45f
+
+    // Set up an infinite transition to animate the wave.
     val infiniteTransition = rememberInfiniteTransition()
     val animatedWaveHeight by infiniteTransition.animateFloat(
         initialValue = waveHeight,
@@ -66,13 +65,14 @@ fun LoginScreen(
             .fillMaxSize()
             .background(primaryGreen)
     ) {
-        // Wave background
+        // Wave background using Canvas
         Canvas(
             modifier = Modifier.fillMaxSize()
         ) {
             val width = size.width
             val height = size.height
-            
+
+            // Construct a wave path using cubicTo for smooth curves.
             val wavePath = Path().apply {
                 moveTo(0f, 0f)
                 lineTo(width, 0f)
@@ -92,14 +92,14 @@ fun LoginScreen(
             )
         }
 
-        // Content
+        // Main content overlay
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 50.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Logo - adjusted spacing
+            // Logo area with spacing
             Spacer(modifier = Modifier.height(120.dp))
             Image(
                 painter = painterResource(id = R.drawable.quix_alert),
@@ -108,10 +108,10 @@ fun LoginScreen(
                     .size(206.dp)
                     .padding(16.dp)
             )
-            
+
             Spacer(modifier = Modifier.weight(1f))
-            
-            // Register Button (Blue)
+
+            // Register Button (blue filled)
             Button(
                 onClick = onRegisterClick,
                 modifier = Modifier
@@ -127,10 +127,10 @@ fun LoginScreen(
                     letterSpacing = (-0.333333).sp
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
-            // Login Button (White with blue border)
+
+            // Login Button (white with blue border)
             Button(
                 onClick = onLoginClick,
                 modifier = Modifier
@@ -147,8 +147,8 @@ fun LoginScreen(
                     letterSpacing = (-0.333333).sp
                 )
             }
-            
-            // Increased bottom spacing to move buttons up
+
+            // Extra spacing at the bottom
             Spacer(modifier = Modifier.height(120.dp))
         }
     }
