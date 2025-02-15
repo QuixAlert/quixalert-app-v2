@@ -59,15 +59,14 @@ import org.quixalert.br.domain.model.AdoptionT
 import org.quixalert.br.domain.model.AnimalType
 import org.quixalert.br.domain.model.Bidding
 import org.quixalert.br.domain.model.Report
-import org.quixalert.br.domain.model.User
 import org.quixalert.br.presentation.icons.QuestionIcon
+import org.quixalert.br.services.FirebaseAuthService
 
 val IconTint = Color(0xFF269996)
 
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
-    user: User,
     reports: List<Report>,
     biddings: List<Bidding>,
     adoptions: List<Adoption>,
@@ -80,6 +79,7 @@ fun ProfileScreen(
     onAdoptionClick: (AdoptionT) -> Unit,
     onFaqCLick: () -> Unit,
     onExitClick: () -> Unit,
+    firebaseAuthService: FirebaseAuthService,
     profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
     val uiState by profileViewModel.uiState.collectAsState()
@@ -105,9 +105,10 @@ fun ProfileScreen(
             }
 
             item {
+                // Instead of passing a User object, we fetch current user data
                 ProfileHeader(
-                    user = user,
-                    onEditClick = onEditProfileClick
+                    onEditClick = onEditProfileClick,
+                    firebaseAuthService = firebaseAuthService
                 )
             }
 
@@ -228,7 +229,7 @@ fun ProfileScreen(
                 if (uiState.adoptionsByUser.isEmpty()) {
                     item {
                         Text(
-                            text = "você não fez nenhuma solicitacao de adocao",
+                            text = "Você não fez nenhuma solicitação de adoção",
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.padding(16.dp)
                         )
@@ -355,10 +356,13 @@ private fun TopBar(
 }
 
 @Composable
-private fun ProfileHeader(
-    user: User,
-    onEditClick: () -> Unit
+fun ProfileHeader(
+    onEditClick: () -> Unit,
+    firebaseAuthService: FirebaseAuthService
 ) {
+    // Retrieve the current user from FirebaseAuth
+    val currentUser = firebaseAuthService.getCurrentUser()
+
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -372,7 +376,7 @@ private fun ProfileHeader(
                     .clip(CircleShape)
             ) {
                 AsyncImage(
-                    model = user.profileImage,
+                    model = currentUser?.photoUrl ?: "",
                     contentDescription = "Profile Picture",
                     modifier = Modifier
                         .size(100.dp)
@@ -383,13 +387,15 @@ private fun ProfileHeader(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text(
-                text = user.name,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 4.dp),
-                color = MaterialTheme.colorScheme.onBackground
-            )
+            currentUser?.displayName?.let { name ->
+                Text(
+                    text = name,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = 4.dp),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
         }
     }
 }

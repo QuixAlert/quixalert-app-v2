@@ -57,6 +57,7 @@ import org.quixalert.br.presentation.pages.notification.NotificationScreen
 import org.quixalert.br.presentation.pages.profile.ProfileScreen
 import org.quixalert.br.presentation.pages.reports.ReportScreen
 import org.quixalert.br.presentation.pages.reportsSolicitationScreen.ReportsSolicitationScreen
+import org.quixalert.br.services.FirebaseAuthService
 import org.quixalert.br.view.pages.login.LoginScreen
 
 @RequiresApi(Build.VERSION_CODES.S)
@@ -64,7 +65,8 @@ import org.quixalert.br.view.pages.login.LoginScreen
 @Composable
 fun App() {
     val loginViewModel: LoginViewModel = viewModel()
-    var currentScreen by remember { mutableStateOf("login") }
+    val firebaseAuthService = FirebaseAuthService(FirebaseAuth.getInstance())
+    var currentScreen by remember { mutableStateOf("profile") }
     var currentUser by remember { mutableStateOf<User?>(null) }
     var registrationData by remember { mutableStateOf<UserRegistrationData?>(null) }
     var isFloatingMenuVisible by remember { mutableStateOf(false) }
@@ -187,7 +189,6 @@ fun App() {
                         }
                         "notification" -> NotificationScreen()
                         "profile" -> ProfileScreen(
-                            user = mockUser,
                             reports = reports,
                             biddings = biddings,
                             adoptions = adoptions,
@@ -209,7 +210,8 @@ fun App() {
                             onAdoptionClick = { adoption ->
                                 currentScreen = "solicitation"
                                 selectedAdoption = adoption
-                            }
+                            },
+                            firebaseAuthService = firebaseAuthService
                         )
                         "news" -> NewsScreen()
                         "animals" -> AdoptionScreen(
