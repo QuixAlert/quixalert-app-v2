@@ -47,11 +47,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import android.net.Uri
 import coil.compose.AsyncImage
 import com.google.firebase.auth.FirebaseUser
 import org.quixalert.br.domain.model.Adoption
@@ -60,17 +64,26 @@ import org.quixalert.br.domain.model.AdoptionT
 import org.quixalert.br.domain.model.AnimalType
 import org.quixalert.br.domain.model.Bidding
 import org.quixalert.br.domain.model.Report
+import org.quixalert.br.domain.model.User
 import org.quixalert.br.presentation.icons.QuestionIcon
 import org.quixalert.br.services.FirebaseAuthService
+import android.content.Context
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
+import androidx.activity.compose.ManagedActivityResultLauncher
 
 val IconTint = Color(0xFF269996)
 
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
+    user: User,
     reports: List<Report>,
     biddings: List<Bidding>,
-    adoptions: List<Adoption>,
+    adoptions: List<AdoptionT>,
     onBackClick: () -> Unit,
     onEditProfileClick: () -> Unit,
     isDarkThemeEnabled: Boolean,
@@ -80,9 +93,11 @@ fun ProfileScreen(
     onAdoptionClick: (AdoptionT) -> Unit,
     onFaqCLick: () -> Unit,
     onExitClick: () -> Unit,
+    onProfileImageChange: (Uri) -> Unit,
     firebaseAuthService: FirebaseAuthService,
     profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     val uiState by profileViewModel.uiState.collectAsState()
     val isMenuOpen = remember { mutableStateOf(false) }
     val darkThemeState = remember { mutableStateOf(isDarkThemeEnabled) }
@@ -90,6 +105,12 @@ fun ProfileScreen(
 
     LaunchedEffect(Unit) {
         currentUser?.uid?.let { profileViewModel.loadAdoptionsByUserId(it) }
+    }
+
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let { onProfileImageChange(it) }
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -110,8 +131,9 @@ fun ProfileScreen(
                 // Instead of passing a User object, we fetch current user data
                 if (currentUser != null) {
                     ProfileHeader(
+                        user = user,
                         onEditClick = onEditProfileClick,
-                        currentUser = currentUser
+                        imagePickerLauncher = imagePickerLauncher
                     )
                 }
             }
@@ -233,7 +255,7 @@ fun ProfileScreen(
                 if (uiState.adoptionsByUser.isEmpty()) {
                     item {
                         Text(
-                            text = "Você não fez nenhuma solicitação de adoção",
+                            text = "você não fez nenhuma solicitacao de adocao",
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.padding(16.dp)
                         )
@@ -360,12 +382,11 @@ private fun TopBar(
 }
 
 @Composable
-fun ProfileHeader(
+private fun ProfileHeader(
+    user: User,
     onEditClick: () -> Unit,
-    currentUser: FirebaseUser
+    imagePickerLauncher: ManagedActivityResultLauncher<String, Uri?>
 ) {
-    // Retrieve the current user from FirebaseAuth
-
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -377,9 +398,10 @@ fun ProfileHeader(
                 modifier = Modifier
                     .shadow(8.dp, CircleShape)
                     .clip(CircleShape)
+                    .clickable { imagePickerLauncher.launch("image/*") }
             ) {
                 AsyncImage(
-                    model = currentUser?.photoUrl ?: "",
+                    model = user.profileImage,
                     contentDescription = "Profile Picture",
                     modifier = Modifier
                         .size(100.dp)
@@ -390,15 +412,13 @@ fun ProfileHeader(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            currentUser?.displayName?.let { name ->
-                Text(
-                    text = name,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 4.dp),
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
+            Text(
+                text = user.name,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 4.dp),
+                color = MaterialTheme.colorScheme.onBackground
+            )
         }
     }
 }
