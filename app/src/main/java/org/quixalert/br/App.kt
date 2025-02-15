@@ -239,7 +239,6 @@ fun App() {
                             onFormClick = { currentScreen = "form_adote" }
                         )
                         "form_adote" -> AdoptionFormScreen(
-                            user = mockUser,
                             onBackClick = { animal ->
                                 selectedAnimal = animal
                                 currentScreen = "pet_details"
