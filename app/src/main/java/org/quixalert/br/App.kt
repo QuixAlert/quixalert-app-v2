@@ -20,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import org.quixalert.br.MockData.adoptions
 import org.quixalert.br.MockData.biddings
 import org.quixalert.br.MockData.reports
@@ -58,12 +60,17 @@ import org.quixalert.br.presentation.pages.profile.ProfileScreen
 import org.quixalert.br.presentation.pages.reports.ReportScreen
 import org.quixalert.br.presentation.pages.reportsSolicitationScreen.ReportsSolicitationScreen
 import org.quixalert.br.view.pages.login.LoginScreen
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 @RequiresApi(Build.VERSION_CODES.S)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun App() {
     val loginViewModel: LoginViewModel = viewModel()
+    val scope = rememberCoroutineScope()
     var currentScreen by remember { mutableStateOf("login") }
     var currentUser by remember { mutableStateOf<User?>(null) }
     var registrationData by remember { mutableStateOf<UserRegistrationData?>(null) }
@@ -81,18 +88,30 @@ fun App() {
     // Check if there is a logged-in user on start
     LaunchedEffect(Unit) {
         val auth = FirebaseAuth.getInstance()
+        val firestore = FirebaseFirestore.getInstance()
         val user = auth.currentUser
+        
         if (user != null) {
-            // If user is logged in, update currentUser state and navigate to home
-            currentUser = User(
-                id = user.uid,
-                name = user.displayName ?: "Usuário Anônimo",
-                greeting = "Bem-vindo de volta!",
-                profileImage = user.photoUrl?.toString() ?: "https://s2-techtudo.glbimg.com/default_profile.png"
-            )
-            currentScreen = "home"
-            Log.d("UserInfo", "UID do usuário logado: ${user.uid}")
-            Log.d("UserInfo", "Nome do usuário: ${user.displayName ?: "Usuário Anônimo"}")
+            try {
+                val userDoc = firestore.collection("users")
+                    .document(user.uid)
+                    .get()
+                    .await()
+                    
+                if (userDoc.exists()) {
+                    currentUser = User(
+                        id = user.uid,
+                        name = userDoc.getString("name") ?: "Usuário Anônimo",
+                        greeting = "Bem-vindo de volta!",
+                        profileImage = userDoc.getString("profileImage") ?: "https://s2-techtudo.glbimg.com/default_profile.png"
+                    )
+                    currentScreen = "home"
+                    Log.d("UserInfo", "UID do usuário logado: ${user.uid}")
+                    Log.d("UserInfo", "Nome do usuário: ${userDoc.getString("name") ?: "Usuário Anônimo"}")
+                }
+            } catch (e: Exception) {
+                Log.e("UserInfo", "Error fetching user data", e)
+            }
         }
     }
 
@@ -134,18 +153,28 @@ fun App() {
                         )
                         "signin" -> SignInScreen(
                             onLoginSuccess = { userId ->
-                                // When login succeeds, update the currentUser state
-                                val auth = FirebaseAuth.getInstance()
-                                val fbUser = auth.currentUser
-                                if (fbUser != null) {
-                                    currentUser = User(
-                                        id = fbUser.uid,
-                                        name = fbUser.displayName ?: "Usuário Anônimo",
-                                        greeting = "Bem-vindo de volta!",
-                                        profileImage = fbUser.photoUrl?.toString() ?: "https://s2-techtudo.glbimg.com/default_profile.png"
-                                    )
+                                val scope = CoroutineScope(Dispatchers.Main)
+                                scope.launch {
+                                    try {
+                                        val firestore = FirebaseFirestore.getInstance()
+                                        val userDoc = firestore.collection("users")
+                                            .document(userId)
+                                            .get()
+                                            .await()
+                                        
+                                        if (userDoc.exists()) {
+                                            currentUser = User(
+                                                id = userId,
+                                                name = userDoc.getString("name") ?: "Usuário Anônimo",
+                                                greeting = "Bem-vindo de volta!",
+                                                profileImage = userDoc.getString("profileImage") ?: "https://s2-techtudo.glbimg.com/default_profile.png"
+                                            )
+                                        }
+                                        currentScreen = "home"
+                                    } catch (e: Exception) {
+                                        Log.e("SignIn", "Error fetching user data", e)
+                                    }
                                 }
-                                currentScreen = "home"
                             }
                         )
                         "register" -> RegisterScreen(
@@ -187,7 +216,7 @@ fun App() {
                         }
                         "notification" -> NotificationScreen()
                         "profile" -> ProfileScreen(
-                            user = mockUser,
+                            user = currentUser ?: User(),
                             reports = reports,
                             biddings = biddings,
                             adoptions = adoptions,
