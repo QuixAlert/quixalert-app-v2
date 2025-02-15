@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.google.firebase.auth.FirebaseUser
 import org.quixalert.br.domain.model.Adoption
 import org.quixalert.br.domain.model.AdoptionStatus
 import org.quixalert.br.domain.model.AdoptionT
@@ -85,9 +86,10 @@ fun ProfileScreen(
     val uiState by profileViewModel.uiState.collectAsState()
     val isMenuOpen = remember { mutableStateOf(false) }
     val darkThemeState = remember { mutableStateOf(isDarkThemeEnabled) }
+    val currentUser = firebaseAuthService.getCurrentUser()
 
     LaunchedEffect(Unit) {
-        profileViewModel.loadAdoptions()
+        currentUser?.uid?.let { profileViewModel.loadAdoptionsByUserId(it) }
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -106,10 +108,12 @@ fun ProfileScreen(
 
             item {
                 // Instead of passing a User object, we fetch current user data
-                ProfileHeader(
-                    onEditClick = onEditProfileClick,
-                    firebaseAuthService = firebaseAuthService
-                )
+                if (currentUser != null) {
+                    ProfileHeader(
+                        onEditClick = onEditProfileClick,
+                        currentUser = currentUser
+                    )
+                }
             }
 
             item {
@@ -358,10 +362,9 @@ private fun TopBar(
 @Composable
 fun ProfileHeader(
     onEditClick: () -> Unit,
-    firebaseAuthService: FirebaseAuthService
+    currentUser: FirebaseUser
 ) {
     // Retrieve the current user from FirebaseAuth
-    val currentUser = firebaseAuthService.getCurrentUser()
 
     Box(
         modifier = Modifier.fillMaxWidth()

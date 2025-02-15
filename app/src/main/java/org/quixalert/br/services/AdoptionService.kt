@@ -28,4 +28,8 @@ class AdoptionService @Inject constructor(
     override fun getById(entityId: String): Deferred<AdoptionT?> {
         return adoptionRepository.getById(entityId)
     }
+
+    fun getAdoptionsByUserId(userId: String): Deferred<List<AdoptionT>> {
+        return adoptionRepository.getAdoptionsByUserId(userId)
+    }
 }

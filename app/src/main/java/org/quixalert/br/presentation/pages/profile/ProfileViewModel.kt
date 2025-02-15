@@ -34,12 +34,12 @@ class ProfileViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> get() = _uiState
 
-    fun loadAdoptions() {
+    fun loadAdoptionsByUserId(userId: String) {
         _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
         viewModelScope.launch {
             try {
                 // Filter by user id if necessary
-                val adoptions = adoptionService.getAll().await().map { adoptionT ->
+                val adoptions = adoptionService.getAdoptionsByUserId(userId).await().map { adoptionT ->
                     AdoptionT(
                         id = adoptionT.id,
                         animal = animalService.getById(adoptionT.animalId).await(),
