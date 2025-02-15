@@ -47,11 +47,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import android.net.Uri
 import coil.compose.AsyncImage
 import org.quixalert.br.domain.model.Adoption
 import org.quixalert.br.domain.model.AdoptionStatus
@@ -61,6 +65,13 @@ import org.quixalert.br.domain.model.Bidding
 import org.quixalert.br.domain.model.Report
 import org.quixalert.br.domain.model.User
 import org.quixalert.br.presentation.icons.QuestionIcon
+import android.content.Context
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
+import androidx.activity.compose.ManagedActivityResultLauncher
 
 val IconTint = Color(0xFF269996)
 
@@ -70,7 +81,7 @@ fun ProfileScreen(
     user: User,
     reports: List<Report>,
     biddings: List<Bidding>,
-    adoptions: List<Adoption>,
+    adoptions: List<AdoptionT>,
     onBackClick: () -> Unit,
     onEditProfileClick: () -> Unit,
     isDarkThemeEnabled: Boolean,
@@ -80,14 +91,22 @@ fun ProfileScreen(
     onAdoptionClick: (AdoptionT) -> Unit,
     onFaqCLick: () -> Unit,
     onExitClick: () -> Unit,
-    profileViewModel: ProfileViewModel = hiltViewModel()
+    onProfileImageChange: (Uri) -> Unit
 ) {
+    val context = LocalContext.current
+    val profileViewModel = hiltViewModel<ProfileViewModel>()
     val uiState by profileViewModel.uiState.collectAsState()
     val isMenuOpen = remember { mutableStateOf(false) }
     val darkThemeState = remember { mutableStateOf(isDarkThemeEnabled) }
 
     LaunchedEffect(Unit) {
         profileViewModel.loadAdoptions()
+    }
+
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let { onProfileImageChange(it) }
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -107,7 +126,8 @@ fun ProfileScreen(
             item {
                 ProfileHeader(
                     user = user,
-                    onEditClick = onEditProfileClick
+                    onEditClick = onEditProfileClick,
+                    imagePickerLauncher = imagePickerLauncher
                 )
             }
 
@@ -357,7 +377,8 @@ private fun TopBar(
 @Composable
 private fun ProfileHeader(
     user: User,
-    onEditClick: () -> Unit
+    onEditClick: () -> Unit,
+    imagePickerLauncher: ManagedActivityResultLauncher<String, Uri?>
 ) {
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -370,6 +391,7 @@ private fun ProfileHeader(
                 modifier = Modifier
                     .shadow(8.dp, CircleShape)
                     .clip(CircleShape)
+                    .clickable { imagePickerLauncher.launch("image/*") }
             ) {
                 AsyncImage(
                     model = user.profileImage,
