@@ -1,6 +1,10 @@
 package org.quixalert.br.presentation.pages.profile
 
+import android.net.Uri
 import android.webkit.WebView
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -53,11 +57,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import android.net.Uri
 import coil.compose.AsyncImage
-import org.quixalert.br.domain.model.Adoption
 import org.quixalert.br.domain.model.AdoptionStatus
 import org.quixalert.br.domain.model.AdoptionT
 import org.quixalert.br.domain.model.AnimalType
@@ -65,13 +65,7 @@ import org.quixalert.br.domain.model.Bidding
 import org.quixalert.br.domain.model.Report
 import org.quixalert.br.domain.model.User
 import org.quixalert.br.presentation.icons.QuestionIcon
-import android.content.Context
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.launch
-import androidx.activity.compose.ManagedActivityResultLauncher
+import org.quixalert.br.services.FirebaseAuthService
 
 val IconTint = Color(0xFF269996)
 
@@ -79,9 +73,7 @@ val IconTint = Color(0xFF269996)
 fun ProfileScreen(
     modifier: Modifier = Modifier,
     user: User,
-    reports: List<Report>,
     biddings: List<Bidding>,
-    adoptions: List<AdoptionT>,
     onBackClick: () -> Unit,
     onEditProfileClick: () -> Unit,
     isDarkThemeEnabled: Boolean,
@@ -91,16 +83,22 @@ fun ProfileScreen(
     onAdoptionClick: (AdoptionT) -> Unit,
     onFaqCLick: () -> Unit,
     onExitClick: () -> Unit,
-    onProfileImageChange: (Uri) -> Unit
+    onProfileImageChange: (Uri) -> Unit,
+    firebaseAuthService: FirebaseAuthService,
+    profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-    val profileViewModel = hiltViewModel<ProfileViewModel>()
     val uiState by profileViewModel.uiState.collectAsState()
     val isMenuOpen = remember { mutableStateOf(false) }
     val darkThemeState = remember { mutableStateOf(isDarkThemeEnabled) }
+    val currentUser = firebaseAuthService.getCurrentUser()
 
     LaunchedEffect(Unit) {
-        profileViewModel.loadAdoptions()
+        currentUser?.uid?.let { uid ->
+            profileViewModel.loadAdoptionsByUserId(uid)
+            profileViewModel.loadReportByUserId(uid)
+            profileViewModel.loadDocumentsByUserId(uid)
+        }
     }
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
@@ -116,21 +114,24 @@ fun ProfileScreen(
                 .padding(start = 16.dp, end = 16.dp, bottom = 64.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            // Top Bar
             item {
                 TopBar(
                     onBackClick = onBackClick,
                     onMenuClick = { isMenuOpen.value = !isMenuOpen.value }
                 )
             }
-
+            // Profile Header
             item {
-                ProfileHeader(
-                    user = user,
-                    onEditClick = onEditProfileClick,
-                    imagePickerLauncher = imagePickerLauncher
-                )
+                if (currentUser != null) {
+                    ProfileHeader(
+                        user = user,
+                        onEditClick = onEditProfileClick,
+                        imagePickerLauncher = imagePickerLauncher
+                    )
+                }
             }
-
+            // Preferences Header
             item {
                 Text(
                     text = "Preferências",
@@ -139,7 +140,7 @@ fun ProfileScreen(
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
-
+            // Dark Theme Toggle
             item {
                 Row(
                     modifier = Modifier
@@ -153,7 +154,6 @@ fun ProfileScreen(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onBackground
                     )
-
                     Switch(
                         checked = darkThemeState.value,
                         onCheckedChange = {
@@ -167,7 +167,7 @@ fun ProfileScreen(
                     )
                 }
             }
-
+            // Reports Section
             item {
                 Text(
                     text = "Minhas Denúncias",
@@ -176,54 +176,9 @@ fun ProfileScreen(
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
-
-            item {
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    contentPadding = PaddingValues(vertical = 8.dp)
-                ) {
-                    items(reports) { report ->
-                        ReportItem(report = report, onReportClick = onReportClick)
-                    }
-                }
-            }
-
-            item {
-                Text(
-                    text = "Minhas Licitações",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-
-            item {
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    contentPadding = PaddingValues(vertical = 8.dp)
-                ) {
-                    items(biddings) { bidding ->
-                        BiddingItem(
-                            bidding = bidding,
-                            onBiddingClick = onBiddingClick
-                        )
-                    }
-                }
-            }
-
-            item {
-                Text(
-                    text = "Minhas Adoções",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-
-            // Display loading indicator or error message below "Minhas Adoções"
             item {
                 when {
-                    uiState.isLoading -> {
+                    uiState.isLoadingReports -> {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -233,22 +188,98 @@ fun ProfileScreen(
                             CircularProgressIndicator()
                         }
                     }
-                    !uiState.errorMessage.isNullOrEmpty() -> {
+                    uiState.errorReports != null -> {
                         Text(
-                            text = uiState.errorMessage!!,
+                            text = uiState.errorReports!!,
                             color = Color.Red,
                             modifier = Modifier.padding(16.dp)
                         )
                     }
+                    else -> {
+                        LazyRow(
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            contentPadding = PaddingValues(vertical = 8.dp)
+                        ) {
+                            items(uiState.reportsSolicitationByUser) { report ->
+                                ReportItem(report = report, onReportClick = onReportClick)
+                            }
+                        }
+                    }
                 }
             }
-
-            // Display adoptions list when not loading and no error
-            if (!uiState.isLoading && uiState.errorMessage.isNullOrEmpty()) {
+            // Documents Section
+            item {
+                Text(
+                    text = "Meus Documentos",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+            item {
+                when {
+                    uiState.isLoadingDocuments -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                    uiState.errorDocuments != null -> {
+                        Text(
+                            text = uiState.errorDocuments!!,
+                            color = Color.Red,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                    else -> {
+                        LazyRow(
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            contentPadding = PaddingValues(vertical = 8.dp)
+                        ) {
+                            items(uiState.documentsSolicitationByUser) { document ->
+                                DocumentItem(document = document)
+                            }
+                        }
+                    }
+                }
+            }
+            // Adoptions Section
+            item {
+                Text(
+                    text = "Minhas Adoções",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+            if (uiState.isLoadingAdoptions) {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+            } else if (uiState.errorAdoptions != null) {
+                item {
+                    Text(
+                        text = uiState.errorAdoptions!!,
+                        color = Color.Red,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+            } else {
                 if (uiState.adoptionsByUser.isEmpty()) {
                     item {
                         Text(
-                            text = "você não fez nenhuma solicitacao de adocao",
+                            text = "Você não fez nenhuma solicitação de adoção",
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.padding(16.dp)
                         )
@@ -259,12 +290,11 @@ fun ProfileScreen(
                     }
                 }
             }
-
             item {
                 Spacer(modifier = Modifier.height(18.dp))
             }
         }
-
+        // Drawer overlay
         if (isMenuOpen.value) {
             Box(
                 modifier = Modifier
@@ -272,13 +302,12 @@ fun ProfileScreen(
                     .background(Color.Black.copy(alpha = 0.5f))
                     .clickable { isMenuOpen.value = false }
             )
-
             Box(
                 modifier = Modifier.fillMaxSize()
             ) {
                 DrawerContent(
-                    onExitClick = { onExitClick() },
-                    onFaqCLick = { onFaqCLick() },
+                    onExitClick = onExitClick,
+                    onFaqCLick = onFaqCLick,
                     modifier = Modifier
                         .clip(RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp))
                         .fillMaxHeight()
@@ -286,6 +315,28 @@ fun ProfileScreen(
                         .align(Alignment.TopEnd)
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun DocumentItem(document: org.quixalert.br.domain.model.Document) {
+    Box(
+        modifier = Modifier
+            .width(200.dp)
+            .shadow(4.dp, RoundedCornerShape(12.dp))
+            .clip(RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .clickable { /* Handle document click */ }
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(
+                text = document.reason,
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                color = MaterialTheme.colorScheme.onBackground
+            )
         }
     }
 }
@@ -307,7 +358,6 @@ fun DrawerContent(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -324,7 +374,6 @@ fun DrawerContent(
             Spacer(modifier = Modifier.width(8.dp))
             Text(text = "FAQ", style = MaterialTheme.typography.bodyMedium)
         }
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -363,7 +412,6 @@ private fun TopBar(
                 tint = IconTint
             )
         }
-
         IconButton(onClick = onMenuClick) {
             Icon(
                 imageVector = Icons.Default.Menu,
@@ -380,9 +428,7 @@ private fun ProfileHeader(
     onEditClick: () -> Unit,
     imagePickerLauncher: ManagedActivityResultLauncher<String, Uri?>
 ) {
-    Box(
-        modifier = Modifier.fillMaxWidth()
-    ) {
+    Box(modifier = Modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -402,9 +448,7 @@ private fun ProfileHeader(
                     contentScale = ContentScale.Crop
                 )
             }
-
             Spacer(modifier = Modifier.height(8.dp))
-
             Text(
                 text = user.name,
                 style = MaterialTheme.typography.titleMedium,
@@ -435,7 +479,6 @@ fun ReportItem(report: Report, onReportClick: (Report) -> Unit) {
                     .height(150.dp),
                 contentScale = ContentScale.Crop
             )
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -444,15 +487,13 @@ fun ReportItem(report: Report, onReportClick: (Report) -> Unit) {
             ) {
                 AsyncImage(
                     model = report.icon,
-                    contentDescription = null,
+                    contentDescription = report.title,
                     modifier = Modifier
                         .size(32.dp)
                         .clip(CircleShape),
                     contentScale = ContentScale.Crop
                 )
-
                 Spacer(modifier = Modifier.width(8.dp))
-
                 Text(
                     text = report.title,
                     style = MaterialTheme.typography.bodyMedium,
@@ -466,7 +507,7 @@ fun ReportItem(report: Report, onReportClick: (Report) -> Unit) {
 }
 
 @Composable
-fun AdoptionItem(adoption: AdoptionT, onAdoptionClick: (adoption: AdoptionT) -> Unit) {
+fun AdoptionItem(adoption: AdoptionT, onAdoptionClick: (AdoptionT) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -489,7 +530,6 @@ fun AdoptionItem(adoption: AdoptionT, onAdoptionClick: (adoption: AdoptionT) -> 
                         .height(160.dp),
                     contentScale = ContentScale.Crop
                 )
-
                 Text(
                     text = if (adoption.status == AdoptionStatus.APPROVED) "Adotado" else "Em análise",
                     style = MaterialTheme.typography.bodySmall.copy(color = Color.White),
@@ -503,7 +543,6 @@ fun AdoptionItem(adoption: AdoptionT, onAdoptionClick: (adoption: AdoptionT) -> 
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                 )
             }
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -521,9 +560,7 @@ fun AdoptionItem(adoption: AdoptionT, onAdoptionClick: (adoption: AdoptionT) -> 
                         .clip(CircleShape),
                     contentScale = ContentScale.Crop
                 )
-
                 Spacer(modifier = Modifier.width(8.dp))
-
                 adoption.animal?.name?.let {
                     Text(
                         text = it,
@@ -551,9 +588,7 @@ fun BiddingItem(
             .background(MaterialTheme.colorScheme.surface)
             .clickable { onBiddingClick(bidding) }
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
+        Column(modifier = Modifier.fillMaxSize()) {
             AsyncImage(
                 model = bidding.image,
                 contentDescription = bidding.title,
@@ -562,7 +597,6 @@ fun BiddingItem(
                     .height(150.dp),
                 contentScale = ContentScale.Crop
             )
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -575,9 +609,7 @@ fun BiddingItem(
                     modifier = Modifier.size(24.dp),
                     tint = IconTint
                 )
-
                 Spacer(modifier = Modifier.width(8.dp))
-
                 Text(
                     text = bidding.title,
                     style = MaterialTheme.typography.bodyMedium,
@@ -601,7 +633,6 @@ fun BiddingPdfScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -617,7 +648,6 @@ fun BiddingPdfScreen(
                     tint = IconTint
                 )
             }
-
             Text(
                 text = bidding.title,
                 style = MaterialTheme.typography.titleMedium,
@@ -626,7 +656,6 @@ fun BiddingPdfScreen(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-
             IconButton(
                 onClick = onShareClick,
                 modifier = Modifier.align(Alignment.CenterEnd)
@@ -638,7 +667,6 @@ fun BiddingPdfScreen(
                 )
             }
         }
-
         Box(
             modifier = Modifier
                 .fillMaxSize()

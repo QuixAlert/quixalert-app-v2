@@ -7,10 +7,11 @@ data class Report(
     val icon: String = "",
     val date: String = "",
     val type: ReportType = ReportType.AMBIENTAL,
-    val description: String,
-    val address: String,
-    val motivation: String,
-    val details: String?
+    val description: String = "",
+    val address: String = "",
+    val motivation: String = "",
+    val details: String = "",
+    val userId: String = ""
 ): BaseModel(id)
 
 

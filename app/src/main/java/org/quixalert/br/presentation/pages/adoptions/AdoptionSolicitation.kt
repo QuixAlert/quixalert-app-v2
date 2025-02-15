@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.quixalert.br.domain.model.AdoptionStatus
 import org.quixalert.br.domain.model.AdoptionT
+import org.quixalert.br.domain.model.User
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
@@ -53,7 +54,8 @@ import java.time.temporal.ChronoUnit
 fun AdoptionSolicitationScreen(
     adoption: AdoptionT,
     onBackClick: () -> Unit,
-    onOpenChatClick: () -> Unit
+    onOpenChatClick: () -> Unit,
+    user: User
 ) {
     var showInfoDialog by remember { mutableStateOf(false) }
     val clipboardManager = LocalClipboardManager.current
@@ -145,13 +147,13 @@ fun AdoptionSolicitationScreen(
                             horizontalArrangement = Arrangement.spacedBy(14.dp)
                         ) {
                             AsyncImage(
-                                model = MOCK_USER_IMAGE_URL,
+                                model = user.profileImage,
                                 contentDescription = "Imagem do solicitante",
                                 modifier = Modifier
                                     .size(40.dp)
                                     .clip(CircleShape)
                             )
-                            Text(text = "Fulaninho de tal", color = Color.Black)
+                            Text(text = user.name, color = Color.Black)
                         }
                     }
                     Column(horizontalAlignment = Alignment.End) {
