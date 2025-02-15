@@ -64,6 +64,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import org.quixalert.br.presentation.pages.profile.ProfileViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @RequiresApi(Build.VERSION_CODES.S)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -215,31 +217,59 @@ fun App() {
                             }
                         }
                         "notification" -> NotificationScreen()
-                        "profile" -> ProfileScreen(
-                            user = currentUser ?: User(),
-                            reports = reports,
-                            biddings = biddings,
-                            adoptions = adoptions,
-                            onBackClick = { currentScreen = "home" },
-                            onEditProfileClick = { currentScreen = "edit_profile" },
-                            onBiddingClick = { },
-                            onReportClick = { currentScreen = "report_details" },
-                            isDarkThemeEnabled = isDarkTheme.value,
-                            onThemeToggle = { isDarkTheme.value = it },
-                            onExitClick = {
-                                FirebaseAuth.getInstance().signOut()
-                                loginViewModel.resetLoginState()
-                                currentUser = null
-                                currentScreen = "login"
-                            },
-                            onFaqCLick = {
-                                currentScreen = "faq"
-                            },
-                            onAdoptionClick = { adoption ->
-                                currentScreen = "solicitation"
-                                selectedAdoption = adoption
-                            }
-                        )
+                        "profile" -> {
+                            val profileViewModel: ProfileViewModel = hiltViewModel()
+                            ProfileScreen(
+                                user = currentUser ?: User(),
+                                reports = reports,
+                                biddings = biddings,
+                                adoptions = profileViewModel.uiState.value.adoptionsByUser,
+                                onBackClick = { currentScreen = "home" },
+                                onEditProfileClick = { currentScreen = "edit_profile" },
+                                onBiddingClick = { },
+                                onReportClick = { currentScreen = "report_details" },
+                                isDarkThemeEnabled = isDarkTheme.value,
+                                onThemeToggle = { isDarkTheme.value = it },
+                                onExitClick = {
+                                    FirebaseAuth.getInstance().signOut()
+                                    loginViewModel.resetLoginState()
+                                    currentUser = null
+                                    currentScreen = "login"
+                                },
+                                onFaqCLick = {
+                                    currentScreen = "faq"
+                                },
+                                onAdoptionClick = { adoption ->
+                                    currentScreen = "solicitation"
+                                    selectedAdoption = adoption
+                                },
+                                onProfileImageChange = { uri ->
+                                    currentUser?.let { user ->
+                                        profileViewModel.updateProfileImage(context, uri, user.id) { success ->
+                                            if (success) {
+                                                scope.launch {
+                                                    try {
+                                                        val firestore = FirebaseFirestore.getInstance()
+                                                        val userDoc = firestore.collection("users")
+                                                            .document(user.id)
+                                                            .get()
+                                                            .await()
+                                                        
+                                                        if (userDoc.exists()) {
+                                                            currentUser = currentUser?.copy(
+                                                                profileImage = userDoc.getString("profileImage") ?: currentUser?.profileImage ?: ""
+                                                            )
+                                                        }
+                                                    } catch (e: Exception) {
+                                                        Log.e("Profile", "Error updating profile image", e)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            )
+                        }
                         "news" -> NewsScreen()
                         "animals" -> AdoptionScreen(
                             onDonateClick = { currentScreen = "donate" },
