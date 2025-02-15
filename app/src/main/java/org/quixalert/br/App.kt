@@ -244,7 +244,8 @@ fun App() {
                                 selectedAnimal = animal
                                 currentScreen = "pet_details"
                             },
-                            onFormClick = { currentScreen = "animals" }
+                            onFormClick = { currentScreen = "animals" },
+                            firebaseAuthService = firebaseAuthService
                         )
                         "report_details" -> ReportScreen()
                         "faq" -> FaqScreen()
