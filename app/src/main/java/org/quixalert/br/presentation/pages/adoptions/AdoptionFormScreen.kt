@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -61,6 +62,7 @@ import org.quixalert.br.presentation.pages.animal.AnimalDetailsViewModel
 import org.quixalert.br.presentation.pages.home.IconTint
 import org.quixalert.br.services.FirebaseAuthService
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,9 +82,11 @@ fun AdoptionFormScreen(
     var householdDescription by remember { mutableStateOf("") }
     var adoptionReason by remember { mutableStateOf("") }
     var showSuccessDialog by remember { mutableStateOf(false) }
-    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
     var showDatePicker by remember { mutableStateOf(false) }
-    val datePickerState = rememberDatePickerState()
+    var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = System.currentTimeMillis()
+    )
 
     val adoptionUiState by adoptionViewModel.uiState.collectAsState()
     val animalUiState by animalDetailsViewModel.uiState.collectAsState()
@@ -307,9 +311,10 @@ fun AdoptionFormScreen(
                     )
 
                     OutlinedTextField(
-                        value = selectedDate?.toString() ?: "",
+                        value = selectedDate?.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) ?: "",
                         onValueChange = { },
                         label = { Text("Agendar visita presencial", color = Color.Black) },
+                        placeholder = { Text("Selecione uma data para a visita", color = Color.Gray) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { showDatePicker = true },
@@ -324,7 +329,14 @@ fun AdoptionFormScreen(
                             cursorColor = MaterialTheme.colorScheme.primary
                         ),
                         readOnly = true,
-                        enabled = true
+                        enabled = true,
+                        trailingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.DateRange,
+                                contentDescription = "Selecionar data",
+                                modifier = Modifier.clickable { showDatePicker = true }
+                            )
+                        }
                     )
 
                     if (showDatePicker) {
@@ -334,19 +346,19 @@ fun AdoptionFormScreen(
                                 TextButton(onClick = {
                                     val epochMillis = datePickerState.selectedDateMillis
                                     if (epochMillis != null) {
-                                        val selectedEpoch = java.time.Instant.ofEpochMilli(epochMillis)
-                                            .atZone(java.time.ZoneId.systemDefault())
-                                            .toLocalDate()
-                                        selectedDate = selectedEpoch
+                                        val selectedLocalDate = DateUtils.fromEpochMillis(epochMillis)
+                                        if (DateUtils.isValidFutureDate(selectedLocalDate)) {
+                                            selectedDate = selectedLocalDate
+                                            showDatePicker = false
+                                        }
                                     }
-                                    showDatePicker = false
                                 }) {
-                                    Text("OK")
+                                    Text("OK", color = Color(0xFF269996))
                                 }
                             },
                             dismissButton = {
                                 TextButton(onClick = { showDatePicker = false }) {
-                                    Text("Cancelar")
+                                    Text("Cancelar", color = Color(0xFF269996))
                                 }
                             }
                         ) {
@@ -362,18 +374,20 @@ fun AdoptionFormScreen(
                         }
 
                         val adoption = animal?.let {
-                            AdoptionT(
-                                animalId = animal.id,
-                                status = AdoptionStatus.PENDING,
-                                address = address,
-                                livingDescription = livingDescription,
-                                otherAnimals = otherAnimals,
-                                monthlyIncome = monthlyIncome,
-                                householdDescription = householdDescription,
-                                adoptionReason = adoptionReason,
-                                visitDate = selectedDate,
-                                userId = userId
-                            )
+                            selectedDate?.let { it1 ->
+                                AdoptionT(
+                                    animalId = animal.id,
+                                    status = AdoptionStatus.PENDING,
+                                    address = address,
+                                    livingDescription = livingDescription,
+                                    otherAnimals = otherAnimals,
+                                    monthlyIncome = monthlyIncome,
+                                    householdDescription = householdDescription,
+                                    adoptionReason = adoptionReason,
+                                    visitDate = it1.toString(),
+                                    userId = userId
+                                )
+                            }
                         }
                         if (adoption != null) {
                             adoptionViewModel.submitAdoption(adoption)
