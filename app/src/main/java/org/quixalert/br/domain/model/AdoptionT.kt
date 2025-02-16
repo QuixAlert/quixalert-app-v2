@@ -1,8 +1,6 @@
 package org.quixalert.br.domain.model
 
 import java.time.LocalDate
-import java.time.Instant
-import java.time.ZoneId
 
 data class AdoptionT(
     override var id: String = "",
@@ -14,7 +12,7 @@ data class AdoptionT(
     val monthlyIncome: String = "",
     val householdDescription: String = "",
     val adoptionReason: String = "",
-    val visitDate: LocalDate? = null,
+    val visitDate: String = LocalDate.now().toString(),
     val userId: String = "",
     val animal: Animal? = null
 ) : BaseModel(id)

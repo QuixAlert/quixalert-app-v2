@@ -1,5 +1,6 @@
 package org.quixalert.br.presentation.pages.adoptions
 
+import DateUtils
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -45,11 +46,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.quixalert.br.domain.model.AdoptionStatus
 import org.quixalert.br.domain.model.AdoptionT
-import org.quixalert.br.utils.DateUtils
 import org.quixalert.br.domain.model.User
-import java.time.LocalDate
-import java.time.temporal.ChronoUnit
-import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -117,11 +114,11 @@ fun AdoptionSolicitationScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     InfoColumn(
-                        title = "Data da Solicitação",
+                        title = "Dia para Visita",
                         value = DateUtils.formatDate(adoption.visitDate)
                     )
                     InfoColumn(
-                        title = "Dias em aberto",
+                        title = "Dias que faltam para a visita",
                         value = DateUtils.calculateDaysOpen(adoption.visitDate)
                     )
                     InfoColumn(

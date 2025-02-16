@@ -60,16 +60,9 @@ import org.quixalert.br.domain.model.AdoptionT
 import org.quixalert.br.domain.model.Animal
 import org.quixalert.br.presentation.pages.animal.AnimalDetailsViewModel
 import org.quixalert.br.presentation.pages.home.IconTint
-import java.time.Instant
 import org.quixalert.br.services.FirebaseAuthService
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import androidx.compose.material3.SelectableDates
-import org.quixalert.br.domain.model.User
-import java.util.Calendar
-import org.quixalert.br.utils.DateUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -381,18 +374,20 @@ fun AdoptionFormScreen(
                         }
 
                         val adoption = animal?.let {
-                            AdoptionT(
-                                animalId = animal.id,
-                                status = AdoptionStatus.PENDING,
-                                address = address,
-                                livingDescription = livingDescription,
-                                otherAnimals = otherAnimals,
-                                monthlyIncome = monthlyIncome,
-                                householdDescription = householdDescription,
-                                adoptionReason = adoptionReason,
-                                visitDate = selectedDate,
-                                userId = userId
-                            )
+                            selectedDate?.let { it1 ->
+                                AdoptionT(
+                                    animalId = animal.id,
+                                    status = AdoptionStatus.PENDING,
+                                    address = address,
+                                    livingDescription = livingDescription,
+                                    otherAnimals = otherAnimals,
+                                    monthlyIncome = monthlyIncome,
+                                    householdDescription = householdDescription,
+                                    adoptionReason = adoptionReason,
+                                    visitDate = it1.toString(),
+                                    userId = userId
+                                )
+                            }
                         }
                         if (adoption != null) {
                             adoptionViewModel.submitAdoption(adoption)

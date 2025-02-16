@@ -19,7 +19,6 @@ import org.quixalert.br.services.FirebaseAuthService
 import org.quixalert.br.services.FirebaseStorageService
 import org.quixalert.br.services.ReportService
 import javax.inject.Inject
-import java.time.format.DateTimeFormatter
 
 data class ProfileUiState(
     val adoptionsByUser: List<AdoptionT> = emptyList(),

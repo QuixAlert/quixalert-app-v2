@@ -1,5 +1,3 @@
-package org.quixalert.br.utils
-
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -17,22 +15,41 @@ object DateUtils {
             .plusDays(1)
     }
 
-    fun formatDate(date: LocalDate?): String {
-        return date?.format(DISPLAY_FORMAT) ?: "N/A"
+    // New version that accepts a date string (ISO-8601 format)
+    fun formatDate(dateString: String?): String {
+        return try {
+            dateString?.let {
+                LocalDate.parse(it).format(DISPLAY_FORMAT)
+            } ?: "N/A"
+        } catch (e: Exception) {
+            "N/A"
+        }
     }
 
-    fun calculateDaysOpen(date: LocalDate?): String {
-        return date?.let { 
-            val diff = ChronoUnit.DAYS.between(date, LocalDate.now())
-            "$diff dias"
-        } ?: "N/A"
+    fun calculateDaysOpen(dateString: String?): String {
+        return try {
+            dateString?.let {
+                val date = LocalDate.parse(it)
+                val diff = ChronoUnit.DAYS.between(date, LocalDate.now())
+                "${kotlin.math.abs(diff)} dias"
+            } ?: "N/A"
+        } catch (e: Exception) {
+            "N/A"
+        }
     }
 
-    fun calculateDeadline(date: LocalDate?): String {
-        return date?.plusDays(30)?.format(DISPLAY_FORMAT) ?: "N/A"
+    fun calculateDeadline(dateString: String?): String {
+        return try {
+            dateString?.let {
+                val date = LocalDate.parse(it)
+                date.plusDays(30).format(DISPLAY_FORMAT)
+            } ?: "N/A"
+        } catch (e: Exception) {
+            "N/A"
+        }
     }
 
     fun isValidFutureDate(date: LocalDate): Boolean {
         return !date.isBefore(LocalDate.now())
     }
-} 
+}
