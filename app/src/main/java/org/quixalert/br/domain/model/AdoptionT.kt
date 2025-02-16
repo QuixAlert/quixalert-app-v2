@@ -1,6 +1,8 @@
 package org.quixalert.br.domain.model
 
 import java.time.LocalDate
+import java.time.Instant
+import java.time.ZoneId
 
 data class AdoptionT(
     override var id: String = "",

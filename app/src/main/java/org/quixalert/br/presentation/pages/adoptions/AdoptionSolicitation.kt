@@ -47,6 +47,7 @@ import org.quixalert.br.domain.model.AdoptionStatus
 import org.quixalert.br.domain.model.AdoptionT
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -114,14 +115,14 @@ fun AdoptionSolicitationScreen(
                 ) {
                     InfoColumn(
                         title = "Data da Solicitação",
-                        value = adoption.visitDate?.toString() ?: "N/A"
+                        value = adoption.visitDate?.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) ?: "N/A"
                     )
                     val daysOpen = adoption.visitDate?.let { date ->
                         val diff = ChronoUnit.DAYS.between(date, LocalDate.now())
                         "$diff dias"
                     } ?: "N/A"
                     InfoColumn(title = "Dias em aberto", value = daysOpen)
-                    val deadline = adoption.visitDate?.plusDays(30)?.toString() ?: "N/A"
+                    val deadline = adoption.visitDate?.plusDays(30)?.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) ?: "N/A"
                     InfoColumn(title = "Prazo de Finalização", value = deadline)
                 }
 

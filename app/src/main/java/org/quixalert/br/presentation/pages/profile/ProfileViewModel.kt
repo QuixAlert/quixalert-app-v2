@@ -14,6 +14,7 @@ import org.quixalert.br.services.AnimalService
 import org.quixalert.br.services.DocumentService
 import org.quixalert.br.services.ReportService
 import javax.inject.Inject
+import java.time.format.DateTimeFormatter
 
 data class ProfileUiState(
     val adoptionsByUser: List<AdoptionT> = emptyList(),

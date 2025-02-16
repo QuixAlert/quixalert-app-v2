@@ -63,9 +63,11 @@ import org.quixalert.br.presentation.pages.animal.AnimalDetailsViewModel
 import org.quixalert.br.presentation.pages.home.IconTint
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import androidx.compose.material3.SelectableDates
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -347,12 +349,21 @@ fun AdoptionFormScreen(
                                 TextButton(onClick = {
                                     val epochMillis = datePickerState.selectedDateMillis
                                     if (epochMillis != null) {
-                                        val selectedEpoch = Instant.ofEpochMilli(epochMillis)
-                                            .atZone(ZoneId.systemDefault())
-                                            .toLocalDate()
-                                        selectedDate = selectedEpoch
+                                        // Convert to LocalDate and add one day to compensate
+                                        val instant = Instant.ofEpochMilli(epochMillis)
+                                        val zonedDateTime = instant.atZone(ZoneId.systemDefault())
+                                        val selectedEpoch = LocalDate.of(
+                                            zonedDateTime.year,
+                                            zonedDateTime.monthValue,
+                                            zonedDateTime.dayOfMonth
+                                        ).plusDays(1)  // Add one day to fix the offset
+                                        
+                                        // Only allow future dates
+                                        if (!selectedEpoch.isBefore(LocalDate.now())) {
+                                            selectedDate = selectedEpoch
+                                            showDatePicker = false
+                                        }
                                     }
-                                    showDatePicker = false
                                 }) {
                                     Text("OK")
                                 }
