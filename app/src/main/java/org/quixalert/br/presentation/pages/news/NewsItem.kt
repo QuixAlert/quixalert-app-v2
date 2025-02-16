@@ -31,7 +31,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.quixalert.br.domain.model.News
-
 @Composable
 fun NewsItem(news: News, isHorizontal: Boolean = true) {
     val context = androidx.compose.ui.platform.LocalContext.current
@@ -57,7 +56,7 @@ fun NewsItem(news: News, isHorizontal: Boolean = true) {
                     .height(300.dp)
             ) {
                 AsyncImage(
-                    model = news.imageUrl,  // Usando a URL aqui
+                    model = news.imageUrl,
                     contentDescription = news.title,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
@@ -67,7 +66,14 @@ fun NewsItem(news: News, isHorizontal: Boolean = true) {
                         .align(Alignment.TopEnd)
                         .padding(8.dp)
                         .size(32.dp)
-                        .background(Color.White.copy(alpha = 0.8f), CircleShape),
+                        .background(Color.White.copy(alpha = 0.8f), CircleShape)
+                        .clickable {
+                            val shareIntent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                                type = "text/plain"
+                                putExtra(android.content.Intent.EXTRA_TEXT, news.newsUrl)
+                            }
+                            context.startActivity(android.content.Intent.createChooser(shareIntent, "Compartilhar via"))
+                        },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -86,7 +92,7 @@ fun NewsItem(news: News, isHorizontal: Boolean = true) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 AsyncImage(
-                    model = news.iconUrl,  // Usando a URL aqui
+                    model = news.iconUrl,
                     contentDescription = "Icon",
                     modifier = Modifier
                         .size(30.dp)

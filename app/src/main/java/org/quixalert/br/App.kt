@@ -52,7 +52,8 @@ fun App() {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    var currentScreen by remember { mutableStateOf("profile") }
+    var currentScreen by remember { mutableStateOf("login") }
+    var lastScreen by remember { mutableStateOf("home") }
     var currentUser by remember { mutableStateOf<User?>(null) }
     var registrationData by remember { mutableStateOf<UserRegistrationData?>(null) }
     var isFloatingMenuVisible by remember { mutableStateOf(false) }
@@ -126,6 +127,7 @@ fun App() {
                 ) {
                     RenderScreen(
                         currentScreen = currentScreen,
+                        lastScreen = lastScreen,
                         currentUser = currentUser,
                         registrationData = registrationData,
                         firebaseAuthService = firebaseAuthService,
@@ -133,6 +135,7 @@ fun App() {
                         selectedAdoption = selectedAdoption,
                         isDarkTheme = isDarkTheme,
                         onScreenChange = { currentScreen = it },
+                        onLastScreenChange = { lastScreen = it },
                         onUserUpdate = { currentUser = it },
                         onRegistrationDataUpdate = { registrationData = it },
                         onAnimalSelected = { selectedAnimal = it },
