@@ -357,12 +357,12 @@ fun AdoptionFormScreen(
                                         }
                                     }
                                 }) {
-                                    Text("OK")
+                                    Text("OK", color = Color(0xFF269996))
                                 }
                             },
                             dismissButton = {
                                 TextButton(onClick = { showDatePicker = false }) {
-                                    Text("Cancelar")
+                                    Text("Cancelar", color = Color(0xFF269996))
                                 }
                             }
                         ) {
