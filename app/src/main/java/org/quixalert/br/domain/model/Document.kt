@@ -6,5 +6,6 @@ data class Document(
     val descriptions: String = "",
     val address: String = "",
     val reason: String = "",
-    val extraDetails: String = ""
+    val extraDetails: String = "",
+    val userId: String = ""
 ): BaseModel(id)

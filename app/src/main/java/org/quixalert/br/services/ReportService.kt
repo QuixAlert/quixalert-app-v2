@@ -28,4 +28,7 @@ class ReportService @Inject constructor(
     override fun getById(entityId: String): Deferred<Report?> {
         return reportRepository.getById(entityId)
     }
+    fun getReportByUserId(userId: String): Deferred<List<Report>> {
+        return reportRepository.getReportByUserId(userId)
+    }
 }

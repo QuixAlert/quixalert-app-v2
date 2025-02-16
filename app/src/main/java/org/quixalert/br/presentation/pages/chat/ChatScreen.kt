@@ -51,6 +51,7 @@ import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
 import org.quixalert.br.domain.model.AdoptionT
 import org.quixalert.br.domain.model.Message
+import org.quixalert.br.domain.model.User
 import org.quixalert.br.utils.formatMessageTime
 import java.util.UUID
 
@@ -63,7 +64,8 @@ val MOCK_USER_ID = "1"
 @Composable
 fun ChatScreen(
     adoption: AdoptionT,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    user: User
 ) {
     val chatViewModel: ChatViewModel = hiltViewModel()
     val uiState by chatViewModel.uiState.collectAsState()
@@ -81,7 +83,7 @@ fun ChatScreen(
             id = UUID.randomUUID().toString(),
             description = text,
             timestamp = System.currentTimeMillis(),
-            userId = MOCK_USER_ID,
+            userId = user.id,
             adoptionId = adoption.id,
             isFromAttendant = false
         )
@@ -131,7 +133,7 @@ fun ChatScreen(
                             visible = true,
                             enter = fadeIn() + slideInVertically(initialOffsetY = { it * 2 })
                         ) {
-                            ChatMessage(message = message, isUserMessage = isUserMessage)
+                            ChatMessage(message = message, isUserMessage = isUserMessage, user.profileImage)
                         }
                     }
                 }
@@ -168,7 +170,7 @@ fun ChatScreen(
 }
 
 @Composable
-private fun ChatMessage(message: Message, isUserMessage: Boolean) {
+private fun ChatMessage(message: Message, isUserMessage: Boolean, userImage: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -205,7 +207,7 @@ private fun ChatMessage(message: Message, isUserMessage: Boolean) {
         if (isUserMessage) {
             Spacer(modifier = Modifier.size(4.dp))
             AsyncImage(
-                model = MOCK_USER_IMAGE_URL,
+                model = userImage,
                 contentDescription = "Usuário",
                 modifier = Modifier
                     .size(32.dp)

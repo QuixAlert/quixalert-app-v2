@@ -28,4 +28,7 @@ class DocumentService @Inject constructor(
     override fun getById(entityId: String): Deferred<Document?> {
         return documentRepository.getById(entityId)
     }
+    fun getDocumentByUserId(userId: String): Deferred<List<Document>> {
+        return documentRepository.getDocumentByUserId(userId)
+    }
 }

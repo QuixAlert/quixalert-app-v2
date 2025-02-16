@@ -15,15 +15,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -53,16 +55,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import org.quixalert.br.R
 import org.quixalert.br.domain.model.ReportType
+import org.quixalert.br.domain.model.User
 import org.quixalert.br.presentation.pages.profile.IconTint
 
 @Composable
 fun ReportsSolicitationScreen(
     onBackClick: () -> Unit = {},
-    onFormClick: () -> Unit = {}
+    onFormClick: () -> Unit = {},
+    user: User
 ) {
     val viewModel: ReportsSolicitationViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
-
     var showSuccessDialog by remember { mutableStateOf(false) }
 
     if (uiState.submissionSuccess && !showSuccessDialog) {
@@ -72,7 +75,7 @@ fun ReportsSolicitationScreen(
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         TopBar(onBackClick = onBackClick)
         Text(
-            text = "Fomulário de denúncia",
+            text = "Formulário de denúncia",
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
@@ -80,23 +83,23 @@ fun ReportsSolicitationScreen(
             modifier = Modifier.padding(top = 8.dp, start = 16.dp),
             color = MaterialTheme.colorScheme.onBackground,
         )
-
-        ReportsSolicitationForm(viewModel)
-
+        ReportsSolicitationForm(viewModel, userId = user.id)
         if (showSuccessDialog) {
             AlertDialog(
                 onDismissRequest = { showSuccessDialog = false },
                 title = { Text("Denúncia enviada com sucesso!") },
                 text = { Text("Sua denúncia foi enviada com sucesso. Clique em OK para continuar.") },
                 confirmButton = {
-                    TextButton(onClick = {
-                        viewModel.resetSubmissionState()
-                        onFormClick()
-                        showSuccessDialog = false
-                    },
+                    TextButton(
+                        onClick = {
+                            viewModel.resetSubmissionState()
+                            onFormClick()
+                            showSuccessDialog = false
+                        },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(0xFF269996)
-                        )) {
+                        )
+                    ) {
                         Text("OK")
                     }
                 }
@@ -106,12 +109,15 @@ fun ReportsSolicitationScreen(
 }
 
 @Composable
-fun ReportsSolicitationForm(viewModel: ReportsSolicitationViewModel) {
+fun ReportsSolicitationForm(viewModel: ReportsSolicitationViewModel, userId: String) {
     val uiState by viewModel.uiState.collectAsState()
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
-        onResult = { uri -> imageUri = uri }
+        onResult = { uri ->
+            imageUri = uri
+            viewModel.updateImageUri(uri)
+        }
     )
 
     val textFieldColors = TextFieldDefaults.colors(
@@ -138,9 +144,12 @@ fun ReportsSolicitationForm(viewModel: ReportsSolicitationViewModel) {
                     onClick = {
                         val enumValue = label.uppercase().replace(" ", "_")
                         viewModel.updateReportType(ReportType.valueOf(enumValue))
-                              },
+                    },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (uiState.selectedType.name == label.uppercase().replace(" ", "_")) Color(0xFF269996) else Color(0xFFB7B7B8)
+                        containerColor = if (uiState.selectedType.name == label.uppercase().replace(" ", "_"))
+                            Color(0xFF269996)
+                        else
+                            Color(0xFFB7B7B8)
                     ),
                     contentPadding = PaddingValues(0.dp),
                     modifier = Modifier
@@ -156,12 +165,26 @@ fun ReportsSolicitationForm(viewModel: ReportsSolicitationViewModel) {
                 }
             }
         }
-
         ImageSelection(
             imageUri = imageUri,
             imagePickerLauncher = imagePickerLauncher
         )
-
+        // New Title Field
+        Text(
+            text = "Título da Denúncia",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        TextField(
+            value = uiState.title,
+            onValueChange = { viewModel.updateTitle(it) },
+            placeholder = { Text("Insira o título da denúncia") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(8.dp)),
+            colors = textFieldColors
+        )
         Text(
             text = "Descrição",
             fontSize = 16.sp,
@@ -177,7 +200,6 @@ fun ReportsSolicitationForm(viewModel: ReportsSolicitationViewModel) {
                 .fillMaxWidth()
                 .height(150.dp)
         )
-
         Text(
             text = "Endereço",
             fontSize = 16.sp,
@@ -193,7 +215,6 @@ fun ReportsSolicitationForm(viewModel: ReportsSolicitationViewModel) {
                 .clip(RoundedCornerShape(8.dp)),
             colors = textFieldColors
         )
-
         Text(
             text = "Motivo da solicitação",
             fontSize = 16.sp,
@@ -209,7 +230,6 @@ fun ReportsSolicitationForm(viewModel: ReportsSolicitationViewModel) {
                 .clip(RoundedCornerShape(8.dp)),
             colors = textFieldColors
         )
-
         Text(
             text = "Detalhes Extras (opcional)",
             fontSize = 16.sp,
@@ -225,20 +245,28 @@ fun ReportsSolicitationForm(viewModel: ReportsSolicitationViewModel) {
                 .clip(RoundedCornerShape(8.dp)),
             colors = textFieldColors
         )
-
+        val context = LocalContext.current
         Button(
-            onClick = { viewModel.submitReport() },
+            onClick = { viewModel.submitReport(userId, context) },
+            enabled = !uiState.isSubmitting,
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF269996)
+                containerColor = if (uiState.isSubmitting) Color.Gray else Color(0xFF269996)
             ),
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
+            modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
-            Text(
-                text = "Enviar Denúncia",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
-            )
+            if (uiState.isSubmitting) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    color = Color.White,
+                    strokeWidth = 2.dp
+                )
+            } else {
+                Text(
+                    text = "Enviar Denúncia",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
+            }
         }
     }
 }
@@ -254,9 +282,7 @@ fun ImageSelection(
             .height(200.dp)
             .clip(RoundedCornerShape(8.dp))
             .padding(8.dp)
-            .clickable {
-                imagePickerLauncher.launch("image/*")
-            }
+            .clickable { imagePickerLauncher.launch("image/*") }
     ) {
         if (imageUri != null) {
             Image(
@@ -288,7 +314,7 @@ fun TopBar(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(onClick = onBackClick) {

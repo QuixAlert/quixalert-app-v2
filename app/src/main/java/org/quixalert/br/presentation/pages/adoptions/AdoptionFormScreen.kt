@@ -58,27 +58,30 @@ import org.quixalert.br.R
 import org.quixalert.br.domain.model.AdoptionStatus
 import org.quixalert.br.domain.model.AdoptionT
 import org.quixalert.br.domain.model.Animal
-import org.quixalert.br.domain.model.User
 import org.quixalert.br.presentation.pages.animal.AnimalDetailsViewModel
 import org.quixalert.br.presentation.pages.home.IconTint
 import java.time.Instant
+import org.quixalert.br.services.FirebaseAuthService
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import androidx.compose.material3.SelectableDates
+import org.quixalert.br.domain.model.User
 import java.util.Calendar
 import org.quixalert.br.utils.DateUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdoptionFormScreen(
-    user: User,
     onBackClick: (Animal?) -> Unit,
     onFormClick: () -> Unit,
     adoptionViewModel: AdoptionViewModel = hiltViewModel(),
-    animalDetailsViewModel: AnimalDetailsViewModel = hiltViewModel()
-) {
+    animalDetailsViewModel: AnimalDetailsViewModel = hiltViewModel(),
+    firebaseAuthService: FirebaseAuthService,
+    ) {
+    val user = firebaseAuthService.getCurrentUser()
+    val userId = user?.uid ?: ""
     var address by remember { mutableStateOf("") }
     var livingDescription by remember { mutableStateOf("") }
     var otherAnimals by remember { mutableStateOf("") }
@@ -388,7 +391,7 @@ fun AdoptionFormScreen(
                                 householdDescription = householdDescription,
                                 adoptionReason = adoptionReason,
                                 visitDate = selectedDate,
-                                userId = user.id
+                                userId = userId
                             )
                         }
                         if (adoption != null) {

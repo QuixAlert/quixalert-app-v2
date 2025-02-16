@@ -46,6 +46,7 @@ import coil.compose.AsyncImage
 import org.quixalert.br.domain.model.AdoptionStatus
 import org.quixalert.br.domain.model.AdoptionT
 import org.quixalert.br.utils.DateUtils
+import org.quixalert.br.domain.model.User
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import java.time.format.DateTimeFormatter
@@ -55,7 +56,8 @@ import java.time.format.DateTimeFormatter
 fun AdoptionSolicitationScreen(
     adoption: AdoptionT,
     onBackClick: () -> Unit,
-    onOpenChatClick: () -> Unit
+    onOpenChatClick: () -> Unit,
+    user: User
 ) {
     var showInfoDialog by remember { mutableStateOf(false) }
     val clipboardManager = LocalClipboardManager.current
@@ -119,11 +121,11 @@ fun AdoptionSolicitationScreen(
                         value = DateUtils.formatDate(adoption.visitDate)
                     )
                     InfoColumn(
-                        title = "Dias em aberto", 
+                        title = "Dias em aberto",
                         value = DateUtils.calculateDaysOpen(adoption.visitDate)
                     )
                     InfoColumn(
-                        title = "Prazo de Finalização", 
+                        title = "Prazo de Finalização",
                         value = DateUtils.calculateDeadline(adoption.visitDate)
                     )
                 }
@@ -148,13 +150,13 @@ fun AdoptionSolicitationScreen(
                             horizontalArrangement = Arrangement.spacedBy(14.dp)
                         ) {
                             AsyncImage(
-                                model = MOCK_USER_IMAGE_URL,
+                                model = user.profileImage,
                                 contentDescription = "Imagem do solicitante",
                                 modifier = Modifier
                                     .size(40.dp)
                                     .clip(CircleShape)
                             )
-                            Text(text = "Fulaninho de tal", color = Color.Black)
+                            Text(text = user.name, color = Color.Black)
                         }
                     }
                     Column(horizontalAlignment = Alignment.End) {

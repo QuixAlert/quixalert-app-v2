@@ -51,13 +51,14 @@ class DocumentsSolicitationViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(address = address)
     }
 
-    fun submitDocument() {
+    fun submitDocument(userId: String) {
         val document = Document(
             documentType = uiState.value.selectedTypeDocument,
             descriptions = uiState.value.description,
             address = uiState.value.address,
             reason = uiState.value.motivation,
-            extraDetails = uiState.value.details
+            extraDetails = uiState.value.details,
+            userId = userId
         )
 
         if (document.descriptions.isEmpty() || document.address.isEmpty() || document.reason.isEmpty()) {
