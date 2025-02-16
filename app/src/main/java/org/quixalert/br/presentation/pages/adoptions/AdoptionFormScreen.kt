@@ -68,6 +68,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import androidx.compose.material3.SelectableDates
 import java.util.Calendar
+import org.quixalert.br.utils.DateUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -349,18 +350,9 @@ fun AdoptionFormScreen(
                                 TextButton(onClick = {
                                     val epochMillis = datePickerState.selectedDateMillis
                                     if (epochMillis != null) {
-                                        // Convert to LocalDate and add one day to compensate
-                                        val instant = Instant.ofEpochMilli(epochMillis)
-                                        val zonedDateTime = instant.atZone(ZoneId.systemDefault())
-                                        val selectedEpoch = LocalDate.of(
-                                            zonedDateTime.year,
-                                            zonedDateTime.monthValue,
-                                            zonedDateTime.dayOfMonth
-                                        ).plusDays(1)  // Add one day to fix the offset
-                                        
-                                        // Only allow future dates
-                                        if (!selectedEpoch.isBefore(LocalDate.now())) {
-                                            selectedDate = selectedEpoch
+                                        val selectedLocalDate = DateUtils.fromEpochMillis(epochMillis)
+                                        if (DateUtils.isValidFutureDate(selectedLocalDate)) {
+                                            selectedDate = selectedLocalDate
                                             showDatePicker = false
                                         }
                                     }

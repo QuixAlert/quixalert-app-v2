@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.quixalert.br.domain.model.AdoptionStatus
 import org.quixalert.br.domain.model.AdoptionT
+import org.quixalert.br.utils.DateUtils
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import java.time.format.DateTimeFormatter
@@ -115,15 +116,16 @@ fun AdoptionSolicitationScreen(
                 ) {
                     InfoColumn(
                         title = "Data da Solicitação",
-                        value = adoption.visitDate?.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) ?: "N/A"
+                        value = DateUtils.formatDate(adoption.visitDate)
                     )
-                    val daysOpen = adoption.visitDate?.let { date ->
-                        val diff = ChronoUnit.DAYS.between(date, LocalDate.now())
-                        "$diff dias"
-                    } ?: "N/A"
-                    InfoColumn(title = "Dias em aberto", value = daysOpen)
-                    val deadline = adoption.visitDate?.plusDays(30)?.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) ?: "N/A"
-                    InfoColumn(title = "Prazo de Finalização", value = deadline)
+                    InfoColumn(
+                        title = "Dias em aberto", 
+                        value = DateUtils.calculateDaysOpen(adoption.visitDate)
+                    )
+                    InfoColumn(
+                        title = "Prazo de Finalização", 
+                        value = DateUtils.calculateDeadline(adoption.visitDate)
+                    )
                 }
 
                 // Solicitante and status row
