@@ -11,13 +11,16 @@ import kotlinx.coroutines.tasks.await
 import org.quixalert.br.MockData.biddings
 import org.quixalert.br.domain.model.AdoptionT
 import org.quixalert.br.domain.model.Animal
+import org.quixalert.br.domain.model.Document
 import org.quixalert.br.domain.model.User
 import org.quixalert.br.domain.model.UserRegistrationData
 import org.quixalert.br.presentation.pages.adoptions.AdoptionFormScreen
 import org.quixalert.br.presentation.pages.adoptions.AdoptionScreen
 import org.quixalert.br.presentation.pages.adoptions.AdoptionSolicitationScreen
 import org.quixalert.br.presentation.pages.adoptions.ChatScreen
+import org.quixalert.br.presentation.pages.adoptions.ChatScreenDocumentation
 import org.quixalert.br.presentation.pages.animal.AnimalDetailsScreen
+import org.quixalert.br.presentation.pages.documentsSolicitationScreen.DocumentationScreen
 import org.quixalert.br.presentation.pages.documentsSolicitationScreen.DocumentsSolicitationScreen
 import org.quixalert.br.presentation.pages.donation.DonationScreen
 import org.quixalert.br.presentation.pages.emergencyNumbers.EmergencyNumbersScreen
@@ -44,6 +47,7 @@ fun RenderScreen(
     firebaseAuthService: FirebaseAuthService,
     selectedAnimal: Animal?,
     selectedAdoption: AdoptionT?,
+    selectedDocument: Document?,
     selectedReportId: String?,
     isDarkTheme: MutableState<Boolean>,
     onScreenChange: (String) -> Unit,
@@ -51,6 +55,7 @@ fun RenderScreen(
     onRegistrationDataUpdate: (UserRegistrationData?) -> Unit,
     onAnimalSelected: (Animal?) -> Unit,
     onAdoptionSelected: (AdoptionT?) -> Unit,
+    onDocumentSelected: (Document?) -> Unit,
     onReportSelected: (String?) -> Unit,
     loginViewModel: LoginViewModel,
     profileViewModel: ProfileViewModel,
@@ -156,6 +161,10 @@ fun RenderScreen(
                     onAdoptionClick = { adoption ->
                         onAdoptionSelected(adoption)
                         onScreenChange("solicitation")
+                    },
+                    onDocumentClick = { document ->
+                        onDocumentSelected(document)
+                        onScreenChange("documentation")
                     },
                     user = user,
                     firebaseAuthService = firebaseAuthService,
@@ -264,11 +273,32 @@ fun RenderScreen(
             }
         }
 
+        "documentation" -> selectedDocument?.let {
+            if (currentUser != null) {
+                DocumentationScreen(
+                    document = it,
+                    onBackClick = { onScreenChange("profile") },
+                    onOpenChatClick = { onScreenChange("chatDocumentation") },
+                    user = currentUser,
+                )
+            }
+        }
+
         "chat" -> selectedAdoption?.let {
             if(currentUser != null){
                 ChatScreen(
                     adoption = it,
                     onBackClick = { onScreenChange("solicitation") },
+                    user = currentUser
+                )
+            }
+        }
+
+        "chatDocumentation" -> selectedDocument?.let {
+            if(currentUser != null){
+                ChatScreenDocumentation(
+                    document = it,
+                    onBackClick = { onScreenChange("documentation") },
                     user = currentUser
                 )
             }

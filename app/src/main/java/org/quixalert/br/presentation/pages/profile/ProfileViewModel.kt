@@ -82,7 +82,17 @@ class ProfileViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(isLoadingDocuments = true, errorDocuments = null)
         viewModelScope.launch {
             try {
-                val documents = documentService.getDocumentByUserId(userId).await()
+                val documents = documentService.getDocumentByUserId(userId).await().map { document ->
+                    Document(
+                        id = document.id,
+                        documentType = document.documentType,
+                        descriptions = document.descriptions,
+                        address = document.address,
+                        reason = document.reason,
+                        extraDetails = document.extraDetails,
+                        userId = document.userId
+                    )
+                }
                 _uiState.value = _uiState.value.copy(
                     documentsSolicitationByUser = documents,
                     isLoadingDocuments = false
