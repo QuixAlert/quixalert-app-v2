@@ -12,7 +12,8 @@ data class Report(
     val motivation: String = "",
     val details: String = "",
     val userId: String = "",
-    val ratings: List<Rating> = emptyList()
+    val ratings: List<Rating> = emptyList(),
+    val status: ReportStatus = ReportStatus.EM_ANALISE
 ): BaseModel(id)
 
 

@@ -13,6 +13,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.tasks.await
 import org.quixalert.br.domain.model.Report
 import org.quixalert.br.domain.model.Rating
+import org.quixalert.br.domain.model.ReportStatus
 import javax.inject.Inject
 
 class ReportRepository @Inject constructor() : FirebaseRepository<Report, String>(
@@ -62,6 +63,19 @@ class ReportRepository @Inject constructor() : FirebaseRepository<Report, String
                 Firebase.firestore.collection("report")
                     .document(reportId)
                     .update("ratings", updatedRatings)
+                    .await()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                throw e
+            }
+        }
+
+    fun updateStatus(reportId: String, newStatus: ReportStatus): Deferred<Unit> =
+        CoroutineScope(Dispatchers.IO + SupervisorJob()).async {
+            try {
+                Firebase.firestore.collection("report")
+                    .document(reportId)
+                    .update("status", newStatus)
                     .await()
             } catch (e: Exception) {
                 e.printStackTrace()

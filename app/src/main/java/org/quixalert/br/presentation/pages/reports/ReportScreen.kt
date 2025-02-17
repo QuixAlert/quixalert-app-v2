@@ -348,11 +348,11 @@ private fun ReportContent(
                                 modifier = Modifier.padding(bottom = 4.dp)
                             )
                             Surface(
-                                color = Color(0xFF269996),
+                                color = Color(report.status.color),
                                 shape = RoundedCornerShape(16.dp)
                             ) {
                                 Text(
-                                    text = report.status,
+                                    text = report.status.label,
                                     color = Color.White,
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),

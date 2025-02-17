@@ -2,6 +2,7 @@ package org.quixalert.br.services
 
 import kotlinx.coroutines.Deferred
 import org.quixalert.br.domain.model.Report
+import org.quixalert.br.domain.model.ReportStatus
 import org.quixalert.br.domain.repository.ReportRepository
 import javax.inject.Inject
 
@@ -34,5 +35,9 @@ class ReportService @Inject constructor(
 
     fun submitRating(reportId: String, rating: Int, comment: String): Deferred<Unit> {
         return reportRepository.submitRating(reportId, rating, comment)
+    }
+
+    fun updateStatus(reportId: String, newStatus: ReportStatus): Deferred<Unit> {
+        return reportRepository.updateStatus(reportId, newStatus)
     }
 }
