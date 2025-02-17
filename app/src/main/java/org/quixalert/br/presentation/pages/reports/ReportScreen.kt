@@ -486,7 +486,7 @@ private fun ReportContent(
                             enabled = !isSubmitting,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(bottom = 64.dp),
+                                .padding(bottom = 16.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color(0xFF269996),
                                 disabledContainerColor = Color(0xFF269996).copy(alpha = 0.6f)
