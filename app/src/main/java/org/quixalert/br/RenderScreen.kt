@@ -18,6 +18,7 @@ import org.quixalert.br.presentation.pages.adoptions.AdoptionFormScreen
 import org.quixalert.br.presentation.pages.adoptions.AdoptionScreen
 import org.quixalert.br.presentation.pages.adoptions.AdoptionSolicitationScreen
 import org.quixalert.br.presentation.pages.adoptions.ChatScreen
+import org.quixalert.br.presentation.pages.adoptions.ChatScreenDocumentation
 import org.quixalert.br.presentation.pages.animal.AnimalDetailsScreen
 import org.quixalert.br.presentation.pages.documentsSolicitationScreen.DocumentationScreen
 import org.quixalert.br.presentation.pages.documentsSolicitationScreen.DocumentsSolicitationScreen
@@ -276,11 +277,11 @@ fun RenderScreen(
             }
         }
 
-        "chatDocumentation" -> selectedAdoption?.let {
+        "chatDocumentation" -> selectedDocument?.let {
             if(currentUser != null){
-                ChatScreen(
-                    adoption = it,
-                    onBackClick = { onScreenChange("solicitation") },
+                ChatScreenDocumentation(
+                    document = it,
+                    onBackClick = { onScreenChange("documentation") },
                     user = currentUser
                 )
             }

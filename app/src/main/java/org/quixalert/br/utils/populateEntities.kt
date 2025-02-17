@@ -6,6 +6,7 @@ import org.quixalert.br.domain.model.AnimalGender
 import org.quixalert.br.domain.model.AnimalSize
 import org.quixalert.br.domain.model.AnimalType
 import org.quixalert.br.domain.model.Message
+import org.quixalert.br.domain.model.MessageDocumentation
 import org.quixalert.br.domain.model.News
 import org.quixalert.br.domain.model.NewsType
 import org.quixalert.br.domain.model.Notification
@@ -314,6 +315,55 @@ fun populateMessagesByAdoptionId(adoptionId: String): List<Message> {
             timestamp = System.currentTimeMillis() - 3_200_000,
             userId = "attendant",
             adoptionId = adoptionId,
+            isFromAttendant = true
+        )
+    )
+
+    return messages
+}
+
+fun populateMessagesByDocumentId(documentId: String): List<MessageDocumentation> {
+    val messages = listOf(
+        MessageDocumentation(
+            description = "Olá, gostaria de fazer um alvara",
+            timestamp = System.currentTimeMillis() - 3_600_000,
+            userId = "SujSxEEQntahImBMCEw75VVY2We2",
+            documentId = documentId,
+            isFromAttendant = false
+        ),
+        MessageDocumentation(
+            description = "Olá! Aqui é a atendente. Vamos iniciar o processo de documentaçao.",
+            timestamp = System.currentTimeMillis() - 3_500_000,
+            userId = "attendant",
+            documentId = documentId,
+            isFromAttendant = true
+        ),
+        MessageDocumentation(
+            description = "Estarei enviando um link do drive com a documentaçao.",
+            timestamp = System.currentTimeMillis() - 3_400_000,
+            userId = "attendant",
+            documentId = documentId,
+            isFromAttendant = true
+        ),
+        MessageDocumentation(
+            description = "https://drive.google.com/drive/folders/1977rKMVPvNDf24UL2jopwr9ImbHgKw1T?usp=sharing",
+            timestamp = System.currentTimeMillis() - 3_400_000,
+            userId = "attendant",
+            documentId = documentId,
+            isFromAttendant = true
+        ),
+        MessageDocumentation(
+            description = "Tudo bem, estarei modificando o modelo de alvara",
+            timestamp = System.currentTimeMillis() - 3_300_000,
+            userId = "SujSxEEQntahImBMCEw75VVY2We2",
+            documentId = documentId,
+            isFromAttendant = false
+        ),
+        MessageDocumentation(
+            description = "Perfeito! Analisarei e retorno em breve.",
+            timestamp = System.currentTimeMillis() - 3_200_000,
+            userId = "SujSxEEQntahImBMCEw75VVY2We2",
+            documentId = documentId,
             isFromAttendant = true
         )
     )
