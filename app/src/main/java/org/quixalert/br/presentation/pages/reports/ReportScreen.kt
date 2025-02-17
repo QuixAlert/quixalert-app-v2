@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Button
@@ -62,6 +63,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 
 @Composable
 fun ReportScreen(
@@ -180,6 +184,9 @@ private fun ReportContent(
     onBackClick: () -> Unit,
     onSubmitClick: () -> Unit
 ) {
+    // Adicionar estado para controlar a visualização da imagem
+    var selectedImageUrl by remember { mutableStateOf<String?>(null) }
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -392,7 +399,8 @@ private fun ReportContent(
                                 Surface(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .shadow(4.dp, RoundedCornerShape(16.dp)),
+                                        .shadow(4.dp, RoundedCornerShape(16.dp))
+                                        .clickable { selectedImageUrl = imageUrl },
                                     shape = RoundedCornerShape(16.dp),
                                     border = BorderStroke(1.dp, Color.White)
                                 ) {
@@ -488,6 +496,49 @@ private fun ReportContent(
                             )
                         }
                     }
+                }
+            }
+        }
+    }
+
+    // Adicionar diálogo de visualização da imagem
+    if (selectedImageUrl != null) {
+        Dialog(
+            onDismissRequest = { selectedImageUrl = null },
+            properties = DialogProperties(
+                dismissOnBackPress = true,
+                dismissOnClickOutside = true,
+                usePlatformDefaultWidth = false
+            )
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.9f))
+                    .clickable { selectedImageUrl = null }
+            ) {
+                AsyncImage(
+                    model = selectedImageUrl,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    contentScale = ContentScale.Fit
+                )
+                
+                // Botão de fechar
+                IconButton(
+                    onClick = { selectedImageUrl = null },
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(16.dp)
+                        .background(Color.Black.copy(alpha = 0.5f), CircleShape)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Fechar",
+                        tint = Color.White
+                    )
                 }
             }
         }
