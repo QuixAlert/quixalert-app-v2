@@ -77,12 +77,19 @@ fun ReportScreen(
         viewModel.loadReport(reportId)
     }
 
+    // Atualizar showSuccessDialog quando houver uma mensagem de sucesso
+    LaunchedEffect(uiState.successMessage) {
+        if (uiState.successMessage != null) {
+            showSuccessDialog = true
+        }
+    }
+
     // Mostrar diálogo de sucesso
-    if (uiState.successMessage != null && !showSuccessDialog) {
-        showSuccessDialog = true
+    if (showSuccessDialog && uiState.successMessage != null) {
         AlertDialog(
             onDismissRequest = { 
                 showSuccessDialog = false
+                viewModel.clearSuccessMessage()
                 onBackClick()
             },
             title = { Text("Sucesso!") },
@@ -91,6 +98,7 @@ fun ReportScreen(
                 TextButton(
                     onClick = { 
                         showSuccessDialog = false
+                        viewModel.clearSuccessMessage()
                         onBackClick()
                     },
                     colors = ButtonDefaults.buttonColors(
