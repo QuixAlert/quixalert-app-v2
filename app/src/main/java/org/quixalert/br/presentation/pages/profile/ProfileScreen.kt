@@ -62,9 +62,11 @@ import org.quixalert.br.domain.model.AdoptionStatus
 import org.quixalert.br.domain.model.AdoptionT
 import org.quixalert.br.domain.model.AnimalType
 import org.quixalert.br.domain.model.Bidding
+import org.quixalert.br.domain.model.Document
 import org.quixalert.br.domain.model.Report
 import org.quixalert.br.domain.model.User
 import org.quixalert.br.presentation.icons.QuestionIcon
+import org.quixalert.br.presentation.pages.documentsSolicitationScreen.MOCKED_DOCUMENTATION_PHOTO
 import org.quixalert.br.services.FirebaseAuthService
 
 val IconTint = Color(0xFF269996)
@@ -81,12 +83,15 @@ fun ProfileScreen(
     onBiddingClick: (Bidding) -> Unit,
     onReportClick: (Report) -> Unit,
     onAdoptionClick: (AdoptionT) -> Unit,
+    onDocumentClick: (Document) -> Unit,
     onFaqCLick: () -> Unit,
     onExitClick: () -> Unit,
     onProfileImageChange: (Uri) -> Unit,
     firebaseAuthService: FirebaseAuthService,
     profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
+    val MOCKED_DOCUMENTATION_PHOTO = "https://static.vecteezy.com/system/resources/thumbnails/047/201/337/small_2x/pile-of-documents-sat-on-desk-in-office-was-pile-of-documents-that-had-been-prepared-to-be-presented-at-meeting-as-summary-of-annual-operations-documents-prepared-for-storage-and-piled-on-the-desk-photo.jpg"
+
     val context = LocalContext.current
     val uiState by profileViewModel.uiState.collectAsState()
     val isMenuOpen = remember { mutableStateOf(false) }
@@ -241,7 +246,7 @@ fun ProfileScreen(
                             contentPadding = PaddingValues(vertical = 8.dp)
                         ) {
                             items(uiState.documentsSolicitationByUser) { document ->
-                                DocumentItem(document = document)
+                                DocumentItem(document = document, onDocumentClick = onDocumentClick)
                             }
                         }
                     }
@@ -315,28 +320,6 @@ fun ProfileScreen(
                         .align(Alignment.TopEnd)
                 )
             }
-        }
-    }
-}
-
-@Composable
-fun DocumentItem(document: org.quixalert.br.domain.model.Document) {
-    Box(
-        modifier = Modifier
-            .width(200.dp)
-            .shadow(4.dp, RoundedCornerShape(12.dp))
-            .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colorScheme.surface)
-            .clickable { /* Handle document click */ }
-    ) {
-        Column(modifier = Modifier.padding(12.dp)) {
-            Text(
-                text = document.reason,
-                style = MaterialTheme.typography.bodyMedium,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.onBackground
-            )
         }
     }
 }
@@ -456,6 +439,44 @@ private fun ProfileHeader(
                 modifier = Modifier.padding(bottom = 4.dp),
                 color = MaterialTheme.colorScheme.onBackground
             )
+        }
+    }
+}
+
+@Composable
+fun DocumentItem(document: org.quixalert.br.domain.model.Document, onDocumentClick: (Document) -> Unit) {
+    Box(
+        modifier = Modifier
+            .width(200.dp)
+            .shadow(4.dp, RoundedCornerShape(12.dp))
+            .clip(RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .clickable { onDocumentClick(document) }
+    ) {
+        Column {
+            AsyncImage(
+                model = MOCKED_DOCUMENTATION_PHOTO,
+                contentDescription = document.id,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp),
+                contentScale = ContentScale.Crop
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = document.reason,
+                    style = MaterialTheme.typography.bodyMedium,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
         }
     }
 }
