@@ -94,7 +94,8 @@ class ReportsSolicitationViewModel @Inject constructor(
             details = uiState.value.details,
             userId = userId,
             image = "", // Initially no image URL
-            status = ReportStatus.EM_ANALISE // Status inicial fixo
+            status = ReportStatus.EM_ANALISE,
+            answer = "" // Inicializa com resposta vazia
         )
 
         // If an image is selected, upload it first

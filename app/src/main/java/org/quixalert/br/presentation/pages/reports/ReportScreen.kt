@@ -377,8 +377,12 @@ private fun ReportContent(
                             border = BorderStroke(1.dp, Color.White)
                         ) {
                             Text(
-                                text = report.answer,
-                                modifier = Modifier.padding(16.dp)
+                                text = if (report.answer.isEmpty()) 
+                                    "Aguardando resposta da prefeitura..." 
+                                else 
+                                    report.answer,
+                                modifier = Modifier.padding(16.dp),
+                                color = if (report.answer.isEmpty()) Color.Gray else Color.Black
                             )
                         }
                     }

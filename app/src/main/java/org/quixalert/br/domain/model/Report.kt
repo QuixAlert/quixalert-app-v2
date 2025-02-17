@@ -13,7 +13,8 @@ data class Report(
     val details: String = "",
     val userId: String = "",
     val ratings: List<Rating> = emptyList(),
-    val status: ReportStatus = ReportStatus.EM_ANALISE
+    val status: ReportStatus = ReportStatus.EM_ANALISE,
+    val answer: String = ""
 ): BaseModel(id)
 
 
