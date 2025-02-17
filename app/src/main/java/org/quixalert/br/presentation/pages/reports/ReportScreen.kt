@@ -67,6 +67,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.clickable
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import org.quixalert.br.domain.model.ReportStatus
 
 @Composable
 fun ReportScreen(
@@ -422,87 +423,93 @@ private fun ReportContent(
                         }
                     }
 
-                    // Rating Section
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "Dê sua nota para a resolução:",
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
-                        Row(
-                            horizontalArrangement = Arrangement.Center,
-                            modifier = Modifier.fillMaxWidth()
+                    // Seção de Avaliação - Só mostrar se o status for CONCLUIDO ou REJEITADO
+                    if (report.status == ReportStatus.CONCLUIDO || report.status == ReportStatus.REJEITADO) {
+                        // Rating Section
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            repeat(5) { index ->
-                                IconButton(onClick = { onRatingChange(index + 1) }) {
-                                    Icon(
-                                        imageVector = if (index < rating) Icons.Default.Star else Icons.Outlined.Star,
-                                        contentDescription = null,
-                                        tint = if (index < rating) Color(0xFF269996) else Color.Gray
-                                    )
+                            Text(
+                                text = "Dê sua nota para a resolução:",
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            )
+                            Row(
+                                horizontalArrangement = Arrangement.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                repeat(5) { index ->
+                                    IconButton(onClick = { onRatingChange(index + 1) }) {
+                                        Icon(
+                                            imageVector = if (index < rating) Icons.Default.Star else Icons.Outlined.Star,
+                                            contentDescription = null,
+                                            tint = if (index < rating) Color(0xFF269996) else Color.Gray
+                                        )
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    // Comment Section
-                    Column(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "Comentários (opcional):",
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
-                        Surface(
+                        // Comment Section
+                        Column(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "Comentários (opcional):",
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            )
+                            Surface(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .shadow(4.dp, RoundedCornerShape(16.dp)),
+                                shape = RoundedCornerShape(16.dp),
+                                border = BorderStroke(1.dp, Color.White)
+                            ) {
+                                TextField(
+                                    value = comment,
+                                    onValueChange = { onCommentChange(it) },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    colors = TextFieldDefaults.colors(
+                                        focusedContainerColor = Color(0xFFE0E0E0),
+                                        unfocusedContainerColor = Color(0xFFE0E0E0),
+                                        disabledContainerColor = Color(0xFFE0E0E0),
+                                        focusedIndicatorColor = Color.Transparent,
+                                        unfocusedIndicatorColor = Color.Transparent
+                                    )
+                                )
+                            }
+                        }
+
+                        // Submit Button
+                        Button(
+                            onClick = onSubmitClick,
+                            enabled = !isSubmitting,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .shadow(4.dp, RoundedCornerShape(16.dp)),
-                            shape = RoundedCornerShape(16.dp),
-                            border = BorderStroke(1.dp, Color.White)
+                                .padding(bottom = 64.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFF269996),
+                                disabledContainerColor = Color(0xFF269996).copy(alpha = 0.6f)
+                            )
                         ) {
-                            TextField(
-                                value = comment,
-                                onValueChange = { onCommentChange(it) },
-                                modifier = Modifier.fillMaxWidth(),
-                                colors = TextFieldDefaults.colors(
-                                    focusedContainerColor = Color(0xFFE0E0E0),
-                                    unfocusedContainerColor = Color(0xFFE0E0E0),
-                                    disabledContainerColor = Color(0xFFE0E0E0),
-                                    focusedIndicatorColor = Color.Transparent,
-                                    unfocusedIndicatorColor = Color.Transparent
+                            if (isSubmitting) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(24.dp),
+                                    color = Color.White
                                 )
-                            )
-                        }
-                    }
-
-                    // Submit Button
-                    Button(
-                        onClick = onSubmitClick,
-                        enabled = !isSubmitting,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 64.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF269996),
-                            disabledContainerColor = Color(0xFF269996).copy(alpha = 0.6f)
-                        )
-                    ) {
-                        if (isSubmitting) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(24.dp),
-                                color = Color.White
-                            )
-                        } else {
-                            Text(
-                                text = "Enviar validação",
-                                modifier = Modifier.padding(vertical = 8.dp)
-                            )
+                            } else {
+                                Text(
+                                    text = "Enviar avaliação",
+                                    modifier = Modifier.padding(vertical = 8.dp)
+                                )
+                            }
                         }
                     }
                 }
             }
+
+            // Sempre mostrar as avaliações anteriores
+            RatingsList(report.ratings)
         }
     }
 
