@@ -34,6 +34,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import org.quixalert.br.domain.model.AdoptionT
 import org.quixalert.br.domain.model.Animal
+import org.quixalert.br.domain.model.Document
 import org.quixalert.br.domain.model.User
 import org.quixalert.br.domain.model.UserRegistrationData
 import org.quixalert.br.presentation.components.FloatingMenu
@@ -58,6 +59,7 @@ fun App() {
     var isFloatingMenuVisible by remember { mutableStateOf(false) }
     var selectedAnimal by remember { mutableStateOf<Animal?>(null) }
     var selectedAdoption by remember { mutableStateOf<AdoptionT?>(null) }
+    var selectedDocument by remember { mutableStateOf<Document?>(null) }
     val firebaseAuthService = FirebaseAuthService(FirebaseAuth.getInstance())
 
     val currentDarkTheme = false
@@ -131,12 +133,14 @@ fun App() {
                         firebaseAuthService = firebaseAuthService,
                         selectedAnimal = selectedAnimal,
                         selectedAdoption = selectedAdoption,
+                        selectedDocument = selectedDocument,
                         isDarkTheme = isDarkTheme,
                         onScreenChange = { currentScreen = it },
                         onUserUpdate = { currentUser = it },
                         onRegistrationDataUpdate = { registrationData = it },
                         onAnimalSelected = { selectedAnimal = it },
                         onAdoptionSelected = { selectedAdoption = it },
+                        onDocumentSelected = { selectedDocument = it },
                         loginViewModel = loginViewModel,
                         profileViewModel = profileViewModel,
                         scope = scope,
@@ -158,7 +162,7 @@ fun App() {
             },
             bottomBar = {
                 if (currentScreen in listOf(
-                        "home", "profile", "notification", "news", "animals", "faq", "solicitation"
+                        "home", "profile", "notification", "news", "animals", "faq", "solicitation", "documentation"
                     )
                 ) {
                     Column {
