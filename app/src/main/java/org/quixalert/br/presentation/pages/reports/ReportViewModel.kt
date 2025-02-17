@@ -41,7 +41,7 @@ class ReportViewModel @Inject constructor(
                         report = ReportDetail(
                             id = report.id,
                             title = report.title,
-                            category = report.type.name,
+                            category = report.type.label,
                             description = report.description,
                             responsible = "Prefeitura de Quixadá",
                             responsibleIcon = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3Ze3JUrTPRe5LIttbKF8ouyH-0wbUnrbjBQ&s",
