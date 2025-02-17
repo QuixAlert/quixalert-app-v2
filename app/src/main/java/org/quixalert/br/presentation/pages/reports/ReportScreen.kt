@@ -379,12 +379,16 @@ private fun ReportContent(
                             border = BorderStroke(1.dp, Color.White)
                         ) {
                             Text(
-                                text = if (report.answer.isEmpty()) 
-                                    "Aguardando resposta da prefeitura..." 
-                                else 
-                                    report.answer,
+                                text = when {
+                                    report.status == ReportStatus.CONCLUIDO || report.status == ReportStatus.REJEITADO -> 
+                                        if (report.answer.isEmpty()) "Sem resposta da prefeitura" else report.answer
+                                    else -> "Aguardando resposta da prefeitura..."
+                                },
                                 modifier = Modifier.padding(16.dp),
-                                color = if (report.answer.isEmpty()) Color.Gray else Color.Black
+                                color = if (report.status == ReportStatus.CONCLUIDO || report.status == ReportStatus.REJEITADO) 
+                                    Color.Black 
+                                else 
+                                    Color.Gray
                             )
                         }
                     }
