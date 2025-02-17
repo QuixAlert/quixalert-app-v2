@@ -399,7 +399,8 @@ private fun ReportContent(
                             columns = GridCells.Fixed(2),
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp),
-                            modifier = Modifier.height(250.dp)
+                            modifier = Modifier
+                                .height(120.dp)
                         ) {
                             items(report.gallery) { imageUrl ->
                                 Surface(
