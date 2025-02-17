@@ -174,8 +174,9 @@ fun DocumentationScreen(
             }
         }
         // Floating Action Button to open chat
+        //muda aqui
         FloatingActionButton(
-            onClick = {  },
+            onClick = onOpenChatClick,
             containerColor = Color(0xFF269996),
             modifier = Modifier
                 .padding(start = 16.dp, top = 16.dp, end = 12.dp, bottom = 95.dp)
