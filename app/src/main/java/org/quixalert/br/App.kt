@@ -58,6 +58,7 @@ fun App() {
     var isFloatingMenuVisible by remember { mutableStateOf(false) }
     var selectedAnimal by remember { mutableStateOf<Animal?>(null) }
     var selectedAdoption by remember { mutableStateOf<AdoptionT?>(null) }
+    var selectedReportId by remember { mutableStateOf<String?>(null) }
     val firebaseAuthService = FirebaseAuthService(FirebaseAuth.getInstance())
 
     val currentDarkTheme = false
@@ -131,12 +132,14 @@ fun App() {
                         firebaseAuthService = firebaseAuthService,
                         selectedAnimal = selectedAnimal,
                         selectedAdoption = selectedAdoption,
+                        selectedReportId = selectedReportId,
                         isDarkTheme = isDarkTheme,
                         onScreenChange = { currentScreen = it },
                         onUserUpdate = { currentUser = it },
                         onRegistrationDataUpdate = { registrationData = it },
                         onAnimalSelected = { selectedAnimal = it },
                         onAdoptionSelected = { selectedAdoption = it },
+                        onReportSelected = { selectedReportId = it },
                         loginViewModel = loginViewModel,
                         profileViewModel = profileViewModel,
                         scope = scope,

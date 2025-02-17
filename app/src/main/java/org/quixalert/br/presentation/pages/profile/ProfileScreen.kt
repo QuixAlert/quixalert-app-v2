@@ -201,7 +201,12 @@ fun ProfileScreen(
                             contentPadding = PaddingValues(vertical = 8.dp)
                         ) {
                             items(uiState.reportsSolicitationByUser) { report ->
-                                ReportItem(report = report, onReportClick = onReportClick)
+                                ReportItem(
+                                    report = report,
+                                    onReportClick = { clickedReport -> 
+                                        onReportClick(clickedReport)
+                                    }
+                                )
                             }
                         }
                     }

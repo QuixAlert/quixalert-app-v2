@@ -24,14 +24,17 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,6 +50,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.runtime.collectAsState
 
 data class ReportDetail(
     val id: String,
@@ -72,302 +77,350 @@ val mockReportDetail = ReportDetail(
     gallery = List(4) { "https://images.jota.info/wp-content/uploads/2023/04/pexels-rk-jajoria-1189673.jpg" }
 )
 
-@Preview
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReportScreen(report: ReportDetail = mockReportDetail) {
-    var rating by remember { mutableStateOf(0) }
-    var comment by remember { mutableStateOf("") }
+fun ReportScreen(
+    reportId: String,
+    viewModel: ReportViewModel = hiltViewModel(),
+    onBackClick: () -> Unit = {}
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(reportId) {
+        viewModel.loadReport(reportId)
+    }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            // Header Image with Back Button
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp)
-            ) {
-                AsyncImage(
-                    model = report.gallery.firstOrNull(),
-                    contentDescription = null,
+        when {
+            uiState.isLoading -> {
+                Box(
                     modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+            uiState.error != null -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = uiState.error!!,
+                        color = Color.Red,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+            }
+            uiState.report != null -> {
+                ReportContent(
+                    report = uiState.report!!,
+                    rating = uiState.rating,
+                    comment = uiState.comment,
+                    onRatingChange = viewModel::updateRating,
+                    onCommentChange = viewModel::updateComment,
+                    onBackClick = onBackClick
                 )
             }
+        }
+    }
+}
 
-            // Content Section
-            Column(
+@Composable
+private fun ReportContent(
+    report: ReportDetail,
+    rating: Int,
+    comment: String,
+    onRatingChange: (Int) -> Unit,
+    onCommentChange: (String) -> Unit,
+    onBackClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        // Header Image with Back Button
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(300.dp)
+        ) {
+            AsyncImage(
+                model = report.gallery.firstOrNull(),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+        }
+
+        // Content Section
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .offset(y = (-20).dp)
+                .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+                .background(Color.White)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            // Parte superior (fundo branco)
+            Surface(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f)
-                    .offset(y = (-20).dp)
-                    .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-                    .background(Color.White)
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                    .padding(horizontal = 20.dp, vertical = 16.dp),
+                color = Color.White
             ) {
-                // Parte superior (fundo branco)
-                Surface(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp, vertical = 16.dp),
-                    color = Color.White
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    // Title and Category Row
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        // Title and Category Row
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Column(modifier = Modifier.weight(2f)) {
-                                Text(
-                                    text = "Título",
-                                    fontSize = 14.sp,
-                                    color = Color.Gray
-                                )
-                                Text(
-                                    text = report.title,
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
-                            Column(
-                                modifier = Modifier.weight(1f),
-                                horizontalAlignment = Alignment.Start
-                            ) {
-                                Text(
-                                    text = "Categoria",
-                                    fontSize = 14.sp,
-                                    color = Color.Gray,
-                                    modifier = Modifier.padding(bottom = 4.dp)
-                                )
-                                Surface(
-                                    color = Color(0xFF269996),
-                                    shape = RoundedCornerShape(16.dp)
-                                ) {
-                                    Text(
-                                        text = report.category,
-                                        color = Color.White,
-                                        fontWeight = FontWeight.Bold,
-                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                                        fontSize = 14.sp
-                                    )
-                                }
-                            }
-                        }
-
-                        // Description Section
-                        Column {
+                        Column(modifier = Modifier.weight(2f)) {
                             Text(
-                                text = "Descrição:",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier.padding(bottom = 8.dp)
+                                text = "Título",
+                                fontSize = 14.sp,
+                                color = Color.Gray
                             )
                             Text(
-                                text = report.description,
-                                fontSize = 13.sp
+                                text = report.title,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                        Column(
+                            modifier = Modifier.weight(1f),
+                            horizontalAlignment = Alignment.Start
+                        ) {
+                            Text(
+                                text = "Categoria",
+                                fontSize = 14.sp,
+                                color = Color.Gray,
+                                modifier = Modifier.padding(bottom = 4.dp)
+                            )
+                            Surface(
+                                color = Color(0xFF269996),
+                                shape = RoundedCornerShape(16.dp)
+                            ) {
+                                Text(
+                                    text = report.category,
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                                    fontSize = 14.sp
+                                )
+                            }
+                        }
+                    }
+
+                    // Description Section
+                    Column {
+                        Text(
+                            text = "Descrição:",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        Text(
+                            text = report.description,
+                            fontSize = 13.sp
+                        )
+                    }
+                }
+            }
+
+            // Parte inferior (fundo cinza claro)
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = Color(0xFFF5F5F5)
+            ) {
+                Column(
+                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    // Responsible and Status Row
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column(modifier = Modifier.weight(2f)) {
+                            Text(
+                                text = "Responsável",
+                                fontSize = 14.sp,
+                                color = Color.Gray,
+                                modifier = Modifier.padding(bottom = 4.dp)
+                            )
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                AsyncImage(
+                                    model = report.responsibleIcon,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(24.dp)
+                                        .clip(CircleShape),
+                                    contentScale = ContentScale.Crop
+                                )
+                                Text(
+                                    text = report.responsible,
+                                    fontSize = 16.sp
+                                )
+                            }
+                        }
+                        Column(
+                            modifier = Modifier.weight(1f),
+                            horizontalAlignment = Alignment.Start
+                        ) {
+                            Text(
+                                text = "Status",
+                                fontSize = 14.sp,
+                                color = Color.Gray,
+                                modifier = Modifier.padding(bottom = 4.dp)
+                            )
+                            Surface(
+                                color = Color(0xFF269996),
+                                shape = RoundedCornerShape(16.dp)
+                            ) {
+                                Text(
+                                    text = report.status,
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                                    fontSize = 14.sp
+                                )
+                            }
+                        }
+                    }
+
+                    // Answer Section
+                    Column {
+                        Text(
+                            text = "Resposta:",
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        Surface(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .shadow(4.dp, RoundedCornerShape(16.dp)),
+                            color = Color(0xFFE0E0E0),
+                            shape = RoundedCornerShape(16.dp),
+                            border = BorderStroke(1.dp, Color.White)
+                        ) {
+                            Text(
+                                text = report.answer,
+                                modifier = Modifier.padding(16.dp)
                             )
                         }
                     }
-                }
 
-                // Parte inferior (fundo cinza claro)
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    color = Color(0xFFF5F5F5)
-                ) {
-                    Column(
-                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        // Responsible and Status Row
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
+                    // Gallery Section
+                    Column {
+                        Text(
+                            text = "Galeria:",
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(2),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            modifier = Modifier.height(250.dp)
                         ) {
-                            Column(modifier = Modifier.weight(2f)) {
-                                Text(
-                                    text = "Responsável",
-                                    fontSize = 14.sp,
-                                    color = Color.Gray,
-                                    modifier = Modifier.padding(bottom = 4.dp)
-                                )
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            items(report.gallery) { imageUrl ->
+                                Surface(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .shadow(4.dp, RoundedCornerShape(16.dp)),
+                                    shape = RoundedCornerShape(16.dp),
+                                    border = BorderStroke(1.dp, Color.White)
                                 ) {
                                     AsyncImage(
-                                        model = report.responsibleIcon,
+                                        model = imageUrl,
                                         contentDescription = null,
                                         modifier = Modifier
-                                            .size(24.dp)
-                                            .clip(CircleShape),
+                                            .fillMaxWidth()
+                                            .height(100.dp),
                                         contentScale = ContentScale.Crop
                                     )
-                                    Text(
-                                        text = report.responsible,
-                                        fontSize = 16.sp
-                                    )
-                                }
-                            }
-                            Column(
-                                modifier = Modifier.weight(1f),
-                                horizontalAlignment = Alignment.Start
-                            ) {
-                                Text(
-                                    text = "Status",
-                                    fontSize = 14.sp,
-                                    color = Color.Gray,
-                                    modifier = Modifier.padding(bottom = 4.dp)
-                                )
-                                Surface(
-                                    color = Color(0xFF269996),
-                                    shape = RoundedCornerShape(16.dp)
-                                ) {
-                                    Text(
-                                        text = report.status,
-                                        color = Color.White,
-                                        fontWeight = FontWeight.Bold,
-                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                                        fontSize = 14.sp
-                                    )
                                 }
                             }
                         }
+                    }
 
-                        // Answer Section
-                        Column {
-                            Text(
-                                text = "Resposta:",
-                                modifier = Modifier.padding(bottom = 8.dp)
-                            )
-                            Surface(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .shadow(4.dp, RoundedCornerShape(16.dp)),
-                                color = Color(0xFFE0E0E0),
-                                shape = RoundedCornerShape(16.dp),
-                                border = BorderStroke(1.dp, Color.White)
-                            ) {
-                                Text(
-                                    text = report.answer,
-                                    modifier = Modifier.padding(16.dp)
-                                )
-                            }
-                        }
-
-                        // Gallery Section
-                        Column {
-                            Text(
-                                text = "Galeria:",
-                                modifier = Modifier.padding(bottom = 8.dp)
-                            )
-                            LazyVerticalGrid(
-                                columns = GridCells.Fixed(2),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                verticalArrangement = Arrangement.spacedBy(8.dp),
-                                modifier = Modifier.height(250.dp)
-                            ) {
-                                items(report.gallery) { imageUrl ->
-                                    Surface(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .shadow(4.dp, RoundedCornerShape(16.dp)),
-                                        shape = RoundedCornerShape(16.dp),
-                                        border = BorderStroke(1.dp, Color.White)
-                                    ) {
-                                        AsyncImage(
-                                            model = imageUrl,
-                                            contentDescription = null,
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .height(100.dp),
-                                            contentScale = ContentScale.Crop
-                                        )
-                                    }
-                                }
-                            }
-                        }
-
-                        // Rating Section
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                text = "Dê sua nota para a resolução:",
-                                modifier = Modifier.padding(bottom = 8.dp)
-                            )
-                            Row(
-                                horizontalArrangement = Arrangement.Center,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                repeat(5) { index ->
-                                    IconButton(onClick = { rating = index + 1 }) {
-                                        Icon(
-                                            imageVector = if (index < rating) Icons.Default.Star else Icons.Outlined.Star,
-                                            contentDescription = null,
-                                            tint = if (index < rating) Color(0xFF269996) else Color.Gray
-                                        )
-                                    }
-                                }
-                            }
-                        }
-
-                        // Comment Section
-                        Column(
+                    // Rating Section
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Dê sua nota para a resolução:",
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text(
-                                text = "Comentários (opcional):",
-                                modifier = Modifier.padding(bottom = 8.dp)
-                            )
-                            Surface(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .shadow(4.dp, RoundedCornerShape(16.dp)),
-                                shape = RoundedCornerShape(16.dp),
-                                border = BorderStroke(1.dp, Color.White)
-                            ) {
-                                TextField(
-                                    value = comment,
-                                    onValueChange = { comment = it },
-                                    modifier = Modifier.fillMaxWidth(),
-                                    colors = TextFieldDefaults.colors(
-                                        focusedContainerColor = Color(0xFFE0E0E0),
-                                        unfocusedContainerColor = Color(0xFFE0E0E0),
-                                        disabledContainerColor = Color(0xFFE0E0E0),
-                                        focusedIndicatorColor = Color.Transparent,
-                                        unfocusedIndicatorColor = Color.Transparent
+                            repeat(5) { index ->
+                                IconButton(onClick = { onRatingChange(index + 1) }) {
+                                    Icon(
+                                        imageVector = if (index < rating) Icons.Default.Star else Icons.Outlined.Star,
+                                        contentDescription = null,
+                                        tint = if (index < rating) Color(0xFF269996) else Color.Gray
                                     )
-                                )
+                                }
                             }
                         }
+                    }
 
-                        // Submit Button
-                        Button(
-                            onClick = { },
+                    // Comment Section
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "Comentários (opcional):",
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        Surface(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(bottom = 64.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF269996)
-                            )
+                                .shadow(4.dp, RoundedCornerShape(16.dp)),
+                            shape = RoundedCornerShape(16.dp),
+                            border = BorderStroke(1.dp, Color.White)
                         ) {
-                            Text(
-                                text = "Enviar validação",
-                                modifier = Modifier.padding(vertical = 8.dp)
+                            TextField(
+                                value = comment,
+                                onValueChange = { onCommentChange(it) },
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = TextFieldDefaults.colors(
+                                    focusedContainerColor = Color(0xFFE0E0E0),
+                                    unfocusedContainerColor = Color(0xFFE0E0E0),
+                                    disabledContainerColor = Color(0xFFE0E0E0),
+                                    focusedIndicatorColor = Color.Transparent,
+                                    unfocusedIndicatorColor = Color.Transparent
+                                )
                             )
                         }
+                    }
+
+                    // Submit Button
+                    Button(
+                        onClick = { },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 64.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF269996)
+                        )
+                    ) {
+                        Text(
+                            text = "Enviar validação",
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
                     }
                 }
             }

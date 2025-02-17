@@ -44,12 +44,14 @@ fun RenderScreen(
     firebaseAuthService: FirebaseAuthService,
     selectedAnimal: Animal?,
     selectedAdoption: AdoptionT?,
+    selectedReportId: String?,
     isDarkTheme: MutableState<Boolean>,
     onScreenChange: (String) -> Unit,
     onUserUpdate: (User?) -> Unit,
     onRegistrationDataUpdate: (UserRegistrationData?) -> Unit,
     onAnimalSelected: (Animal?) -> Unit,
     onAdoptionSelected: (AdoptionT?) -> Unit,
+    onReportSelected: (String?) -> Unit,
     loginViewModel: LoginViewModel,
     profileViewModel: ProfileViewModel,
     scope: CoroutineScope,
@@ -138,7 +140,10 @@ fun RenderScreen(
                     onBackClick = { onScreenChange("home") },
                     onEditProfileClick = { onScreenChange("edit_profile") },
                     onBiddingClick = { },
-                    onReportClick = { onScreenChange("report_details") },
+                    onReportClick = { report -> 
+                        onReportSelected(report.id)
+                        onScreenChange("report_details")
+                    },
                     isDarkThemeEnabled = isDarkTheme.value,
                     onThemeToggle = { isDarkTheme.value = it },
                     onExitClick = {
@@ -232,7 +237,14 @@ fun RenderScreen(
             firebaseAuthService = firebaseAuthService
         )
 
-        "report_details" -> ReportScreen()
+        "report_details" -> {
+            selectedReportId?.let { reportId ->
+                ReportScreen(
+                    reportId = reportId,
+                    onBackClick = { onScreenChange("profile") }
+                )
+            }
+        }
 
         "faq" -> FaqScreen()
 
