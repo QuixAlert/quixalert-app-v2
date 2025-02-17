@@ -11,7 +11,8 @@ data class Report(
     val address: String = "",
     val motivation: String = "",
     val details: String = "",
-    val userId: String = ""
+    val userId: String = "",
+    val ratings: List<Rating> = emptyList()
 ): BaseModel(id)
 
 

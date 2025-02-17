@@ -1,5 +1,6 @@
 package org.quixalert.br.presentation.pages.reports
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -8,13 +9,17 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.quixalert.br.services.ReportService
 import javax.inject.Inject
+import org.quixalert.br.presentation.pages.reports.ReportDetail
+import org.quixalert.br.domain.model.Rating
 
 data class ReportUiState(
     val report: ReportDetail? = null,
     val isLoading: Boolean = false,
     val error: String? = null,
     val rating: Int = 0,
-    val comment: String = ""
+    val comment: String = "",
+    val isSubmitting: Boolean = false,
+    val successMessage: String? = null
 )
 
 @HiltViewModel
@@ -42,7 +47,8 @@ class ReportViewModel @Inject constructor(
                             responsibleIcon = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3Ze3JUrTPRe5LIttbKF8ouyH-0wbUnrbjBQ&s",
                             status = "Em análise",
                             answer = report.details,
-                            gallery = listOf(report.image)
+                            gallery = listOf(report.image),
+                            ratings = report.ratings
                         ),
                         isLoading = false
                     )
@@ -67,5 +73,28 @@ class ReportViewModel @Inject constructor(
 
     fun updateComment(newComment: String) {
         _uiState.value = _uiState.value.copy(comment = newComment)
+    }
+
+    fun submitRating(reportId: String, rating: Int, comment: String) {
+        _uiState.value = _uiState.value.copy(isSubmitting = true)
+        viewModelScope.launch {
+            try {
+                reportService.submitRating(reportId, rating, comment).await()
+                _uiState.value = _uiState.value.copy(
+                    isSubmitting = false,
+                    successMessage = "Avaliação enviada com sucesso!"
+                )
+            } catch (e: Exception) {
+                Log.e("ReportViewModel", "Error submitting rating", e)
+                _uiState.value = _uiState.value.copy(
+                    isSubmitting = false,
+                    error = "Erro ao enviar avaliação: ${e.message}"
+                )
+            }
+        }
+    }
+
+    fun clearError() {
+        _uiState.value = _uiState.value.copy(error = null)
     }
 }

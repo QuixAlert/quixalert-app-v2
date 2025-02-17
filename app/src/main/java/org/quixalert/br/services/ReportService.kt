@@ -31,4 +31,8 @@ class ReportService @Inject constructor(
     fun getReportByUserId(userId: String): Deferred<List<Report>> {
         return reportRepository.getReportByUserId(userId)
     }
+
+    fun submitRating(reportId: String, rating: Int, comment: String): Deferred<Unit> {
+        return reportRepository.submitRating(reportId, rating, comment)
+    }
 }

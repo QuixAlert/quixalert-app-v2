@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,6 +21,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Button
@@ -52,30 +54,14 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.runtime.collectAsState
-
-data class ReportDetail(
-    val id: String,
-    val title: String,
-    val category: String,
-    val description: String,
-    val responsible: String,
-    val responsibleIcon: String,
-    val status: String,
-    val answer: String,
-    val gallery: List<String>
-)
-
-val mockReportDetail = ReportDetail(
-    id = "1",
-    title = "Animal abandonado",
-    category = "Maus tratos",
-    description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    responsible = "Prefeitura de Quixadá",
-    responsibleIcon = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3Ze3JUrTPRe5LIttbKF8ouyH-0wbUnrbjBQ&s",
-    status = "Resolvido",
-    answer = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    gallery = List(4) { "https://images.jota.info/wp-content/uploads/2023/04/pexels-rk-jajoria-1189673.jpg" }
-)
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.Snackbar
+import org.quixalert.br.domain.model.Rating
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import androidx.compose.foundation.layout.width
 
 @Composable
 fun ReportScreen(
@@ -84,9 +70,51 @@ fun ReportScreen(
     onBackClick: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var showSuccessDialog by remember { mutableStateOf(false) }
 
+    // Adicionar LaunchedEffect para carregar o relatório quando a tela for aberta
     LaunchedEffect(reportId) {
         viewModel.loadReport(reportId)
+    }
+
+    // Mostrar diálogo de sucesso
+    if (uiState.successMessage != null && !showSuccessDialog) {
+        showSuccessDialog = true
+        AlertDialog(
+            onDismissRequest = { 
+                showSuccessDialog = false
+                onBackClick()
+            },
+            title = { Text("Sucesso!") },
+            text = { Text(uiState.successMessage!!) },
+            confirmButton = {
+                TextButton(
+                    onClick = { 
+                        showSuccessDialog = false
+                        onBackClick()
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF269996)
+                    )
+                ) {
+                    Text("OK", color = Color.White)
+                }
+            }
+        )
+    }
+
+    // Mostrar snackbar de erro
+    if (uiState.error != null) {
+        Snackbar(
+            modifier = Modifier.padding(16.dp),
+            action = {
+                TextButton(onClick = { viewModel.clearError() }) {
+                    Text("OK", color = Color.White)
+                }
+            }
+        ) {
+            Text(uiState.error!!)
+        }
     }
 
     Box(
@@ -104,25 +132,29 @@ fun ReportScreen(
                 }
             }
             uiState.error != null -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = uiState.error!!,
-                        color = Color.Red,
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                }
+                // Mostrar erro
+                Text(
+                    text = uiState.error ?: "Erro desconhecido",
+                    modifier = Modifier.padding(16.dp),
+                    color = Color.Red
+                )
             }
             uiState.report != null -> {
                 ReportContent(
                     report = uiState.report!!,
                     rating = uiState.rating,
                     comment = uiState.comment,
+                    isSubmitting = uiState.isSubmitting,
                     onRatingChange = viewModel::updateRating,
                     onCommentChange = viewModel::updateComment,
-                    onBackClick = onBackClick
+                    onBackClick = onBackClick,
+                    onSubmitClick = { 
+                        viewModel.submitRating(
+                            reportId = uiState.report!!.id,
+                            rating = uiState.rating,
+                            comment = uiState.comment
+                        )
+                    }
                 )
             }
         }
@@ -134,9 +166,11 @@ private fun ReportContent(
     report: ReportDetail,
     rating: Int,
     comment: String,
+    isSubmitting: Boolean,
     onRatingChange: (Int) -> Unit,
     onCommentChange: (String) -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onSubmitClick: () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -153,6 +187,21 @@ private fun ReportContent(
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
+            
+            // Botão de voltar
+            IconButton(
+                onClick = onBackClick,
+                modifier = Modifier
+                    .padding(16.dp)
+                    .size(40.dp)
+                    .background(Color.White.copy(alpha = 0.7f), CircleShape)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Voltar",
+                    tint = Color(0xFF269996)
+                )
+            }
         }
 
         // Content Section
@@ -409,21 +458,113 @@ private fun ReportContent(
 
                     // Submit Button
                     Button(
-                        onClick = { },
+                        onClick = onSubmitClick,
+                        enabled = !isSubmitting,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 64.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF269996)
+                            containerColor = Color(0xFF269996),
+                            disabledContainerColor = Color(0xFF269996).copy(alpha = 0.6f)
                         )
                     ) {
-                        Text(
-                            text = "Enviar validação",
-                            modifier = Modifier.padding(vertical = 8.dp)
-                        )
+                        if (isSubmitting) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(24.dp),
+                                color = Color.White
+                            )
+                        } else {
+                            Text(
+                                text = "Enviar validação",
+                                modifier = Modifier.padding(vertical = 8.dp)
+                            )
+                        }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun RatingsList(ratings: List<Rating>) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text(
+            text = "Avaliações anteriores",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        
+        if (ratings.isEmpty()) {
+            Text(
+                text = "Nenhuma avaliação ainda",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.Gray
+            )
+        } else {
+            ratings.forEach { rating ->
+                RatingItem(rating)
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+        }
+    }
+}
+
+@Composable
+private fun RatingItem(rating: Rating) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        shape = RoundedCornerShape(8.dp),
+        border = BorderStroke(1.dp, Color.LightGray)
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Mostrar estrelas
+                repeat(5) { index ->
+                    Icon(
+                        imageVector = if (index < rating.rating) 
+                            Icons.Default.Star else Icons.Outlined.Star,
+                        contentDescription = null,
+                        tint = if (index < rating.rating) 
+                            Color(0xFF269996) else Color.Gray,
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "• ${formatDate(rating.timestamp)}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.Gray
+                )
+            }
+            if (rating.comment.isNotEmpty()) {
+                Text(
+                    text = rating.comment,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
+        }
+    }
+}
+
+// Função auxiliar para formatar a data
+private fun formatDate(timestamp: String): String {
+    return try {
+        val date = Date(timestamp.toLong())
+        SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(date)
+    } catch (e: Exception) {
+        timestamp
     }
 }

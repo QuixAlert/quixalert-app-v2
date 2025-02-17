@@ -239,10 +239,15 @@ fun RenderScreen(
 
         "report_details" -> {
             selectedReportId?.let { reportId ->
+                Log.d("RenderScreen", "Navigating to report details with ID: $reportId")
                 ReportScreen(
                     reportId = reportId,
                     onBackClick = { onScreenChange("profile") }
                 )
+            } ?: run {
+                Log.e("RenderScreen", "No report ID provided")
+                // Voltar para a tela anterior se não houver ID
+                onScreenChange("profile")
             }
         }
 
