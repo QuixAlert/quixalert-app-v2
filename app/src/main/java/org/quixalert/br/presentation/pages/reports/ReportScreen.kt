@@ -563,6 +563,7 @@ private fun RatingsList(ratings: List<Rating>) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
+            .padding(bottom = 80.dp)
     ) {
         Text(
             text = "Avaliações anteriores",
