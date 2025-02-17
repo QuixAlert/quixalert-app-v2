@@ -32,6 +32,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -71,7 +72,8 @@ import androidx.compose.ui.window.DialogProperties
 fun ReportScreen(
     reportId: String,
     viewModel: ReportViewModel = hiltViewModel(),
-    onBackClick: () -> Unit = {}
+    onBackClick: () -> Unit = {},
+    onNavigate: (String) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var showSuccessDialog by remember { mutableStateOf(false) }
@@ -144,7 +146,6 @@ fun ReportScreen(
                 }
             }
             uiState.error != null -> {
-                // Mostrar erro
                 Text(
                     text = uiState.error ?: "Erro desconhecido",
                     modifier = Modifier.padding(16.dp),

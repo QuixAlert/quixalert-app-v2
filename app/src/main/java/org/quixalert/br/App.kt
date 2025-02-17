@@ -161,7 +161,8 @@ fun App() {
             },
             bottomBar = {
                 if (currentScreen in listOf(
-                        "home", "profile", "notification", "news", "animals", "faq", "solicitation"
+                        "home", "profile", "notification", "news", "animals", 
+                        "faq", "solicitation", "report_details"
                     )
                 ) {
                     Column {
