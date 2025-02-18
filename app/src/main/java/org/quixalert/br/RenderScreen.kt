@@ -42,6 +42,7 @@ import org.quixalert.br.view.pages.login.LoginScreen
 @Composable
 fun RenderScreen(
     currentScreen: String,
+    lastScreen: String,
     currentUser: User?,
     registrationData: UserRegistrationData?,
     firebaseAuthService: FirebaseAuthService,
@@ -51,6 +52,7 @@ fun RenderScreen(
     selectedReportId: String?,
     isDarkTheme: MutableState<Boolean>,
     onScreenChange: (String) -> Unit,
+    onLastScreenChange: (String) -> Unit,
     onUserUpdate: (User?) -> Unit,
     onRegistrationDataUpdate: (UserRegistrationData?) -> Unit,
     onAnimalSelected: (Animal?) -> Unit,
@@ -129,7 +131,11 @@ fun RenderScreen(
             if (currentUser != null) {
                 HomeScreen(
                     user = currentUser,
-                    onNotificationClick = { onScreenChange("notification") }
+                    onNotificationClick = { onScreenChange("notification") },
+                    onClick = {
+                        onScreenChange("pet_details")
+                        onLastScreenChange("home")
+                    }
                 )
             } else {
                 onScreenChange("login")
@@ -203,7 +209,10 @@ fun RenderScreen(
 
         "animals" -> AdoptionScreen(
             onDonateClick = { onScreenChange("donate") },
-            onDetailsClick = { onScreenChange("pet_details") }
+            onDetailsClick = {
+                onScreenChange("pet_details")
+                onLastScreenChange("animals")
+            }
         )
 
         "donate" -> DonationScreen(
@@ -233,7 +242,7 @@ fun RenderScreen(
 
         "pet_details" -> AnimalDetailsScreen(
             selectedAnimal = selectedAnimal,
-            onBackClick = { onScreenChange("animals") },
+            onBackClick = { onScreenChange(lastScreen) },
             onFormClick = { onScreenChange("form_adote") }
         )
 
