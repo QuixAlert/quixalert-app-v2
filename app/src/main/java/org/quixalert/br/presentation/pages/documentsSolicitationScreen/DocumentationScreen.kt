@@ -140,7 +140,7 @@ fun DocumentationScreen(
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                         Text(
-                            text = document.documentType.toString(),
+                            text = document.status.label,
                             modifier = Modifier
                                 .background(Color(0xFF269996), RoundedCornerShape(16.dp))
                                 .padding(horizontal = 12.dp, vertical = 6.dp),

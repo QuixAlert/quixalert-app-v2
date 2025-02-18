@@ -86,6 +86,7 @@ class ProfileViewModel @Inject constructor(
                     Document(
                         id = document.id,
                         documentType = document.documentType,
+                        status = document.status,
                         descriptions = document.descriptions,
                         address = document.address,
                         reason = document.reason,
