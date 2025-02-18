@@ -49,6 +49,7 @@ fun RenderScreen(
     selectedAnimal: Animal?,
     selectedAdoption: AdoptionT?,
     selectedDocument: Document?,
+    selectedReportId: String?,
     isDarkTheme: MutableState<Boolean>,
     onScreenChange: (String) -> Unit,
     onLastScreenChange: (String) -> Unit,
@@ -57,6 +58,7 @@ fun RenderScreen(
     onAnimalSelected: (Animal?) -> Unit,
     onAdoptionSelected: (AdoptionT?) -> Unit,
     onDocumentSelected: (Document?) -> Unit,
+    onReportSelected: (String?) -> Unit,
     loginViewModel: LoginViewModel,
     profileViewModel: ProfileViewModel,
     scope: CoroutineScope,
@@ -149,7 +151,10 @@ fun RenderScreen(
                     onBackClick = { onScreenChange("home") },
                     onEditProfileClick = { onScreenChange("edit_profile") },
                     onBiddingClick = { },
-                    onReportClick = { onScreenChange("report_details") },
+                    onReportClick = { report -> 
+                        onReportSelected(report.id)
+                        onScreenChange("report_details")
+                    },
                     isDarkThemeEnabled = isDarkTheme.value,
                     onThemeToggle = { isDarkTheme.value = it },
                     onExitClick = {
@@ -250,7 +255,19 @@ fun RenderScreen(
             firebaseAuthService = firebaseAuthService
         )
 
-        "report_details" -> ReportScreen()
+        "report_details" -> {
+            selectedReportId?.let { reportId ->
+                Log.d("RenderScreen", "Navigating to report details with ID: $reportId")
+                ReportScreen(
+                    reportId = reportId,
+                    onBackClick = { onScreenChange("profile") },
+                    onNavigate = { screen -> onScreenChange(screen) }
+                )
+            } ?: run {
+                Log.e("RenderScreen", "No report ID provided")
+                onScreenChange("profile")
+            }
+        }
 
         "faq" -> FaqScreen()
 

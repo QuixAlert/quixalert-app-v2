@@ -111,14 +111,16 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val reports = reportService.getReportByUserId(userId).await()
+                val sortedReports = reports.sortedByDescending { it.date }
+                
                 _uiState.value = _uiState.value.copy(
-                    reportsSolicitationByUser = reports,
+                    reportsSolicitationByUser = sortedReports,
                     isLoadingReports = false
                 )
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     isLoadingReports = false,
-                    errorReports = "Failed to load reports: ${e.message}"
+                    errorReports = "Erro ao carregar denúncias: ${e.message}"
                 )
             }
         }

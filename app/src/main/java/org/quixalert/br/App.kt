@@ -61,6 +61,7 @@ fun App() {
     var selectedAnimal by remember { mutableStateOf<Animal?>(null) }
     var selectedAdoption by remember { mutableStateOf<AdoptionT?>(null) }
     var selectedDocument by remember { mutableStateOf<Document?>(null) }
+    var selectedReportId by remember { mutableStateOf<String?>(null) }
     val firebaseAuthService = FirebaseAuthService(FirebaseAuth.getInstance())
 
     val currentDarkTheme = false
@@ -136,6 +137,7 @@ fun App() {
                         selectedAnimal = selectedAnimal,
                         selectedAdoption = selectedAdoption,
                         selectedDocument = selectedDocument,
+                        selectedReportId = selectedReportId,
                         isDarkTheme = isDarkTheme,
                         onScreenChange = { currentScreen = it },
                         onLastScreenChange = { lastScreen = it },
@@ -144,6 +146,7 @@ fun App() {
                         onAnimalSelected = { selectedAnimal = it },
                         onAdoptionSelected = { selectedAdoption = it },
                         onDocumentSelected = { selectedDocument = it },
+                        onReportSelected = { selectedReportId = it },
                         loginViewModel = loginViewModel,
                         profileViewModel = profileViewModel,
                         scope = scope,
@@ -165,7 +168,8 @@ fun App() {
             },
             bottomBar = {
                 if (currentScreen in listOf(
-                        "home", "profile", "notification", "news", "animals", "faq", "solicitation", "documentation", "donate"
+                        "home", "profile", "notification", "news", "animals", 
+                        "faq", "solicitation", "documentation", "donate", "report_details"
                     )
                 ) {
                     Column {
