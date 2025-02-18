@@ -49,6 +49,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
+import org.quixalert.br.domain.model.Adoption
+import org.quixalert.br.domain.model.AdoptionStatus
 import org.quixalert.br.domain.model.AdoptionT
 import org.quixalert.br.domain.model.Message
 import org.quixalert.br.domain.model.User
@@ -139,31 +141,37 @@ fun ChatScreen(
                 }
             }
         }
-        Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-            TextField(
-                value = messageText,
-                onValueChange = { messageText = it },
-                modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("Digite sua mensagem...") },
-                textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.LightGray.copy(alpha = 0.1f)
+
+        if (adoption.status == AdoptionStatus.PENDING) {
+            Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                TextField(
+                    value = messageText,
+                    onValueChange = { messageText = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = { Text("Digite sua mensagem...") },
+                    textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color.LightGray.copy(alpha = 0.1f)
+                    )
                 )
-            )
-            Button(
-                onClick = {
-                    if (messageText.isNotBlank()) {
-                        addNewMessage(messageText)
-                        messageText = ""
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF269996)),
-                shape = RoundedCornerShape(8.dp)
-            ) {
-                Text("Enviar", style = MaterialTheme.typography.bodyMedium.copy(color = Color.White))
+                Button(
+                    onClick = {
+                        if (messageText.isNotBlank()) {
+                            addNewMessage(messageText)
+                            messageText = ""
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF269996)),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(
+                        "Enviar",
+                        style = MaterialTheme.typography.bodyMedium.copy(color = Color.White)
+                    )
+                }
             }
         }
     }
