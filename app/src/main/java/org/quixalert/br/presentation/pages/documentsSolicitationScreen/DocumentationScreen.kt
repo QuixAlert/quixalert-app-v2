@@ -43,6 +43,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import org.quixalert.br.domain.model.Document
+import org.quixalert.br.domain.model.DocumentStatus
 import org.quixalert.br.domain.model.User
 
 val MOCKED_DOCUMENTATION_PHOTO = "https://static.vecteezy.com/system/resources/thumbnails/047/201/337/small_2x/pile-of-documents-sat-on-desk-in-office-was-pile-of-documents-that-had-been-prepared-to-be-presented-at-meeting-as-summary-of-annual-operations-documents-prepared-for-storage-and-piled-on-the-desk-photo.jpg"
@@ -140,7 +141,10 @@ fun DocumentationScreen(
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                         Text(
-                            text = document.status.label,
+                            text = when (document.status) {
+                                DocumentStatus.EM_ANDAMENTO -> "Em atendimento"
+                                DocumentStatus.CONCLUIDO-> "Aprovado"
+                            },
                             modifier = Modifier
                                 .background(Color(0xFF269996), RoundedCornerShape(16.dp))
                                 .padding(horizontal = 12.dp, vertical = 6.dp),

@@ -26,7 +26,7 @@ class ChatDocumentationViewModel @Inject constructor(
     val uiState: StateFlow<ChatUiStateDocumentation> get() = _uiState
 
     fun loadMessages(adoptionId: String) {
-        //registerMessages("787c33a0-88e1-4d26-bd8c-ff6acf535f08")
+//        registerMessages("7d5c33b3-5c91-45ad-8f7b-3eac66e3e523")
         _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
         viewModelScope.launch {
             try {
