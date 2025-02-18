@@ -39,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import org.quixalert.br.domain.model.Animal
 import org.quixalert.br.domain.model.NewsType
 import org.quixalert.br.domain.model.User
 import org.quixalert.br.presentation.components.ErrorSection
@@ -56,8 +57,9 @@ fun HomeScreen(
     user: User,
     newsViewModel: NewsViewModel = hiltViewModel(),
     adoptionViewModel: AdoptionViewModel = hiltViewModel(),
-    onNotificationClick: () -> Unit
-) {
+    onNotificationClick: () -> Unit,
+    onClick: (Animal) -> Unit
+    ) {
     val newsUiState by newsViewModel.uiState.collectAsState()
     val adoptionUiState by adoptionViewModel.uiState.collectAsState()
 
@@ -125,7 +127,7 @@ fun HomeScreen(
                 ) {
                     rowAnimals.forEach { animal ->
                         Box(modifier = Modifier.weight(1f)) {
-                            AnimalItem(animal = animal)
+                            AnimalItem(animal = animal, onClick = onClick)
                         }
                     }
                     if (rowAnimals.size == 1) {
