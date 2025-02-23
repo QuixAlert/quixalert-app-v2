@@ -43,6 +43,7 @@ import org.quixalert.br.presentation.components.NavigationBarM3
 import org.quixalert.br.presentation.pages.login.LoginViewModel
 import org.quixalert.br.presentation.pages.profile.ProfileViewModel
 import org.quixalert.br.services.FirebaseAuthService
+import org.quixalert.br.utils.isDarkModeActive
 
 @RequiresApi(Build.VERSION_CODES.S)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -64,7 +65,7 @@ fun App() {
     var selectedReportId by remember { mutableStateOf<String?>(null) }
     val firebaseAuthService = FirebaseAuthService(FirebaseAuth.getInstance())
 
-    val currentDarkTheme = false
+    val currentDarkTheme = isDarkModeActive()
     val isDarkTheme = remember { mutableStateOf(currentDarkTheme) }
     val systemUiController = rememberSystemUiController()
     systemUiController.setSystemBarsColor(color = Color.Blue)
