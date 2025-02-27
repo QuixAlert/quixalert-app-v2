@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.quixalert.br.presentation.components.StyledTextField
+import org.quixalert.br.presentation.components.WaveBackground
 import org.quixalert.br.presentation.ui.theme.primaryBlue
 import org.quixalert.br.presentation.ui.theme.primaryGreen
 
@@ -60,6 +61,8 @@ fun SignInScreen(
             .fillMaxSize()
             .background(primaryGreen)
     ) {
+        WaveBackground()
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -153,7 +156,7 @@ fun SignInScreen(
                 ) {
                     Text(
                         text = loginState.errorMessage ?: "Erro desconhecido",
-                        color = Color.Red
+                        color = Color(0xFF960808)
                     )
                 }
             }
