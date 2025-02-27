@@ -1,6 +1,7 @@
 package org.quixalert.br.presentation.pages.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,18 +20,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import org.quixalert.br.domain.model.Animal
 import org.quixalert.br.domain.model.AnimalGender
 import org.quixalert.br.domain.model.AnimalType
+import org.quixalert.br.presentation.pages.animal.AnimalDetailsViewModel
 
 @Composable
-fun AnimalItem(animal: Animal) {
+fun AnimalItem(animal: Animal,
+               onClick: (Animal) -> Unit,
+               viewModel: AnimalDetailsViewModel = hiltViewModel()
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(250.dp)
             .shadow(4.dp, RoundedCornerShape(12.dp))
+            .clickable {
+                onClick(animal)
+                viewModel.setAnimalId(animal.id)
+            }
     ) {
         AsyncImage(
             model = animal.image,

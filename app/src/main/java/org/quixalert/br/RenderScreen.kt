@@ -11,13 +11,16 @@ import kotlinx.coroutines.tasks.await
 import org.quixalert.br.MockData.biddings
 import org.quixalert.br.domain.model.AdoptionT
 import org.quixalert.br.domain.model.Animal
+import org.quixalert.br.domain.model.Document
 import org.quixalert.br.domain.model.User
 import org.quixalert.br.domain.model.UserRegistrationData
 import org.quixalert.br.presentation.pages.adoptions.AdoptionFormScreen
 import org.quixalert.br.presentation.pages.adoptions.AdoptionScreen
 import org.quixalert.br.presentation.pages.adoptions.AdoptionSolicitationScreen
 import org.quixalert.br.presentation.pages.adoptions.ChatScreen
+import org.quixalert.br.presentation.pages.adoptions.ChatScreenDocumentation
 import org.quixalert.br.presentation.pages.animal.AnimalDetailsScreen
+import org.quixalert.br.presentation.pages.documentsSolicitationScreen.DocumentationScreen
 import org.quixalert.br.presentation.pages.documentsSolicitationScreen.DocumentsSolicitationScreen
 import org.quixalert.br.presentation.pages.donation.DonationScreen
 import org.quixalert.br.presentation.pages.emergencyNumbers.EmergencyNumbersScreen
@@ -39,17 +42,23 @@ import org.quixalert.br.view.pages.login.LoginScreen
 @Composable
 fun RenderScreen(
     currentScreen: String,
+    lastScreen: String,
     currentUser: User?,
     registrationData: UserRegistrationData?,
     firebaseAuthService: FirebaseAuthService,
     selectedAnimal: Animal?,
     selectedAdoption: AdoptionT?,
+    selectedDocument: Document?,
+    selectedReportId: String?,
     isDarkTheme: MutableState<Boolean>,
     onScreenChange: (String) -> Unit,
+    onLastScreenChange: (String) -> Unit,
     onUserUpdate: (User?) -> Unit,
     onRegistrationDataUpdate: (UserRegistrationData?) -> Unit,
     onAnimalSelected: (Animal?) -> Unit,
     onAdoptionSelected: (AdoptionT?) -> Unit,
+    onDocumentSelected: (Document?) -> Unit,
+    onReportSelected: (String?) -> Unit,
     loginViewModel: LoginViewModel,
     profileViewModel: ProfileViewModel,
     scope: CoroutineScope,
@@ -122,7 +131,11 @@ fun RenderScreen(
             if (currentUser != null) {
                 HomeScreen(
                     user = currentUser,
-                    onNotificationClick = { onScreenChange("notification") }
+                    onNotificationClick = { onScreenChange("notification") },
+                    onClick = {
+                        onScreenChange("pet_details")
+                        onLastScreenChange("home")
+                    }
                 )
             } else {
                 onScreenChange("login")
@@ -138,7 +151,10 @@ fun RenderScreen(
                     onBackClick = { onScreenChange("home") },
                     onEditProfileClick = { onScreenChange("edit_profile") },
                     onBiddingClick = { },
-                    onReportClick = { onScreenChange("report_details") },
+                    onReportClick = { report -> 
+                        onReportSelected(report.id)
+                        onScreenChange("report_details")
+                    },
                     isDarkThemeEnabled = isDarkTheme.value,
                     onThemeToggle = { isDarkTheme.value = it },
                     onExitClick = {
@@ -151,6 +167,10 @@ fun RenderScreen(
                     onAdoptionClick = { adoption ->
                         onAdoptionSelected(adoption)
                         onScreenChange("solicitation")
+                    },
+                    onDocumentClick = { document ->
+                        onDocumentSelected(document)
+                        onScreenChange("documentation")
                     },
                     user = user,
                     firebaseAuthService = firebaseAuthService,
@@ -189,7 +209,10 @@ fun RenderScreen(
 
         "animals" -> AdoptionScreen(
             onDonateClick = { onScreenChange("donate") },
-            onDetailsClick = { onScreenChange("pet_details") }
+            onDetailsClick = {
+                onScreenChange("pet_details")
+                onLastScreenChange("animals")
+            }
         )
 
         "donate" -> DonationScreen(
@@ -219,7 +242,7 @@ fun RenderScreen(
 
         "pet_details" -> AnimalDetailsScreen(
             selectedAnimal = selectedAnimal,
-            onBackClick = { onScreenChange("animals") },
+            onBackClick = { onScreenChange(lastScreen) },
             onFormClick = { onScreenChange("form_adote") }
         )
 
@@ -232,7 +255,19 @@ fun RenderScreen(
             firebaseAuthService = firebaseAuthService
         )
 
-        "report_details" -> ReportScreen()
+        "report_details" -> {
+            selectedReportId?.let { reportId ->
+                Log.d("RenderScreen", "Navigating to report details with ID: $reportId")
+                ReportScreen(
+                    reportId = reportId,
+                    onBackClick = { onScreenChange("profile") },
+                    onNavigate = { screen -> onScreenChange(screen) }
+                )
+            } ?: run {
+                Log.e("RenderScreen", "No report ID provided")
+                onScreenChange("profile")
+            }
+        }
 
         "faq" -> FaqScreen()
 
@@ -247,11 +282,32 @@ fun RenderScreen(
             }
         }
 
+        "documentation" -> selectedDocument?.let {
+            if (currentUser != null) {
+                DocumentationScreen(
+                    document = it,
+                    onBackClick = { onScreenChange("profile") },
+                    onOpenChatClick = { onScreenChange("chatDocumentation") },
+                    user = currentUser,
+                )
+            }
+        }
+
         "chat" -> selectedAdoption?.let {
             if(currentUser != null){
                 ChatScreen(
                     adoption = it,
                     onBackClick = { onScreenChange("solicitation") },
+                    user = currentUser
+                )
+            }
+        }
+
+        "chatDocumentation" -> selectedDocument?.let {
+            if(currentUser != null){
+                ChatScreenDocumentation(
+                    document = it,
+                    onBackClick = { onScreenChange("documentation") },
                     user = currentUser
                 )
             }

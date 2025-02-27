@@ -7,12 +7,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.quixalert.br.domain.model.Document
+import org.quixalert.br.domain.model.DocumentStatus
 import org.quixalert.br.domain.model.DocumentType
 import org.quixalert.br.services.DocumentService
 import javax.inject.Inject
 
 data class DocumentsSolicitationUiState(
     val selectedTypeDocument: DocumentType = DocumentType.ALVARA,
+    val statusDocument: DocumentStatus = DocumentStatus.EM_ANDAMENTO,
     val description: String = "",
     val motivation: String = "",
     val details: String = "",
@@ -35,6 +37,10 @@ class DocumentsSolicitationViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(selectedTypeDocument = type)
     }
 
+    fun updateDocumentStatus(status: DocumentStatus) {
+        _uiState.value = _uiState.value.copy(statusDocument = status)
+    }
+
     fun updateDescription(description: String) {
         _uiState.value = _uiState.value.copy(description = description)
     }
@@ -54,6 +60,7 @@ class DocumentsSolicitationViewModel @Inject constructor(
     fun submitDocument(userId: String) {
         val document = Document(
             documentType = uiState.value.selectedTypeDocument,
+            status = uiState.value.statusDocument,
             descriptions = uiState.value.description,
             address = uiState.value.address,
             reason = uiState.value.motivation,

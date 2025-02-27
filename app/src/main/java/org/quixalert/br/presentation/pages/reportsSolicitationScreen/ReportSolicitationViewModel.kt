@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.quixalert.br.domain.model.Report
 import org.quixalert.br.domain.model.ReportType
+import org.quixalert.br.domain.model.ReportStatus
 import org.quixalert.br.services.FirebaseStorageService
 import org.quixalert.br.services.ReportService
 import javax.inject.Inject
@@ -92,7 +93,9 @@ class ReportsSolicitationViewModel @Inject constructor(
             motivation = uiState.value.motivation,
             details = uiState.value.details,
             userId = userId,
-            image = "" // Initially no image URL,
+            image = "", // Initially no image URL
+            status = ReportStatus.EM_ANALISE,
+            answer = "" // Inicializa com resposta vazia
         )
 
         // If an image is selected, upload it first

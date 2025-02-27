@@ -1,6 +1,5 @@
-package org.quixalert.br.presentation.pages.adoptions
+package org.quixalert.br.presentation.pages.documentsSolicitationScreen
 
-import DateUtils
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,7 +21,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -44,14 +42,15 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import org.quixalert.br.domain.model.AdoptionStatus
-import org.quixalert.br.domain.model.AdoptionT
+import org.quixalert.br.domain.model.Document
+import org.quixalert.br.domain.model.DocumentStatus
 import org.quixalert.br.domain.model.User
 
-@OptIn(ExperimentalMaterial3Api::class)
+val MOCKED_DOCUMENTATION_PHOTO = "https://static.vecteezy.com/system/resources/thumbnails/047/201/337/small_2x/pile-of-documents-sat-on-desk-in-office-was-pile-of-documents-that-had-been-prepared-to-be-presented-at-meeting-as-summary-of-annual-operations-documents-prepared-for-storage-and-piled-on-the-desk-photo.jpg"
+
 @Composable
-fun AdoptionSolicitationScreen(
-    adoption: AdoptionT,
+fun DocumentationScreen(
+    document: Document,
     onBackClick: () -> Unit,
     onOpenChatClick: () -> Unit,
     user: User
@@ -68,7 +67,7 @@ fun AdoptionSolicitationScreen(
                     .height(300.dp)
             ) {
                 AsyncImage(
-                    model = adoption.animal?.image,
+                    model = MOCKED_DOCUMENTATION_PHOTO,
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
@@ -93,7 +92,7 @@ fun AdoptionSolicitationScreen(
                 // Header Row with title and info button
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = "Solicitação de Adoção",
+                        text = "Solicitação de Documentação",
                         style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                         modifier = Modifier.weight(1f)
                     )
@@ -106,28 +105,6 @@ fun AdoptionSolicitationScreen(
                     }
                 }
 
-                // Information row for dates and deadlines
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    InfoColumn(
-                        title = "Dia para Visita",
-                        value = DateUtils.formatDate(adoption.visitDate)
-                    )
-                    InfoColumn(
-                        title = "Dias que faltam para a visita",
-                        value = DateUtils.calculateDaysOpen(adoption.visitDate)
-                    )
-                    InfoColumn(
-                        title = "Prazo de Finalização",
-                        value = DateUtils.calculateDeadline(adoption.visitDate)
-                    )
-                }
-
-                // Solicitante and status row
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -164,13 +141,12 @@ fun AdoptionSolicitationScreen(
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                         Text(
-                            text = when (adoption.status) {
-                                AdoptionStatus.PENDING -> "Em atendimento"
-                                AdoptionStatus.APPROVED -> "Aprovado"
-                                else -> "Desconhecido"
+                            text = when (document.status) {
+                                DocumentStatus.EM_ANDAMENTO -> "Em atendimento"
+                                DocumentStatus.CONCLUIDO-> "Aprovado"
                             },
                             modifier = Modifier
-                                .background(Color(0xFFFFB74D), RoundedCornerShape(16.dp))
+                                .background(Color(0xFF269996), RoundedCornerShape(16.dp))
                                 .padding(horizontal = 12.dp, vertical = 6.dp),
                             color = Color.White,
                             style = MaterialTheme.typography.bodyMedium
@@ -181,7 +157,7 @@ fun AdoptionSolicitationScreen(
                 // "Detalhes da Adoção" section with scrolling enabled only for this area.
                 Column(modifier = Modifier.padding(top = 16.dp)) {
                     Text(
-                        text = "Detalhes da Adoção",
+                        text = "Detalhes da solicitação",
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
@@ -193,18 +169,16 @@ fun AdoptionSolicitationScreen(
                             .verticalScroll(rememberScrollState())
                     ) {
                         Column {
-                            DetailItem(label = "Endereço", value = adoption.address)
-                            DetailItem(label = "Descrição do local onde mora", value = adoption.livingDescription)
-                            DetailItem(label = "Outros animais na residência", value = adoption.otherAnimals)
-                            DetailItem(label = "Renda Mensal", value = adoption.monthlyIncome)
-                            DetailItem(label = "Descrição da residência", value = adoption.householdDescription)
-                            DetailItem(label = "Motivo da Adoção", value = adoption.adoptionReason)
+                            DetailItem(label = "Tipo do documento", value = document.documentType.toString())
+                            DetailItem(label = "Endereço", value = document.address)
+                            DetailItem(label = "Razão para solicitação", value = document.reason)
                         }
                     }
                 }
             }
         }
         // Floating Action Button to open chat
+        //muda aqui
         FloatingActionButton(
             onClick = onOpenChatClick,
             containerColor = Color(0xFF269996),
@@ -233,7 +207,7 @@ fun AdoptionSolicitationScreen(
             },
             text = {
                 Text(
-                    adoption.id,
+                    document.id,
                     style = MaterialTheme.typography.bodySmall.copy(color = Color.Black),
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                 )
@@ -241,7 +215,7 @@ fun AdoptionSolicitationScreen(
             confirmButton = {
                 TextButton(
                     onClick = {
-                        clipboardManager.setText(AnnotatedString(adoption.id))
+                        clipboardManager.setText(AnnotatedString(document.id))
                         showInfoDialog = false
                     }
                 ) {

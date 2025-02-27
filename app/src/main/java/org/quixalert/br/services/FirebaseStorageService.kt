@@ -11,7 +11,13 @@ import javax.inject.Inject
 class FirebaseStorageService @Inject constructor() {
 
     fun uploadImageToFirebase(context: Context, imageUri: Uri, userId: String, callback: (String?) -> Unit) {
-        val storageRef = FirebaseStorage.getInstance().reference.child("users/$userId/profile.jpg")
+        // Criar um nome único para a imagem usando timestamp
+        val timestamp = System.currentTimeMillis()
+        val imageName = "report_${timestamp}.jpg"
+        
+        // Modificar o caminho para incluir uma pasta específica para reports
+        val storageRef = FirebaseStorage.getInstance().reference
+            .child("reports/$userId/$imageName")
 
         try {
             val inputStream: InputStream? = context.contentResolver.openInputStream(imageUri)
@@ -30,12 +36,12 @@ class FirebaseStorageService @Inject constructor() {
 
             uploadTask.addOnSuccessListener {
                 storageRef.downloadUrl.addOnSuccessListener { uri ->
-                    callback(uri.toString()) // Retorna a URL pública da imagem
+                    callback(uri.toString())
                 }.addOnFailureListener {
-                    callback(null) // Falha ao obter URL
+                    callback(null)
                 }
             }.addOnFailureListener {
-                callback(null) // Falha no upload
+                callback(null)
             }
         } catch (e: Exception) {
             Log.e("FirebaseUpload", "Erro ao converter URI para arquivo: ${e.message}")

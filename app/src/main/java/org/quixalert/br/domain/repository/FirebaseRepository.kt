@@ -19,7 +19,7 @@ abstract class FirebaseRepository<T : BaseModel, R>(
 ) : IFirebaseRepository<T, R> {
 
     private val collection = Firebase.firestore.collection(collectionName)
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    protected val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     override fun add(entity: T) {
         scope.launch {

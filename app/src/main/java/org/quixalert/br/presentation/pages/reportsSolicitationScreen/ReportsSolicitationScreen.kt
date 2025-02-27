@@ -1,7 +1,9 @@
 package org.quixalert.br.presentation.pages.reportsSolicitationScreen
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.icu.text.SimpleDateFormat
 import android.net.Uri
-import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -51,13 +53,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import org.quixalert.br.R
 import org.quixalert.br.domain.model.ReportType
 import org.quixalert.br.domain.model.User
 import org.quixalert.br.presentation.pages.profile.IconTint
+import java.io.File
+import java.util.Date
+import java.util.Locale
 
+private fun createImageFile(context: Context): File {
+    val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+    val storageDir = context.getExternalFilesDir("images")
+    return File.createTempFile(
+        "JPEG_${timeStamp}_",
+        ".jpg",
+        storageDir
+    )
+}
+
+@SuppressLint("RememberReturnType")
 @Composable
 fun ReportsSolicitationScreen(
     onBackClick: () -> Unit = {},
@@ -112,11 +129,25 @@ fun ReportsSolicitationScreen(
 fun ReportsSolicitationForm(viewModel: ReportsSolicitationViewModel, userId: String) {
     val uiState by viewModel.uiState.collectAsState()
     var imageUri by remember { mutableStateOf<Uri?>(null) }
-    val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
-        onResult = { uri ->
-            imageUri = uri
-            viewModel.updateImageUri(uri)
+    val context = LocalContext.current
+
+    // Cria um arquivo temporário para armazenar a foto
+    val photoFile = remember { createImageFile(context) }
+    val photoUri = remember(photoFile) {
+        FileProvider.getUriForFile(
+            context,
+            "${context.packageName}.provider",
+            photoFile
+        )
+    }
+
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture(),
+        onResult = { success ->
+            if (success) {
+                imageUri = photoUri
+                viewModel.updateImageUri(photoUri)
+            }
         }
     )
 
@@ -167,7 +198,7 @@ fun ReportsSolicitationForm(viewModel: ReportsSolicitationViewModel, userId: Str
         }
         ImageSelection(
             imageUri = imageUri,
-            imagePickerLauncher = imagePickerLauncher
+            onCameraClick = { cameraLauncher.launch(photoUri) }
         )
         // New Title Field
         Text(
@@ -274,7 +305,7 @@ fun ReportsSolicitationForm(viewModel: ReportsSolicitationViewModel, userId: Str
 @Composable
 fun ImageSelection(
     imageUri: Uri?,
-    imagePickerLauncher: ManagedActivityResultLauncher<String, Uri?>
+    onCameraClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -282,7 +313,7 @@ fun ImageSelection(
             .height(200.dp)
             .clip(RoundedCornerShape(8.dp))
             .padding(8.dp)
-            .clickable { imagePickerLauncher.launch("image/*") }
+            .clickable { onCameraClick() }
     ) {
         if (imageUri != null) {
             Image(

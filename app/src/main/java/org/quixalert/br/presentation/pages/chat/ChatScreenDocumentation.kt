@@ -1,10 +1,13 @@
 package org.quixalert.br.presentation.pages.adoptions
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,36 +47,37 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
-import org.quixalert.br.domain.model.Adoption
-import org.quixalert.br.domain.model.AdoptionStatus
-import org.quixalert.br.domain.model.AdoptionT
-import org.quixalert.br.domain.model.Message
+import org.quixalert.br.domain.model.Document
+import org.quixalert.br.domain.model.DocumentStatus
+import org.quixalert.br.domain.model.MessageDocumentation
 import org.quixalert.br.domain.model.User
 import org.quixalert.br.utils.formatMessageTime
 import java.util.UUID
+import java.util.regex.Pattern
 
 // Global mocked URLs for avatars – replace with real URLs when ready.
-val MOCK_USER_IMAGE_URL = "https://firebasestorage.googleapis.com/v0/b/quixalert.appspot.com/o/imagens%2FScreenshot%202025-02-14%20at%2016.06.44.png?alt=media&token=338974aa-2e2f-4a0b-b508-c660534907a0"
-val MOCK_ATTENDANT_IMAGE_URL = "https://firebasestorage.googleapis.com/v0/b/quixalert.appspot.com/o/imagens%2FScreenshot%202025-02-14%20at%2016.06.59.png?alt=media&token=8cff36b7-f824-4e27-aed8-6ed80974d685"
-val MOCK_USER_ID = "1"
+//val MOCK_USER_IMAGE_URL = "https://firebasestorage.googleapis.com/v0/b/quixalert.appspot.com/o/imagens%2FScreenshot%202025-02-14%20at%2016.06.44.png?alt=media&token=338974aa-2e2f-4a0b-b508-c660534907a0"
+//val MOCK_ATTENDANT_IMAGE_URL = "https://firebasestorage.googleapis.com/v0/b/quixalert.appspot.com/o/imagens%2FScreenshot%202025-02-14%20at%2016.06.59.png?alt=media&token=8cff36b7-f824-4e27-aed8-6ed80974d685"
+//val MOCK_USER_ID = "1"
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun ChatScreen(
-    adoption: AdoptionT,
+fun ChatScreenDocumentation(
+    document: Document,
     onBackClick: () -> Unit,
     user: User
 ) {
-    val chatViewModel: ChatViewModel = hiltViewModel()
+    val chatViewModel: ChatDocumentationViewModel = hiltViewModel()
     val uiState by chatViewModel.uiState.collectAsState()
 
-    LaunchedEffect(adoption.id) {
-        chatViewModel.loadMessages(adoption.id)
+    LaunchedEffect(document.id) {
+        chatViewModel.loadMessages(document.id)
     }
 
     var messageText by remember { mutableStateOf("") }
@@ -81,12 +85,12 @@ fun ChatScreen(
     val coroutineScope = rememberCoroutineScope()
 
     fun addNewMessage(text: String) {
-        val newMessage = Message(
+        val newMessage = MessageDocumentation(
             id = UUID.randomUUID().toString(),
             description = text,
             timestamp = System.currentTimeMillis(),
             userId = user.id,
-            adoptionId = adoption.id,
+            documentId = document.id,
             isFromAttendant = false
         )
         chatViewModel.addMessage(newMessage)
@@ -106,7 +110,7 @@ fun ChatScreen(
                 Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Voltar")
             }
             Text(
-                text = "Adoção do(a) ${adoption.animal?.name ?: "Animal"}",
+                text = "Processo de solicitação de documentação",
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                 modifier = Modifier.padding(start = 8.dp)
             )
@@ -135,14 +139,13 @@ fun ChatScreen(
                             visible = true,
                             enter = fadeIn() + slideInVertically(initialOffsetY = { it * 2 })
                         ) {
-                            ChatMessage(message = message, isUserMessage = isUserMessage, user.profileImage)
+                            ChatMessageDocumentation(message = message, isUserMessage = isUserMessage, user.profileImage)
                         }
                     }
                 }
             }
         }
-
-        if (adoption.status == AdoptionStatus.PENDING) {
+        if(document.status == DocumentStatus.EM_ANDAMENTO) {
             Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
                 TextField(
                     value = messageText,
@@ -178,7 +181,13 @@ fun ChatScreen(
 }
 
 @Composable
-private fun ChatMessage(message: Message, isUserMessage: Boolean, userImage: String) {
+private fun ChatMessageDocumentation(message: MessageDocumentation, isUserMessage: Boolean, userImage: String) {
+    val context = LocalContext.current
+    val urlPattern = Pattern.compile("(https?://[\\w-]+(\\.[\\w-]+)+(/[\\w-./?%&=]*)?)")
+    val matcher = urlPattern.matcher(message.description)
+    val containsUrl = matcher.find()
+    val url = if (containsUrl) matcher.group(0) else ""
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -193,7 +202,7 @@ private fun ChatMessage(message: Message, isUserMessage: Boolean, userImage: Str
                 modifier = Modifier
                     .size(32.dp)
                     .clip(CircleShape)
-                    .shadow(10.dp) // Added shadow to match user image
+                    .shadow(10.dp)
             )
             Spacer(modifier = Modifier.size(4.dp))
         }
@@ -205,7 +214,18 @@ private fun ChatMessage(message: Message, isUserMessage: Boolean, userImage: Str
                 )
                 .padding(8.dp)
         ) {
-            Text(text = message.description, style = MaterialTheme.typography.bodyMedium)
+            if (containsUrl) {
+                Text(
+                    text = url,
+                    style = MaterialTheme.typography.bodyMedium.copy(color = Color.Blue),
+                    modifier = Modifier.clickable {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                        context.startActivity(intent)
+                    }
+                )
+            } else {
+                Text(text = message.description, style = MaterialTheme.typography.bodyMedium)
+            }
             Text(
                 text = message.timestamp.formatMessageTime(),
                 style = MaterialTheme.typography.labelSmall,

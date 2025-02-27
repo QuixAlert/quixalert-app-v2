@@ -82,7 +82,18 @@ class ProfileViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(isLoadingDocuments = true, errorDocuments = null)
         viewModelScope.launch {
             try {
-                val documents = documentService.getDocumentByUserId(userId).await()
+                val documents = documentService.getDocumentByUserId(userId).await().map { document ->
+                    Document(
+                        id = document.id,
+                        documentType = document.documentType,
+                        status = document.status,
+                        descriptions = document.descriptions,
+                        address = document.address,
+                        reason = document.reason,
+                        extraDetails = document.extraDetails,
+                        userId = document.userId
+                    )
+                }
                 _uiState.value = _uiState.value.copy(
                     documentsSolicitationByUser = documents,
                     isLoadingDocuments = false
@@ -101,14 +112,16 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val reports = reportService.getReportByUserId(userId).await()
+                val sortedReports = reports.sortedByDescending { it.date }
+                
                 _uiState.value = _uiState.value.copy(
-                    reportsSolicitationByUser = reports,
+                    reportsSolicitationByUser = sortedReports,
                     isLoadingReports = false
                 )
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     isLoadingReports = false,
-                    errorReports = "Failed to load reports: ${e.message}"
+                    errorReports = "Erro ao carregar denúncias: ${e.message}"
                 )
             }
         }
